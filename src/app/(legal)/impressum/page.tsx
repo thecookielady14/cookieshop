@@ -8,18 +8,18 @@ export default function Impressum() {
                     <section>
                         <h2 className="font-bold text-xl mb-2">Angaben gemäß § 5 TMG</h2>
                         <p>
-                            Max Mustermann<br />
+                            Tanja Lux<br />
                             The Cookie Lady<br />
-                            Musterstraße 1<br />
-                            12345 Musterstadt
+                            Kissinger Straße 17<br />
+                            86415 Mering
                         </p>
                     </section>
 
                     <section>
                         <h2 className="font-bold text-xl mb-2">Kontakt</h2>
                         <p>
-                            Telefon: +49 (0) 123 44 55 66<br />
-                            E-Mail: hello@thecookielady.de
+                            Telefon: +49 159 02193895<br />
+                            E-Mail: kontakt@thecookielady.de
                         </p>
                     </section>
 
@@ -27,7 +27,7 @@ export default function Impressum() {
                         <h2 className="font-bold text-xl mb-2">Umsatzsteuer-ID</h2>
                         <p>
                             Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-                            DE999999999
+                            DE460296346
                         </p>
                     </section>
 
@@ -38,9 +38,7 @@ export default function Impressum() {
                         </p>
                     </section>
 
-                    <p className="text-sm opacity-60 italic mt-8">
-                        Hinweis: Dies ist ein Platzhalter-Impressum. Bitte ersetze diese Daten vor Live-Schaltung mit deinen echten, rechtsgültigen Angaben.
-                    </p>
+
                 </div>
             </div>
         </div>
