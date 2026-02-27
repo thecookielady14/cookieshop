@@ -1,8 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Cookie } from "lucide-react";
+import { createClient } from "@supabase/supabase-js";
+import ProductCard from "@/components/ProductCard";
 
-export default function Home() {
+// Initialize Supabase client for Server Component
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+export const revalidate = 60; // Cache the homepage for 60 seconds
+
+export default async function Home() {
+  // Fetch up to 3 active products for the "Bestseller" section
+  const { data: featuredProducts, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('is_available', true)
+    .limit(3);
+
+  if (error) {
+    console.error("Error fetching featured products:", error);
+  }
+
   return (
     <div className="bg-[var(--color-brand-bg)]">
       {/* Hero Section */}
@@ -70,52 +91,22 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Dummy Product 1 */}
-            <div className="group cursor-pointer">
-              <div className="aspect-square bg-[var(--color-brand-secondary)] rounded-3xl mb-4 overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-50 group-hover:scale-110 transition-transform duration-500">
-                  🍪
-                </div>
-              </div>
-              <h3 className="text-xl font-bold mb-1">Classic Chocolate Chip</h3>
-              <p className="text-[var(--color-brand-dark)] mb-2">Der Klassiker mit zarter Schokolade.</p>
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-lg">3,50 €</span>
-                <span className="text-sm font-medium bg-[var(--color-brand-bg)] px-3 py-1 rounded-full text-[var(--color-brand-dark)]">+ Warenkorb</span>
-              </div>
+          {featuredProducts && featuredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
             </div>
-
-            {/* Dummy Product 2 */}
-            <div className="group cursor-pointer">
-              <div className="aspect-square bg-[#f4a261]/20 rounded-3xl mb-4 overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-50 group-hover:scale-110 transition-transform duration-500">
-                  🍫
-                </div>
-              </div>
-              <h3 className="text-xl font-bold mb-1">Double Choc Fudge</h3>
-              <p className="text-[var(--color-brand-dark)] mb-2">Für alle Schokoholics.</p>
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-lg">3,90 €</span>
-                <span className="text-sm font-medium bg-[var(--color-brand-bg)] px-3 py-1 rounded-full text-[var(--color-brand-dark)]">+ Warenkorb</span>
-              </div>
+          ) : (
+            <div className="text-center py-16 bg-neutral-50 rounded-3xl border border-neutral-100">
+              <Cookie className="w-16 h-16 mx-auto text-neutral-300 mb-4" />
+              <h3 className="text-xl font-bold text-neutral-800 mb-2">Der Ofen glüht schon vor!</h3>
+              <p className="text-neutral-500 max-w-md mx-auto">
+                Wir bereiten gerade die erste Fuhre frischer Cookies für die Neueröffnung vor.
+                Schau in ein paar Stunden nochmal vorbei!
+              </p>
             </div>
-
-            {/* Dummy Product 3 */}
-            <div className="group cursor-pointer">
-              <div className="aspect-square bg-[#2a9d8f]/20 rounded-3xl mb-4 overflow-hidden relative">
-                <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-50 group-hover:scale-110 transition-transform duration-500">
-                  🥜
-                </div>
-              </div>
-              <h3 className="text-xl font-bold mb-1">Peanut Butter Crunch</h3>
-              <p className="text-[var(--color-brand-dark)] mb-2">Salzig trifft süß.</p>
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-lg">3,90 €</span>
-                <span className="text-sm font-medium bg-[var(--color-brand-bg)] px-3 py-1 rounded-full text-[var(--color-brand-dark)]">+ Warenkorb</span>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </section>
     </div>
