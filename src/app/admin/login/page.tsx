@@ -56,7 +56,7 @@ export default function AdminLogin() {
 
                 <div className="flex flex-col items-center mb-8">
                     <Image
-                        src="/logo_transparent.png"
+                        src="/logo.jpeg"
                         alt="The Cookie Lady Logo"
                         width={80}
                         height={80}

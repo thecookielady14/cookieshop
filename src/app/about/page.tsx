@@ -14,7 +14,7 @@ export default function About() {
                         <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[var(--color-brand-secondary)] rounded-full blur-3xl opacity-60 -z-10"></div>
 
                         <Image
-                            src="/logo_transparent.png"
+                            src="/logo.jpeg"
                             alt="The Cookie Lady"
                             width={500}
                             height={500}
