@@ -27,7 +27,19 @@ export default function AdminLayout({
     return (
         <div className="min-h-screen bg-gray-50 flex">
             {/* Admin Sidebar */}
-            <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full z-10 pt-24 pb-6">
+            <aside className="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full z-10 pt-8 pb-6">
+                {/* Branding & Logo */}
+                <div className="px-6 mb-8 flex flex-col items-center">
+                    <img
+                        src="/logo.jpeg"
+                        alt="The Cookie Lady"
+                        className="w-24 h-24 rounded-full object-cover shadow-sm mb-4 border-2 border-gray-50"
+                    />
+                    <span className="font-serif font-black text-xl text-center leading-tight text-gray-900 group-hover:text-[var(--color-brand-accent)] transition-colors">
+                        The Cookie<br />Lady
+                    </span>
+                </div>
+
                 <div className="flex-1 px-4 space-y-2">
                     {navItems.map((item) => {
                         const Icon = item.icon;
@@ -37,8 +49,8 @@ export default function AdminLayout({
                                 key={item.name}
                                 href={item.href}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive
-                                        ? 'bg-[var(--color-brand-primary)] text-white font-medium'
-                                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                                    ? 'bg-[var(--color-brand-primary)] text-white font-medium'
+                                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                                     }`}
                             >
                                 <Icon className="w-5 h-5" />

@@ -5,15 +5,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/lib/store";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
     const [mounted, setMounted] = useState(false);
     const cartCount = useCartStore((state) => state.getCartCount());
+    const pathname = usePathname();
 
     // Avoid hydration mismatch for persisted store
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    // Hide Navbar completely in admin panel
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
 
     return (
         <nav className="absolute top-0 w-full z-50 flex justify-between items-center p-6 lg:px-12 bg-transparent">
