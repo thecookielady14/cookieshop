@@ -87,11 +87,7 @@ export default function AGB() {
                         </p>
                     </section>
 
-                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mt-8">
-                        <p className="text-sm text-amber-800 font-medium italic">
-                            Hinweis: Diese AGB wurden auf Basis von Standard-Vorlagen für den elektronischen Geschäftsverkehr erstellt. Bitte prüfen Sie diese als Gewerbetreibende dennoch sorgfältig oder lassen Sie sie im Zweifel kurz von einem Anwalt absegnen.
-                        </p>
-                    </div>
+
                 </div>
             </div>
         </div>

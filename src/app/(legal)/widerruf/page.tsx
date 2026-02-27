@@ -51,11 +51,7 @@ export default function Widerruf() {
                         </p>
                     </section>
 
-                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mt-8">
-                        <p className="text-sm text-amber-800 font-medium italic">
-                            Hinweis: Diese Belehrung wurde auf Basis des BGB formuliert. Bitte prüfen Sie diese als Gewerbetreibende dennoch sorgfältig auf Fehler.
-                        </p>
-                    </div>
+
                 </div>
             </div>
         </div>
