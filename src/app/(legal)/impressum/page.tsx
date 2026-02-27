@@ -8,8 +8,7 @@ export default function Impressum() {
                     <section>
                         <h2 className="font-bold text-xl mb-2">Angaben gemäß § 5 TMG</h2>
                         <p>
-                            Tanja Lux<br />
-                            The Cookie Lady<br />
+                            Tanja Lux - The Cookie Lady<br />
                             Kissinger Straße 17<br />
                             86415 Mering
                         </p>

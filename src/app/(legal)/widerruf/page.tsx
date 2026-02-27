@@ -32,7 +32,7 @@ export default function Widerruf() {
                             Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag, an dem Sie oder ein von Ihnen benannter Dritter, der nicht der Beförderer ist, die Waren in Besitz genommen haben bzw. hat.
                         </p>
                         <p className="mb-4">
-                            Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (Tanja Lux, Kissinger Straße 17, 86415 Mering, E-Mail: kontakt@thecookielady.de) mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief oder eine E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.
+                            Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (Tanja Lux - The Cookie Lady, Kissinger Straße 17, 86415 Mering, E-Mail: kontakt@thecookielady.de) mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief oder eine E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.
                         </p>
                         <p>
                             Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.

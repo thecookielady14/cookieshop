@@ -40,8 +40,7 @@ export default function Datenschutz() {
                         <h3 className="font-bold text-lg mb-2">Hinweis zur verantwortlichen Stelle</h3>
                         <p className="mb-2">Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
                         <p className="bg-neutral-50 p-4 rounded-lg border border-neutral-100">
-                            Tanja Lux<br />
-                            The Cookie Lady<br />
+                            Tanja Lux - The Cookie Lady<br />
                             Kissinger Straße 17<br />
                             86415 Mering<br /><br />
                             Telefon: +49 159 02193895<br />

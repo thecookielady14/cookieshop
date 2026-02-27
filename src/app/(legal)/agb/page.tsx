@@ -17,7 +17,7 @@ export default function AGB() {
                     <section>
                         <h2 className="font-bold text-xl mb-3">2. Vertragspartner, Vertragsschluss</h2>
                         <p className="mb-4">
-                            Der Kaufvertrag kommt zustande mit The Cookie Lady (Tanja Lux).
+                            Der Kaufvertrag kommt zustande mit Tanja Lux - The Cookie Lady.
                         </p>
                         <p>
                             Die Darstellung der Produkte im Online-Shop stellt kein rechtlich bindendes Angebot, sondern einen unverbindlichen
