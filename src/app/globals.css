@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #1a1510;
+  --color-brand-secondary: #fdfbf7;
+  --color-brand-accent: #c9a227;
+  /* Gold color */
+  --color-brand-dark: #3e2723;
+  --color-brand-text: #2c1a12;
+  --color-brand-bg: #fefae0;
+
+  --font-sans: "Inter", var(--font-sans);
+  --font-serif: "Playfair Display", var(--font-serif);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-text);
+  }
+}
