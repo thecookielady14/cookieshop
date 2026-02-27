@@ -24,44 +24,18 @@ export default async function ProductPage({ params }: { params: { id: string } }
         // Ignore supabase errors in dev mode without connection
     }
 
-    // Mock Backend data for development without DB connection
     if (!product) {
-        const mockProducts = [
-            {
-                id: '1',
-                name: 'Classic Chocolate Chip',
-                description: 'Der absolute Klassiker. Aussen knusprig, innen herrlich zart (chewy) mit großen, schmelzenden belgischen Schokoladenstückchen. Ein Traum für jeden Keks-Liebhaber.',
-                price: 3.50,
-                image_url: '',
-                weight_grams: 125,
-                ingredients: 'Weizenmehl, Butter, Zucker, Brauner Rohrrohrzucker, Schokoladentropfen (Kakaomasse, Zucker, Kakaobutter, Emulgator: Sojalecithin, natürliches Vanillearoma), Eier, Vanilleextrakt, Backpulver, Speisesalz.',
-                allergens: 'Glutenhaltiges Getreide (Weizen), Milch, Eier, Soja. Kann Spuren von Schalenfrüchten enthalten.',
-                consumer_info: 'Kühl und trocken lagern. Nach dem Öffnen rasch verzehren. Für den ultimativen Genuss: Keks für 10-15 Sekunden in die Mikrowelle geben.'
-            },
-            {
-                id: '2',
-                name: 'Double Choc Fudge',
-                description: 'Für alle echten Schokoholics. Ein dunkler, reichhaltiger Keks-Teig mit extra viel Kakaopulver und doppelten Schokoladenstückchen.',
-                price: 3.90,
-                image_url: '',
-                weight_grams: 130,
-                ingredients: 'Weizenmehl, Butter, Brauner Rohrrohrzucker, Zucker, Kakaopulver, Zartbitterschokolade, Eier, Vanilleextrakt, Backpulver, Speisesalz.',
-                allergens: 'Glutenhaltiges Getreide (Weizen), Milch, Eier, Soja. Kann Spuren von Schalenfrüchten enthalten.',
-                consumer_info: 'Kühl und trocken lagern. Nach dem Öffnen rasch verzehren. Schmeckt fantastisch mit einem kalten Glas Milch.'
-            },
-            {
-                id: '3',
-                name: 'Peanut Butter Crunch',
-                description: 'Salzig trifft süß. Cremige Erdnussbutter im Teig und knackige gesalzene Erdnüsse obendrauf.',
-                price: 3.90,
-                image_url: '',
-                weight_grams: 120,
-                ingredients: 'Weizenmehl, Erdnussbutter (Erdnüsse, Palmöl, Salz), Butter, Brauner Zucker, Zucker, Eier, geröstete Erdnüsse, Vanilleextrakt, Backpulver, Speisesalz.',
-                allergens: 'Glutenhaltiges Getreide (Weizen), Erdnüsse, Milch, Eier. Kann Spuren von Soja und anderen Nüssen enthalten.',
-                consumer_info: 'Kühl und trocken lagern. Vor Wärme schützen.'
-            }
-        ];
-        product = mockProducts.find(p => p.id === params.id) || mockProducts[0];
+        return (
+            <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12 flex items-center justify-center">
+                <div className="text-center p-12 bg-white rounded-3xl shadow-sm border border-neutral-100">
+                    <h1 className="text-2xl font-bold mb-4">Keks nicht gefunden</h1>
+                    <p className="text-neutral-500 mb-8">Dieser Cookie scheint aufgegessen oder aus dem Sortiment genommen worden zu sein.</p>
+                    <Link href="/shop" className="bg-[var(--color-brand-primary)] text-white px-6 py-3 rounded-full font-bold hover:bg-[var(--color-brand-accent)] transition-colors">
+                        Zurück zur Auswahl
+                    </Link>
+                </div>
+            </div>
+        );
     }
 
     // Calculate price per kg

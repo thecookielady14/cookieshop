@@ -6,37 +6,13 @@ export const revalidate = 60; // seconds
 
 export default async function ShopOverview() {
     // Fetch real products from our Supabase Database
-    let { data: fetchedProducts, error } = await supabase
+    let { data: products, error } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
-    // Mock Backend data for development without DB connection
-    let products = fetchedProducts;
-    if (error || !products) {
-        products = [
-            {
-                id: '1',
-                name: 'Classic Chocolate Chip',
-                description: 'Der Klassiker mit zarter Schokolade.',
-                price: 3.50,
-                image_url: ''
-            },
-            {
-                id: '2',
-                name: 'Double Choc Fudge',
-                description: 'Für alle Schokoholics.',
-                price: 3.90,
-                image_url: ''
-            },
-            {
-                id: '3',
-                name: 'Peanut Butter Crunch',
-                description: 'Salzig trifft süß.',
-                price: 3.90,
-                image_url: ''
-            }
-        ];
+    if (error) {
+        console.error("Error fetching products:", error);
     }
 
     // Fallback map for colorful mock emojis based on names 
@@ -58,11 +34,7 @@ export default async function ShopOverview() {
                     Suche dir deine Lieblingssorten aus.
                 </p>
 
-                {error && (
-                    <div className="bg-yellow-50 text-yellow-800 p-4 rounded-xl text-center mb-12 border border-yellow-200">
-                        Hinweis: Keine Datenbank-Verbindung erkannt. Es werden Platzhalter-Produkte angezeigt.
-                    </div>
-                )}
+
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {products?.map((product: any) => (
