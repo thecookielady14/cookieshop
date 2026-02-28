@@ -59,17 +59,17 @@ export default async function Home() {
               Jeder Keks ein kleines Stückchen Glück – direkt zu dir nach Hause!
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6">
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 mt-4">
               <Link
                 href="/shop"
-                className="group flex flex-1 items-center justify-center gap-3 bg-[var(--color-brand-accent)] text-[#2a1711] px-6 lg:px-10 py-5 rounded-full font-black text-lg lg:text-xl hover:bg-[#e0b836] transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                className="group flex flex-1 items-center justify-center gap-3 bg-[var(--color-brand-accent)] text-[var(--color-brand-primary)] px-8 py-4 rounded-full font-bold tracking-wide text-lg hover:shadow-xl hover:-translate-y-0.5 transition-all shadow-lg"
               >
                 Jetzt shoppen
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/about"
-                className="flex flex-1 items-center justify-center bg-transparent border-4 border-[var(--color-brand-accent)] text-[var(--color-brand-accent)] px-6 lg:px-10 py-5 rounded-full font-bold text-lg lg:text-xl hover:bg-[var(--color-brand-accent)]/10 transition-all shadow-sm"
+                className="flex flex-1 items-center justify-center bg-transparent border-2 border-[var(--color-brand-accent)] text-[var(--color-brand-accent)] px-8 py-4 rounded-full font-semibold tracking-wide text-lg hover:bg-[var(--color-brand-accent)]/10 transition-all shadow-sm"
               >
                 Geschichte
               </Link>
@@ -79,7 +79,7 @@ export default async function Home() {
       </section>
 
       {/* Featured Products Preview */}
-      <section className="py-20 px-6 lg:px-12 bg-white">
+      <section className="py-20 px-6 lg:px-12 bg-[var(--color-brand-secondary)]">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-end mb-12">
             <div>

@@ -24,7 +24,8 @@ export default function Navbar() {
 
     return (
         <nav className="absolute top-0 w-full z-50 flex justify-between items-center p-6 lg:px-12 bg-transparent">
-            <div className="flex items-center gap-4">
+            {/* Left Box */}
+            <div className="flex-1 flex justify-start items-center">
                 <Link href="/" className="flex items-center gap-3 group">
                     <Image
                         src="/logo.jpeg"
@@ -38,12 +39,16 @@ export default function Navbar() {
                     </span>
                 </Link>
             </div>
-            <div className="hidden md:flex gap-10 font-bold text-lg">
+
+            {/* Center Box */}
+            <div className="hidden md:flex flex-1 justify-center gap-10 font-bold text-lg">
                 <Link href="/" className="text-[var(--color-brand-secondary)] hover:text-white transition">Start</Link>
                 <Link href="/shop" className="text-[var(--color-brand-secondary)] hover:text-white transition">Shop</Link>
                 <Link href="/about" className="text-[var(--color-brand-secondary)] hover:text-white transition">Über mich</Link>
             </div>
-            <div>
+
+            {/* Right Box */}
+            <div className="flex-1 flex justify-end">
                 <Link href="/cart" className="relative p-2 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:shadow-md transition flex items-center justify-center">
                     <ShoppingBag className="w-5 h-5 text-[var(--color-brand-text)]" />
                     {mounted && cartCount > 0 && (
