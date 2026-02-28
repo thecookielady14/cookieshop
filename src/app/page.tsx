@@ -79,7 +79,7 @@ export default async function Home() {
       </section>
 
       {/* Featured Products Preview */}
-      <section className="py-20 px-6 lg:px-12 bg-[var(--color-brand-secondary)]">
+      <section className="py-20 px-6 lg:px-12 bg-transparent">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-end mb-12">
             <div>
