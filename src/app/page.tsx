@@ -62,14 +62,14 @@ export default async function Home() {
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 mt-4">
               <Link
                 href="/shop"
-                className="group flex flex-1 items-center justify-center gap-3 bg-[var(--color-brand-accent)] text-[var(--color-brand-primary)] px-8 py-4 rounded-full font-serif font-bold tracking-wide text-lg hover:shadow-xl hover:-translate-y-0.5 transition-all shadow-lg"
+                className="group flex flex-1 items-center justify-center gap-3 bg-[var(--color-brand-accent)] text-[var(--color-brand-primary)] px-8 py-4 rounded-full font-serif font-extrabold tracking-wide text-lg hover:shadow-xl hover:-translate-y-0.5 transition-all shadow-lg"
               >
                 Jetzt shoppen
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/about"
-                className="flex flex-1 items-center justify-center bg-transparent border-2 border-[var(--color-brand-accent)] text-[var(--color-brand-accent)] px-8 py-4 rounded-full font-serif font-semibold tracking-wide text-lg hover:bg-[var(--color-brand-accent)]/10 transition-all shadow-sm"
+                className="flex flex-1 items-center justify-center bg-transparent border-2 border-[var(--color-brand-accent)] text-[var(--color-brand-accent)] px-8 py-4 rounded-full font-serif font-extrabold tracking-wide text-lg hover:bg-[var(--color-brand-accent)]/10 transition-all shadow-sm"
               >
                 Geschichte
               </Link>
