@@ -38,7 +38,7 @@ export default function Footer() {
             </div>
             <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/10 text-sm opacity-60 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
                 <p>© {new Date().getFullYear()} The Cookie Lady. Alle Rechte vorbehalten.</p>
-                <p className="flex items-center gap-1 mt-2 sm:mt-0">Made with <Heart className="w-4 h-4 text-[var(--color-brand-accent)]" /></p>
+                <p className="flex items-center gap-1 mt-2 sm:mt-0">Made with <Heart className="w-4 h-4 text-[var(--color-brand-accent)]" strokeWidth={2.5} /></p>
             </div>
         </footer>
     );
