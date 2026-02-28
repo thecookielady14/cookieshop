@@ -69,7 +69,7 @@ export async function POST(req: Request) {
             success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/cart`,
             shipping_address_collection: {
-                allowed_countries: ['DE', 'AT', 'CH'],
+                allowed_countries: ['DE'],
             },
             shipping_options: [
                 {

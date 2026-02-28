@@ -50,7 +50,7 @@ export default async function Home() {
 
           {/* Right: Text Content */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-6 text-white tracking-tight">
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal mb-6 text-white tracking-tight">
               Mit Liebe gebacken. <br />
               <span className="text-[var(--color-brand-accent)] font-serif italic">Für dich gemacht.</span>
             </h1>

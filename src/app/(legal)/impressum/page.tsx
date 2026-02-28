@@ -33,7 +33,7 @@ export default function Impressum() {
                     <section>
                         <h2 className="font-bold text-xl mb-2">Verbraucherstreitbeilegung/Universalschlichtungsstelle</h2>
                         <p>
-                            Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+                            Wir sind stets bemüht, eventuelle Meinungsverschiedenheiten einvernehmlich beizulegen. Zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle sind wir jedoch nicht verpflichtet und nehmen daran auch nicht teil.
                         </p>
                     </section>
 

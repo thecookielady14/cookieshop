@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-primary: #1a1510;
+  --color-brand-primary: #2c1a12;
   --color-brand-secondary: #fdfbf7;
-  --color-brand-accent: #c9a227;
+  --color-brand-accent: #d4af37;
   /* Gold color */
   --color-brand-dark: #3e2723;
   --color-brand-text: #2c1a12;
-  --color-brand-bg: #fefae0;
+  --color-brand-bg: #faf9f6;
 
   --font-sans: "Inter", var(--font-sans);
   --font-serif: "Playfair Display", var(--font-serif);
