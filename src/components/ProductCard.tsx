@@ -18,7 +18,7 @@ interface Product {
 
 export default function ProductCard({ product }: { product: Product }) {
     return (
-        <Link href={`/shop/${product.id}`} className="group block">
+        <Link href={`/shop/${product.id}`} prefetch={false} className="group block">
             <div className={`aspect-square bg-[var(--color-brand-secondary)] rounded-3xl mb-4 overflow-hidden relative border border-neutral-100 shadow-sm ${product.is_available === false ? 'grayscale opacity-70' : ''}`}>
                 {/* Placeholder Emoji display until real images exist */}
                 <div className="absolute inset-0 flex items-center justify-center text-7xl opacity-50 group-hover:scale-110 transition-transform duration-500">

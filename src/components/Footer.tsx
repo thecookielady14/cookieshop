@@ -20,7 +20,7 @@ export default function Footer() {
                 <div>
                     <h4 className="font-bold text-white mb-4">Shop</h4>
                     <ul className="space-y-2 opacity-80">
-                        <li><Link href="/shop" className="hover:text-white hover:underline transition">Alle Cookies</Link></li>
+                        <li><Link href="/shop" prefetch={false} className="hover:text-white hover:underline transition">Alle Cookies</Link></li>
                         <li><Link href="/about" className="hover:text-white hover:underline transition">Über Mich</Link></li>
                         <li><Link href="/faq" className="hover:text-white hover:underline transition">FAQ</Link></li>
                     </ul>

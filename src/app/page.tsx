@@ -87,7 +87,7 @@ export default async function Home() {
               <h2 className="text-3xl font-bold mb-2">Bestseller</h2>
               <p className="text-[var(--color-brand-dark)]">Die absoluten Lieblinge unserer Kunden</p>
             </div>
-            <Link href="/shop" className="hidden sm:flex items-center gap-2 font-medium text-[var(--color-brand-primary)] hover:underline">
+            <Link href="/shop" prefetch={false} className="hidden sm:flex items-center gap-2 font-medium text-[var(--color-brand-primary)] hover:underline">
               Alle ansehen <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
