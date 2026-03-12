@@ -12,7 +12,8 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
-    const [stock, setStock] = useState('');
+    const [weight, setWeight] = useState('');
+    const [stockCount, setStockCount] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [allergens, setAllergens] = useState('');
     const [consumerInfo, setConsumerInfo] = useState('');
@@ -37,7 +38,8 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     setName(data.name);
                     setDescription(data.description || '');
                     setPrice(data.price.toString());
-                    setStock(data.weight_grams?.toString() || '');
+                    setWeight(data.weight_grams?.toString() || '');
+                    setStockCount(data.stock_count?.toString() || '');
                     setIngredients(data.ingredients || '');
                     setAllergens(data.allergens || '');
                     setConsumerInfo(data.consumer_info || '');
@@ -92,7 +94,8 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     ingredients,
                     allergens,
                     consumer_info: consumerInfo,
-                    weight_grams: parseInt(stock) || 0,
+                    weight_grams: parseInt(weight) || 0,
+                    stock_count: parseInt(stockCount) || 0,
                     image_url: imageUrl,
                     is_available: isActive
                 })
@@ -152,7 +155,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-3 gap-6">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Preis (€)</label>
                                 <input
@@ -167,13 +170,25 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Lagerbestand</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Gewicht (g)</label>
                                 <input
                                     type="number"
                                     min="0"
-                                    value={stock}
-                                    onChange={e => setStock(e.target.value)}
-                                    placeholder="100"
+                                    value={weight}
+                                    onChange={e => setWeight(e.target.value)}
+                                    placeholder="z.B. 120"
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Lagerbestand (Stück)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={stockCount}
+                                    onChange={e => setStockCount(e.target.value)}
+                                    placeholder="z.B. 50"
                                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
                                     required
                                 />
