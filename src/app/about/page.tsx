@@ -42,7 +42,7 @@ export default function About() {
                         </p>
                         <p className="font-medium text-xl italic mt-4 text-[var(--color-brand-dark)]">
                             "Jeder Keks, der meine Küche verlässt, ist ein kleines Kunstwerk und wird mit
-                            ganz viel Liebe von Hand gerollt."
+                            ganz viel Liebe von Hand geformt."
                         </p>
                     </div>
                 </div>
@@ -64,7 +64,7 @@ export default function About() {
                         <div>
                             <div className="text-4xl mb-4">📦</div>
                             <h4 className="font-bold mb-2">Frisch verschickt</h4>
-                            <p className="text-sm opacity-80">Heute gebacken, morgen schon bei dir.</p>
+                            <p className="text-sm opacity-80">Heute gebacken, in wenigen Tagen schon bei dir.</p>
                         </div>
                     </div>
                 </div>
