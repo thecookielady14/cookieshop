@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function ClientProductTable({ initialProducts }: { initialProducts: any[] }) {
     const [products, setProducts] = useState(initialProducts);
@@ -67,9 +68,13 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
                         <td className="p-4 text-gray-600">{product.weight_grams}g</td>
                         <td className="p-4 text-right">
                             <div className="flex justify-end gap-2">
-                                <button title="Bearbeiten" disabled className="p-2 text-gray-400 hover:text-[var(--color-brand-primary)] bg-white rounded-lg border border-gray-200 shadow-sm transition-colors opacity-50 cursor-not-allowed">
+                                <Link 
+                                    href={`/admin/products/${product.id}/edit`}
+                                    title="Bearbeiten" 
+                                    className="p-2 text-gray-400 hover:text-[var(--color-brand-primary)] bg-white rounded-lg border border-gray-200 shadow-sm transition-colors block"
+                                >
                                     <Edit className="w-4 h-4" />
-                                </button>
+                                </Link>
                                 <button 
                                     onClick={() => handleDelete(product.id, product.name)}
                                     disabled={isDeleting === product.id}
