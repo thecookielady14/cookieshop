@@ -6,15 +6,16 @@ import AddToCartButton from "./AddToCartButton";
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     let product = null;
+    const { id } = await params;
 
     // Fetch real products from our Supabase Database
     try {
         const { data, error } = await supabase
             .from('products')
             .select('*')
-            .eq('id', params.id)
+            .eq('id', id)
             .single();
 
         if (!error && data) {
