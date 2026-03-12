@@ -103,7 +103,7 @@ export default async function Home() {
               <h3 className="text-xl font-bold text-neutral-800 mb-2">Der Ofen glüht schon vor!</h3>
               <p className="text-neutral-500 max-w-md mx-auto">
                 Wir bereiten gerade die erste Fuhre frischer Cookies für die Neueröffnung vor.
-                Schau in ein paar Stunden nochmal vorbei!
+                Schau in ein paar Tagen nochmal vorbei!
               </p>
             </div>
           )}
