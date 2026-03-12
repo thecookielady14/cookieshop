@@ -15,6 +15,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const [stock, setStock] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [allergens, setAllergens] = useState('');
+    const [consumerInfo, setConsumerInfo] = useState('');
     const [isActive, setIsActive] = useState(true);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
@@ -39,6 +40,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     setStock(data.weight_grams?.toString() || '');
                     setIngredients(data.ingredients || '');
                     setAllergens(data.allergens || '');
+                    setConsumerInfo(data.consumer_info || '');
                     setIsActive(data.is_available);
                     setExistingImageUrl(data.image_url);
                 }
@@ -89,6 +91,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     price: parseFloat(price.replace(',', '.')),
                     ingredients,
                     allergens,
+                    consumer_info: consumerInfo,
                     weight_grams: parseInt(stock) || 0,
                     image_url: imageUrl,
                     is_available: isActive
@@ -203,6 +206,17 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                 value={allergens}
                                 onChange={e => setAllergens(e.target.value)}
                                 placeholder="z.B. Enthält Gluten (Weizen), Eier, Milch, Soja. Kann Spuren von Nüssen enthalten."
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Verbraucherhinweise</label>
+                            <textarea
+                                rows={2}
+                                value={consumerInfo}
+                                onChange={e => setConsumerInfo(e.target.value)}
+                                placeholder="z.B. Kühl und trocken lagern. Nach dem Öffnen innerhalb von 3 Tagen verzehren."
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
                             />
                         </div>

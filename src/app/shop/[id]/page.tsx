@@ -62,13 +62,21 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 <div className="bg-white rounded-[3rem] shadow-xl overflow-hidden border border-neutral-100 flex flex-col lg:flex-row">
 
                     {/* Left Side: Product Image */}
-                    <div className="lg:w-1/2 bg-[var(--color-brand-secondary)] flex items-center justify-center p-12 min-h-[400px] lg:min-h-[600px] relative">
-                        <div className="text-9xl transform transition-transform hover:scale-110 duration-500">
-                            {emoji}
-                        </div>
-                        {/* If we had real images, it would be:
-            <Image src={product.image_url} alt={product.name} fill className="object-cover" />
-            */}
+                    <div className="lg:w-1/2 bg-[var(--color-brand-secondary)] flex items-center justify-center min-h-[400px] lg:min-h-[600px] relative overflow-hidden">
+                        {product.image_url ? (
+                            <Image 
+                                src={product.image_url} 
+                                alt={product.name} 
+                                fill 
+                                className="object-cover hover:scale-105 transition-transform duration-700"
+                                priority
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                            />
+                        ) : (
+                            <div className="text-9xl transform transition-transform hover:scale-110 duration-500">
+                                {emoji}
+                            </div>
+                        )}
                     </div>
 
                     {/* Right Side: Product Details */}

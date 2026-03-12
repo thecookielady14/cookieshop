@@ -20,10 +20,19 @@ export default function ProductCard({ product }: { product: Product }) {
     return (
         <Link href={`/shop/${product.id}`} prefetch={false} className="group block">
             <div className={`aspect-square bg-[var(--color-brand-secondary)] rounded-3xl mb-4 overflow-hidden relative border border-neutral-100 shadow-sm ${product.is_available === false ? 'grayscale opacity-70' : ''}`}>
-                {/* Placeholder Emoji display until real images exist */}
-                <div className="absolute inset-0 flex items-center justify-center text-7xl opacity-50 group-hover:scale-110 transition-transform duration-500">
-                    {product.emoji || '🍪'}
-                </div>
+                {product.image_url ? (
+                    <Image 
+                        src={product.image_url} 
+                        alt={product.name} 
+                        fill 
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-7xl opacity-50 group-hover:scale-110 transition-transform duration-500">
+                        {product.emoji || '🍪'}
+                    </div>
+                )}
             </div>
             <h3 className="text-xl font-bold mb-1 group-hover:text-[var(--color-brand-primary)] transition-colors">
                 {product.name}
