@@ -238,11 +238,16 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Produktbild</label>
-                            <label className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer text-gray-500 block">
-                                <span className="block text-3xl mb-2">{imageFile ? '✅' : '📸'}</span>
-                                <span className="text-sm font-medium">
-                                    {imageFile ? imageFile.name : 'Klicke hier, um ein Bild hochzuladen'}
+                            <label className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer text-gray-500 block relative overflow-hidden group">
+                                <span className="block text-3xl mb-2 z-10 relative">{imageFile ? '✅' : (existingImageUrl ? '🖼️' : '📸')}</span>
+                                <span className="text-sm font-medium z-10 relative bg-white/80 px-2 py-1 rounded inline-block">
+                                    {imageFile ? imageFile.name : (existingImageUrl ? 'Aktuelles Bild überschreiben' : 'Klicke hier, um ein Bild hochzuladen')}
                                 </span>
+                                {existingImageUrl && !imageFile && (
+                                    <div className="absolute inset-0 opacity-20 group-hover:opacity-10 transition-opacity">
+                                        <img src={existingImageUrl} alt="Current Product Image" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
                                 <input
                                     type="file"
                                     className="hidden"
