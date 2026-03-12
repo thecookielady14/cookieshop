@@ -10,7 +10,7 @@ export default function FAQ() {
                     <div className="border border-neutral-100 rounded-2xl p-6 hover:shadow-md transition-shadow">
                         <h2 className="font-bold text-xl mb-3 text-gray-900">Wie lange sind die Cookies haltbar?</h2>
                         <p>
-                            Da wir komplett auf künstliche Konservierungsstoffe verzichten und unsere Cookies frisch backen, empfehlen wir, sie innerhalb von <strong>5-7 Tagen</strong> zu genießen. Für den perfekten Geschmack wie frisch aus dem Ofen: Kurz vor dem Verzehr für 3-5 Minuten bei 150°C in den Backofen legen!
+                            Da wir komplett auf künstliche Konservierungsstoffe verzichten und unsere Cookies frisch backen, empfehlen wir, sie innerhalb von <strong>5-7 Tagen</strong> zu genießen. Für den perfekten Geschmack wie frisch aus dem Ofen: Kurz vor dem Verzehr für 1-2 Minuten bei 150°C in den Backofen legen!
                         </p>
                     </div>
 
