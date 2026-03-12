@@ -67,7 +67,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                     return (
                         <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                             <td className="p-4">
-                                <span className="font-bold text-gray-900 block">{order.id.substring(0, 8)}</span>
+                                <span className="font-bold text-gray-900 block">#{order.order_number || order.id.substring(0, 8)}</span>
                                 <span className="text-xs text-gray-500">{totalItems} Artikel • {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount)}</span>
                             </td>
                             <td className="p-4">
