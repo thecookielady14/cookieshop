@@ -1,8 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
 
-// Revalidate data periodically or on demand
-export const revalidate = 60; // seconds
+// Force dynamic rendering to always show the latest products
+export const dynamic = 'force-dynamic';
 
 export default async function ShopOverview() {
     // Fetch real products from our Supabase Database

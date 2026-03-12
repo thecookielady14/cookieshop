@@ -10,7 +10,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export const revalidate = 60; // Cache the homepage for 60 seconds
+// Force dynamic rendering to guarantee fresh featured products
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   // Fetch up to 3 active products for the "Bestseller" section

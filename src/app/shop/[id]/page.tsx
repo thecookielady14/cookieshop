@@ -2,9 +2,9 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import AddToCartButton from "./AddToCartButton"; // We will create this client component
+import AddToCartButton from "./AddToCartButton";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
     let product = null;
