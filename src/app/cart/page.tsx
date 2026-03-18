@@ -2,6 +2,7 @@
 
 import { useCartStore } from "@/lib/store";
 import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -77,9 +78,19 @@ export default function Cart() {
                         <div className="lg:w-2/3 space-y-6">
                             {items.map((item) => (
                                 <div key={item.id} className="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 flex items-center gap-6">
-                                    {/* Image Placeholder */}
-                                    <div className="w-24 h-24 bg-[var(--color-brand-secondary)] rounded-2xl flex items-center justify-center text-4xl flex-shrink-0">
-                                        🍪
+                                    {/* Product Image */}
+                                    <div className="w-24 h-24 bg-[var(--color-brand-secondary)] rounded-2xl flex items-center justify-center text-4xl flex-shrink-0 overflow-hidden relative">
+                                        {item.imageUrl ? (
+                                            <Image
+                                                src={item.imageUrl}
+                                                alt={item.name}
+                                                fill
+                                                className="object-cover"
+                                                sizes="96px"
+                                            />
+                                        ) : (
+                                            <span>🍪</span>
+                                        )}
                                     </div>
 
                                     <div className="flex-1">
