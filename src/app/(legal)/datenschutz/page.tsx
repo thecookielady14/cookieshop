@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Datenschutzerklärung – The Cookie Lady",
+    description: "Datenschutzerklärung gemäß DSGVO für den Online-Shop The Cookie Lady. Informationen zu Datenverarbeitung, Cookies, Supabase und Stripe.",
+};
+
 export default function Datenschutz() {
     return (
         <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">

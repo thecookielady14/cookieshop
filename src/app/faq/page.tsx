@@ -1,4 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "FAQ – The Cookie Lady | Häufige Fragen zu Bestellung & Versand",
+    description: "Hier findest du Antworten auf die häufigsten Fragen: Haltbarkeit, Versand, Rückgabe, Allergene und Sonderbestellungen für Hochzeiten & Events.",
+};
 
 export default function FAQ() {
     return (

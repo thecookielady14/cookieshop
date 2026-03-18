@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "AGB – The Cookie Lady | Allgemeine Geschäftsbedingungen",
+    description: "Allgemeine Geschäftsbedingungen für den Online-Shop The Cookie Lady. Informationen zu Vertragsschluss, Zahlung, Lieferung und Gewährleistung.",
+};
+
 export default function AGB() {
     return (
         <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">

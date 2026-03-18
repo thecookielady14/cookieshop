@@ -3,8 +3,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(
+    { params }: { params: Promise<{ id: string }> }
+): Promise<Metadata> {
+    const { id } = await params;
+    const { data: product } = await supabase
+        .from('products')
+        .select('name, description')
+        .eq('id', id)
+        .single();
+
+    if (!product) {
+        return { title: "Cookie nicht gefunden – The Cookie Lady" };
+    }
+
+    return {
+        title: `${product.name} – The Cookie Lady | Handgemachter Cookie`,
+        description: product.description || `${product.name} – Handgemacht, frisch gebacken und mit Liebe verpackt. Jetzt bei The Cookie Lady bestellen.`,
+    };
+}
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     let product = null;

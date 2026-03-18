@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Impressum – The Cookie Lady",
+    description: "Impressum und Anbieterkennzeichnung gemäß § 5 TMG für The Cookie Lady.",
+};
+
 export default function Impressum() {
     return (
         <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">

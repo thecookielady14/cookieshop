@@ -1,4 +1,10 @@
 import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Über mich – The Cookie Lady | Die Geschichte hinter den Cookies",
+    description: "Lern The Cookie Lady kennen! Ich backe mit Leidenschaft handgemachte Cookies aus echten Zutaten – ohne Kompromisse, dafür mit ganz viel Liebe.",
+};
 
 export default function About() {
     return (

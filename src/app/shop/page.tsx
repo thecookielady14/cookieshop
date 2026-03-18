@@ -1,5 +1,11 @@
 import { supabase } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Shop – The Cookie Lady | Handgemachte Cookies bestellen",
+    description: "Entdecke alle handgemachten Cookies von The Cookie Lady. Frisch gebacken, aus besten Zutaten – jetzt online bestellen und nach Hause liefern lassen.",
+};
 
 // Force dynamic rendering to always show the latest products
 export const dynamic = 'force-dynamic';
