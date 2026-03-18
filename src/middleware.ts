@@ -1,20 +1,40 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 
-export function middleware(request: NextRequest) {
-    // Only protect admin routes (excluding login page itself)
+export async function middleware(request: NextRequest) {
     if (
         request.nextUrl.pathname.startsWith('/admin') &&
         request.nextUrl.pathname !== '/admin/login'
     ) {
-        // admin_auth is set by the login page only AFTER a successful
-        // supabase.auth.signInWithPassword call – so it's tied to real credentials.
-        const hasAdminCookie = request.cookies.has('admin_auth');
+        const response = NextResponse.next({
+            request: { headers: request.headers },
+        });
 
-        if (!hasAdminCookie) {
-            const loginUrl = new URL('/admin/login', request.url);
-            return NextResponse.redirect(loginUrl);
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    getAll() {
+                        return request.cookies.getAll();
+                    },
+                    setAll(cookiesToSet) {
+                        cookiesToSet.forEach(({ name, value, options }) =>
+                            response.cookies.set(name, value, options)
+                        );
+                    },
+                },
+            }
+        );
+
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!session) {
+            return NextResponse.redirect(new URL('/admin/login', request.url));
         }
+
+        return response;
     }
 
     return NextResponse.next();

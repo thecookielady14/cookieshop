@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { createBrowserClient } from '@supabase/ssr';
 import { Lock } from 'lucide-react';
 import Image from 'next/image';
 
@@ -13,23 +13,19 @@ export default function AdminLogin() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    // createBrowserClient from @supabase/ssr stores the session in cookies
+    // so the middleware can verify the JWT on every request
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
         try {
-            // Simulate login for dev environment if Supabase isn't really connected yet
-            if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('dummy')) {
-                if (email === 'admin@thecookielady.de' && password === 'admin') {
-                    document.cookie = "admin_auth=true; path=/";
-                    router.push('/admin');
-                    return;
-                } else {
-                    throw new Error('Ungültige Anmeldedaten (Dev-Modus: admin@thecookielady.de / admin)');
-                }
-            }
-
             const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
@@ -38,8 +34,6 @@ export default function AdminLogin() {
             if (error) throw error;
 
             if (data.session) {
-                // Set a gentle custom cookie just for basic middleware routing checks
-                document.cookie = "admin_auth=true; path=/; max-age=86400";
                 router.push('/admin');
                 router.refresh();
             }
