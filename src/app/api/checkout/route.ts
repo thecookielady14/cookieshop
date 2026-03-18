@@ -112,6 +112,8 @@ export async function POST(req: Request) {
                 allowed_countries: ['DE'],
             },
             shipping_options: shippingOptions,
+            // Promo codes: create & manage codes in the Stripe Dashboard
+            allow_promotion_codes: true,
             // This setting automatically generates PDF invoices for the customer!
             invoice_creation: {
                 enabled: true,

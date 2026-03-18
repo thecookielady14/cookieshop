@@ -21,9 +21,23 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
             if (error) throw error;
 
             // Optimistically update local state
-            setOrders(orders.map(order => 
+            setOrders(orders.map(order =>
                 order.id === orderId ? { ...order, status: newStatus } : order
             ));
+
+            // Send shipping notification email automatically
+            if (newStatus === 'shipped') {
+                const res = await fetch('/api/notify-shipped', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId }),
+                });
+                if (res.ok) {
+                    alert('✅ Status aktualisiert & Versand-Email an Kunden gesendet!');
+                } else {
+                    alert('✅ Status aktualisiert – aber Email konnte nicht gesendet werden (RESEND_API_KEY prüfen).');
+                }
+            }
         } catch (error: any) {
             alert('Fehler beim Aktualisieren des Status: ' + error.message);
         } finally {
