@@ -7,24 +7,11 @@ export function middleware(request: NextRequest) {
         request.nextUrl.pathname.startsWith('/admin') &&
         request.nextUrl.pathname !== '/admin/login'
     ) {
-        // Supabase sets a cookie named sb-<project-ref>-auth-token when logged in.
-        // We look for any cookie matching that pattern and verify it contains a real token.
-        const supabaseAuthCookie = request.cookies.getAll().find(
-            (cookie) => cookie.name.startsWith('sb-') && cookie.name.endsWith('-auth-token')
-        );
+        // admin_auth is set by the login page only AFTER a successful
+        // supabase.auth.signInWithPassword call – so it's tied to real credentials.
+        const hasAdminCookie = request.cookies.has('admin_auth');
 
-        let hasValidSession = false;
-        if (supabaseAuthCookie?.value) {
-            try {
-                const parsed = JSON.parse(decodeURIComponent(supabaseAuthCookie.value));
-                // A real Supabase session will have an access_token field
-                hasValidSession = !!(parsed?.access_token || (Array.isArray(parsed) && parsed[0]));
-            } catch {
-                hasValidSession = false;
-            }
-        }
-
-        if (!hasValidSession) {
+        if (!hasAdminCookie) {
             const loginUrl = new URL('/admin/login', request.url);
             return NextResponse.redirect(loginUrl);
         }
