@@ -57,6 +57,46 @@ export async function POST(req: Request) {
             });
         }
 
+        // Calculate cart total from validated DB prices for shipping logic
+        const cartTotal = lineItems.reduce((sum, item) => {
+            return sum + (item.price_data.unit_amount * item.quantity);
+        }, 0) / 100; // Convert cents to euros
+
+        // Dynamic shipping: free above 30€
+        const shippingOptions = cartTotal >= 30
+            ? [
+                {
+                    shipping_rate_data: {
+                        type: 'fixed_amount' as const,
+                        fixed_amount: {
+                            amount: 0,
+                            currency: 'eur',
+                        },
+                        display_name: 'Kostenloser Versand',
+                        delivery_estimate: {
+                            minimum: { unit: 'business_day' as const, value: 2 },
+                            maximum: { unit: 'business_day' as const, value: 4 },
+                        },
+                    },
+                },
+            ]
+            : [
+                {
+                    shipping_rate_data: {
+                        type: 'fixed_amount' as const,
+                        fixed_amount: {
+                            amount: 490, // 4.90 €
+                            currency: 'eur',
+                        },
+                        display_name: 'Standardversand',
+                        delivery_estimate: {
+                            minimum: { unit: 'business_day' as const, value: 2 },
+                            maximum: { unit: 'business_day' as const, value: 4 },
+                        },
+                    },
+                },
+            ];
+
         // Create Checkout Session
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card', 'paypal'],
@@ -71,28 +111,7 @@ export async function POST(req: Request) {
             shipping_address_collection: {
                 allowed_countries: ['DE'],
             },
-            shipping_options: [
-                {
-                    shipping_rate_data: {
-                        type: 'fixed_amount',
-                        fixed_amount: {
-                            amount: 490, // 4.90 € shipping
-                            currency: 'eur',
-                        },
-                        display_name: 'Standardversand',
-                        delivery_estimate: {
-                            minimum: {
-                                unit: 'business_day',
-                                value: 2,
-                            },
-                            maximum: {
-                                unit: 'business_day',
-                                value: 4,
-                            },
-                        },
-                    },
-                },
-            ],
+            shipping_options: shippingOptions,
             // This setting automatically generates PDF invoices for the customer!
             invoice_creation: {
                 enabled: true,

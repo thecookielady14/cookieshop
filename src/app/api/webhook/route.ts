@@ -57,6 +57,7 @@ export async function POST(req: Request) {
             const { data: orderData, error: orderError } = await supabaseAdmin
                 .from('orders')
                 .insert([{
+                    customer_name: session.customer_details?.name || null,
                     customer_email: customerEmail,
                     stripe_session_id: session.id,
                     total_amount: totalAmount,
