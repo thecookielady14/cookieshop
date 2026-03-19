@@ -17,5 +17,12 @@
   body {
     background-color: var(--color-brand-bg);
     color: var(--color-brand-text);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  *, *::before, *::after {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
