@@ -18,8 +18,8 @@ interface Product {
 
 export default function ProductCard({ product }: { product: Product }) {
     return (
-        <Link href={`/shop/${product.id}`} prefetch={false} className="group block">
-            <div className={`aspect-square bg-[var(--color-brand-secondary)] rounded-3xl mb-4 overflow-hidden relative border border-neutral-100 shadow-sm ${product.is_available === false ? 'grayscale opacity-70' : ''}`}>
+        <Link href={`/shop/${product.id}`} prefetch={false} className="group block transition-transform duration-300 hover:-translate-y-1">
+            <div className={`aspect-square bg-[var(--color-brand-secondary)] rounded-3xl mb-4 overflow-hidden relative border border-neutral-100 shadow-sm group-hover:shadow-2xl transition-shadow duration-300 ${product.is_available === false ? 'grayscale opacity-70' : ''}`}>
                 {product.image_url ? (
                     <Image 
                         src={product.image_url} 

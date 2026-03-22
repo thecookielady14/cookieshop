@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight, Cookie } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import ProductCard from "@/components/ProductCard";
+import AnimateIn from "@/components/AnimateIn";
 
 // Initialize Supabase client for Server Component
 const supabase = createClient(
@@ -82,31 +83,37 @@ export default async function Home() {
       {/* Featured Products Preview */}
       <section className="py-20 px-6 lg:px-12 bg-transparent">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-end mb-12">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Bestseller</h2>
-              <p className="text-[var(--color-brand-dark)]">Die absoluten Lieblinge unserer Kunden</p>
+          <AnimateIn>
+            <div className="flex justify-between items-end mb-12">
+              <div>
+                <h2 className="text-3xl font-bold mb-2">Bestseller</h2>
+                <p className="text-[var(--color-brand-dark)]">Die absoluten Lieblinge unserer Kunden</p>
+              </div>
+              <Link href="/shop" prefetch={false} className="hidden sm:flex items-center gap-2 font-medium text-[var(--color-brand-primary)] hover:underline">
+                Alle ansehen <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-            <Link href="/shop" prefetch={false} className="hidden sm:flex items-center gap-2 font-medium text-[var(--color-brand-primary)] hover:underline">
-              Alle ansehen <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+          </AnimateIn>
 
           {featuredProducts && featuredProducts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {featuredProducts.map((product, index) => (
+                <AnimateIn key={product.id} delay={index * 120}>
+                  <ProductCard product={product} />
+                </AnimateIn>
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-neutral-50 rounded-3xl border border-neutral-100">
-              <Cookie className="w-16 h-16 mx-auto text-neutral-300 mb-4" />
-              <h3 className="text-xl font-bold text-neutral-800 mb-2">Der Ofen glüht schon vor!</h3>
-              <p className="text-neutral-500 max-w-md mx-auto">
-                Wir bereiten gerade die erste Fuhre frischer Cookies für die Neueröffnung vor.
-                Schau in ein paar Tagen nochmal vorbei!
-              </p>
-            </div>
+            <AnimateIn>
+              <div className="text-center py-16 bg-neutral-50 rounded-3xl border border-neutral-100">
+                <Cookie className="w-16 h-16 mx-auto text-neutral-300 mb-4" />
+                <h3 className="text-xl font-bold text-neutral-800 mb-2">Der Ofen glüht schon vor!</h3>
+                <p className="text-neutral-500 max-w-md mx-auto">
+                  Wir bereiten gerade die erste Fuhre frischer Cookies für die Neueröffnung vor.
+                  Schau in ein paar Tagen nochmal vorbei!
+                </p>
+              </div>
+            </AnimateIn>
           )}
         </div>
       </section>
