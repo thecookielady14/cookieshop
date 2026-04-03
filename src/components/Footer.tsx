@@ -12,7 +12,7 @@ export default function Footer() {
                         Jeder Keks ist ein kleines Kunstwerk.
                     </p>
                     <div className="flex gap-4">
-                        <a href="#" className="hover:text-white transition-colors bg-white/10 p-2 rounded-full"><Instagram className="w-5 h-5" /></a>
+                        <a href="https://www.instagram.com/the.cookie_lady?igsh=dmZxbWloeTdnemZz" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors bg-white/10 p-2 rounded-full"><Instagram className="w-5 h-5" /></a>
                         <a href="mailto:kontakt@thecookielady.de" className="hover:text-white transition-colors bg-white/10 p-2 rounded-full"><Mail className="w-5 h-5" /></a>
                     </div>
                 </div>
