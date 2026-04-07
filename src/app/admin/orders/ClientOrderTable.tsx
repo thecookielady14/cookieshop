@@ -29,7 +29,10 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
             if (newStatus === 'shipped') {
                 const res = await fetch('/api/notify-shipped', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-notify-secret': process.env.NEXT_PUBLIC_NOTIFY_SECRET || '',
+                    },
                     body: JSON.stringify({ orderId }),
                 });
                 if (res.ok) {

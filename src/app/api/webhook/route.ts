@@ -54,6 +54,18 @@ export async function POST(req: Request) {
                 process.env.SUPABASE_SERVICE_ROLE_KEY || ''
             );
 
+            // Idempotency: skip if this session was already processed
+            const { data: existing } = await supabaseAdmin
+                .from('orders')
+                .select('id')
+                .eq('stripe_session_id', session.id)
+                .maybeSingle();
+
+            if (existing) {
+                console.log(`Session ${session.id} already processed – skipping duplicate webhook.`);
+                return new NextResponse('Already processed', { status: 200 });
+            }
+
             const { data: orderData, error: orderError } = await supabaseAdmin
                 .from('orders')
                 .insert([{
@@ -69,13 +81,13 @@ export async function POST(req: Request) {
 
             if (orderError) throw orderError;
 
-            // 4. Insert the order items
+            // 4. Insert the order items (price_at_time comes from validated server-side metadata)
             if (items.length > 0 && orderData) {
                 const orderItemsToInsert = items.map((item: any) => ({
                     order_id: orderData.id,
                     product_id: item.id,
                     quantity: item.qty,
-                    price_at_time: item.price
+                    price_at_time: item.price  // set from validated DB price in checkout route
                 }));
 
                 const { error: itemsError } = await supabaseAdmin

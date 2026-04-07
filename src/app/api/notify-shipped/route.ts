@@ -7,6 +7,12 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(req: Request) {
+    // Auth: only allow calls from our own admin panel
+    const secret = req.headers.get('x-notify-secret');
+    if (!secret || secret !== process.env.NOTIFY_SHIPPED_SECRET) {
+        return new NextResponse('Unauthorized', { status: 401 });
+    }
+
     try {
         const { orderId } = await req.json();
 

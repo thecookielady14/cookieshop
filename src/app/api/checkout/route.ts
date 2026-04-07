@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         }
 
         // Convert cart items to Stripe line items using secure DB prices
-        const lineItems = [];
+        const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
         for (const item of items) {
             const realProduct = dbProducts.find(p => p.id === item.id);
 
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
 
         // Calculate cart total from validated DB prices for shipping logic
         const cartTotal = lineItems.reduce((sum, item) => {
-            return sum + (item.price_data.unit_amount * item.quantity);
+            return sum + ((item.price_data!.unit_amount ?? 0) * (item.quantity ?? 1));
         }, 0) / 100; // Convert cents to euros
 
         // Dynamic shipping: free above 30€
@@ -103,8 +103,12 @@ export async function POST(req: Request) {
             line_items: lineItems,
             mode: 'payment',
             metadata: {
-                // Pass order details to webhook
-                items: JSON.stringify(items.map((i: any) => ({ id: i.id, qty: i.quantity, price: i.price }))),
+                // Use validated server-side prices (not client-supplied) for order history
+                items: JSON.stringify(items.map((i: any, idx: number) => ({
+                    id: i.id,
+                    qty: i.quantity,
+                    price: (lineItems[idx].price_data!.unit_amount ?? 0) / 100,  // validated DB price in €
+                }))),
             },
             success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/cart`,
