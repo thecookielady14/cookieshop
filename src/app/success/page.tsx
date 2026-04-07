@@ -33,16 +33,13 @@ function SuccessContent() {
                     Vielen Dank für deine Bestellung!
                 </h1>
 
-                <p className="text-lg text-[var(--color-brand-dark)] mb-8">
-                    Deine Cookies werden jetzt mit viel Liebe gebacken und frisch für dich verpackt.
-                    Du erhältst in Kürze eine Bestätigungsemail mit deiner Rechnung von Stripe.
-                </p>
-
-                <div className="bg-[var(--color-brand-bg)] p-6 rounded-2xl mb-10 inline-block text-left w-full max-w-sm">
-                    <p className="text-sm text-[var(--color-brand-dark)] mb-1">Bestellnummer (Session ID):</p>
-                    <code className="text-xs break-all text-[var(--color-brand-text)] font-bold">
-                        {sessionId || 'Test-Bestellung'}
-                    </code>
+                <div className="bg-[var(--color-brand-bg)] p-6 rounded-2xl mb-10 inline-block w-full max-w-sm">
+                    <p className="text-sm text-[var(--color-brand-dark)] text-center">
+                        Deine Cookies werden jetzt mit viel Liebe gebacken und frisch für dich verpackt. 🍪
+                    </p>
+                    <p className="text-xs text-neutral-400 text-center mt-2">
+                        Du erhältst in Kürze eine Bestätigungsemail mit deiner Rechnung von Stripe.
+                    </p>
                 </div>
 
                 <div>

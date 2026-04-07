@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Gem, PackageCheck, HeartHandshake } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -54,23 +55,29 @@ export default function About() {
                 </div>
 
                 {/* Quality Banner */}
-                <div className="mt-24 bg-white rounded-3xl p-8 lg:p-12 shadow-sm border border-neutral-100">
-                    <h3 className="text-2xl font-bold mb-8 text-center">Mein Qualitätsversprechen</h3>
+                <div className="mt-24 bg-[var(--color-brand-primary)] rounded-3xl p-8 lg:p-12 shadow-sm">
+                    <h3 className="text-2xl font-bold mb-10 text-center text-white">Mein Qualitätsversprechen</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                        <div>
-                            <div className="text-4xl mb-4">🧈</div>
-                            <h4 className="font-bold mb-2">Beste Zutaten</h4>
-                            <p className="text-sm opacity-80">Nur echte Butter und hochwertige Schokolade.</p>
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-[var(--color-brand-accent)]/20 flex items-center justify-center mb-4">
+                                <Gem className="w-8 h-8 text-[var(--color-brand-accent)]" />
+                            </div>
+                            <h4 className="font-bold mb-2 text-white">Beste Zutaten</h4>
+                            <p className="text-sm text-white/70">Nur echte Butter und hochwertige Schokolade.</p>
                         </div>
-                        <div>
-                            <div className="text-4xl mb-4">✋</div>
-                            <h4 className="font-bold mb-2">100% Handgemacht</h4>
-                            <p className="text-sm opacity-80">Jeder Teigling wird von mir persönlich geformt.</p>
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-[var(--color-brand-accent)]/20 flex items-center justify-center mb-4">
+                                <HeartHandshake className="w-8 h-8 text-[var(--color-brand-accent)]" />
+                            </div>
+                            <h4 className="font-bold mb-2 text-white">100% Handgemacht</h4>
+                            <p className="text-sm text-white/70">Jeder Teigling wird von mir persönlich geformt.</p>
                         </div>
-                        <div>
-                            <div className="text-4xl mb-4">📦</div>
-                            <h4 className="font-bold mb-2">Frisch verschickt</h4>
-                            <p className="text-sm opacity-80">Heute gebacken, in wenigen Tagen schon bei dir.</p>
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-[var(--color-brand-accent)]/20 flex items-center justify-center mb-4">
+                                <PackageCheck className="w-8 h-8 text-[var(--color-brand-accent)]" />
+                            </div>
+                            <h4 className="font-bold mb-2 text-white">Frisch verschickt</h4>
+                            <p className="text-sm text-white/70">Heute gebacken, in wenigen Tagen schon bei dir.</p>
                         </div>
                     </div>
                 </div>

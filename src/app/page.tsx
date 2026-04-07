@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Cookie } from "lucide-react";
+import { ArrowRight, Cookie, Flame, Truck, Handshake } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import ProductCard from "@/components/ProductCard";
 import AnimateIn from "@/components/AnimateIn";
@@ -79,6 +79,26 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Trust Band */}
+      <div className="bg-[var(--color-brand-primary)] py-5">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-12">
+          <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">
+            <Flame className="w-4 h-4 text-[var(--color-brand-accent)] flex-shrink-0" />
+            Frisch auf Bestellung gebacken
+          </div>
+          <div className="hidden sm:block w-px h-4 bg-white/20" />
+          <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">
+            <Handshake className="w-4 h-4 text-[var(--color-brand-accent)] flex-shrink-0" />
+            100% Handgemacht
+          </div>
+          <div className="hidden sm:block w-px h-4 bg-white/20" />
+          <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">
+            <Truck className="w-4 h-4 text-[var(--color-brand-accent)] flex-shrink-0" />
+            Versand in 1–2 Werktagen
+          </div>
+        </div>
+      </div>
 
       {/* Featured Products Preview */}
       <section className="py-20 px-6 lg:px-12 bg-transparent">
