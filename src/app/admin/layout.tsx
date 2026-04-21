@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Package, ShoppingCart, Users, LogOut } from "lucide-react";
+import { createBrowserClient } from '@supabase/ssr';
 
 export default function AdminLayout({
     children,
@@ -12,9 +13,14 @@ export default function AdminLayout({
     const pathname = usePathname();
     const router = useRouter();
 
-    const handleLogout = () => {
-        document.cookie = "admin_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    const handleLogout = async () => {
+        const supabase = createBrowserClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+        await supabase.auth.signOut();
         router.push('/admin/login');
+        router.refresh();
     };
 
     const navItems = [
