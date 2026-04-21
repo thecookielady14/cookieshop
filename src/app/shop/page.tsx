@@ -35,12 +35,17 @@ export default async function ShopOverview() {
             <div className="max-w-7xl mx-auto">
                 <AnimateIn>
                     <h1 className="text-4xl lg:text-5xl font-extrabold mb-4 text-[var(--color-brand-text)] text-center">
-                        Unsere Cookies
+                        Meine Kekse
                     </h1>
-                    <p className="text-center text-lg text-[var(--color-brand-dark)] max-w-2xl mx-auto mb-16">
+                    <p className="text-center text-lg text-[var(--color-brand-dark)] max-w-2xl mx-auto mb-6">
                         Handgemacht, frisch auf Bestellung gebacken und mit Liebe verpackt.
-                        Suche dir deine Lieblingssorten aus.
+                        Such dir deine Lieblingssorten aus.
                     </p>
+                    <div className="flex justify-center mb-12">
+                        <span className="text-[var(--color-brand-primary)] font-bold text-sm bg-[var(--color-brand-accent)]/30 px-5 py-2 rounded-full">
+                            🗓️ Ab 01. Juni 2026 bestellbar!
+                        </span>
+                    </div>
                 </AnimateIn>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -60,9 +65,12 @@ export default async function ShopOverview() {
                     <AnimateIn>
                         <div className="text-center py-20 bg-white/50 rounded-3xl border border-neutral-200">
                             <span className="text-6xl mb-4 block">👩‍🍳</span>
-                            <p className="text-xl font-medium text-[var(--color-brand-text)]">
-                                Wir backen gerade frisch! Bald gibt es hier die ersten leckeren Cookies.
+                            <p className="text-xl font-medium text-[var(--color-brand-text)] mb-3">
+                                Ich backe gerade an den ersten Sorten!
                             </p>
+                            <span className="text-[var(--color-brand-primary)] font-bold text-sm bg-[var(--color-brand-accent)]/30 inline-block px-5 py-2 rounded-full">
+                                🗓️ Ab 01. Juni 2026 bestellbar!
+                            </span>
                         </div>
                     </AnimateIn>
                 )}

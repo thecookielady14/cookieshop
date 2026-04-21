@@ -3,8 +3,8 @@ import { Gem, PackageCheck, HeartHandshake } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Über mich – The Cookie Lady | Die Geschichte hinter den Cookies",
-    description: "Lern The Cookie Lady kennen! Ich backe mit Leidenschaft handgemachte Cookies aus echten Zutaten – ohne Kompromisse, dafür mit ganz viel Liebe.",
+    title: "Über mich – The Cookie Lady | Die Geschichte hinter den Keksen",
+    description: "Lern The Cookie Lady kennen! Ich backe mit Leidenschaft handgemachte Kekse aus regionalem Dinkelmehl – ohne Kompromisse, dafür mit ganz viel Herzblut.",
 };
 
 export default function About() {
@@ -25,31 +25,32 @@ export default function About() {
                             alt="The Cookie Lady"
                             width={500}
                             height={500}
-                            className="w-full aspect-square object-cover"
+                            className="w-full aspect-square object-cover rounded-3xl"
                         />
                     </div>
 
                     <div className="w-full md:w-1/2 flex flex-col justify-center space-y-6 text-lg text-[var(--color-brand-text)]">
                         <h2 className="text-3xl font-bold text-[var(--color-brand-primary)]">
-                            Hallo, ich bin Tanja, auch bekannt als The Cookie Lady!
+                            Hallo, ich bin Tanja – auch bekannt als The Cookie Lady!
                         </h2>
                         <p>
-                            Schon als Kind stand ich am liebsten in der Küche und habe die Teigschüssel ausgekratzt.
-                            Die Leidenschaft fürs Backen hat mich seitdem nie losgelassen.
+                            Backen ist für mich kein Hobby – es ist mein Ausgleich, meine Leidenschaft
+                            und das, was ich am liebsten tue. Was als kleines Experiment in meiner Küche begann,
+                            ist heute mein Herzensprojekt geworden.
                         </p>
                         <p>
-                            Nach unzähligen Experimenten, verbrannten Blechen und hunderten von probierten Rezepten
-                            habe ich endlich die perfekten Cookies kreiert: Außen leicht knusprig, innen unverschämt
-                            weich und "chewy" – genau so, wie ein echter amerikanischer Cookie sein muss.
+                            Nach unzähligen Versuchen und vielen verbrannten Blechen habe ich meinen
+                            eigenen Stil gefunden: Kekse, die durch und durch knusprig sind, intensiv im Geschmack
+                            und bei denen man sofort merkt, dass da jemand mit Herzblut dabei war.
                         </p>
                         <p>
-                            Ich verwende für meine Kekse nur die besten, natürlichen Zutaten: Echte Butter,
-                            hochwertige belgische Schokolade und feine Bourbon-Vanille. Keine künstlichen
-                            Zusatzstoffe, einfach nur purer Genuss.
+                            Ich backe ausschließlich mit <strong>Dinkelmehl</strong> – weil es verträglicher
+                            ist als Weizen und einfach besser schmeckt. Dazu kommen regionale Zutaten,
+                            keine künstlichen Konservierungsstoffe und kein Schnickschnack.
+                            Nur das, was wirklich reingehört.
                         </p>
                         <p className="font-medium text-xl italic mt-4 text-[var(--color-brand-dark)]">
-                            "Jeder Keks, der meine Küche verlässt, ist ein kleines Kunstwerk und wird mit
-                            ganz viel Liebe von Hand geformt."
+                            „Kekse backen ist für mich Herzensarbeit – und das schmeckt man."
                         </p>
                     </div>
                 </div>
@@ -62,8 +63,8 @@ export default function About() {
                             <div className="w-16 h-16 rounded-full bg-[var(--color-brand-accent)]/20 flex items-center justify-center mb-4">
                                 <Gem className="w-8 h-8 text-[var(--color-brand-accent)]" />
                             </div>
-                            <h4 className="font-bold mb-2 text-white">Beste Zutaten</h4>
-                            <p className="text-sm text-white/70">Nur echte Butter und hochwertige Schokolade.</p>
+                            <h4 className="font-bold mb-2 text-white">Regionale Zutaten</h4>
+                            <p className="text-sm text-white/70">Dinkelmehl von der Mühle nebenan, Eier vom Bauernhof um die Ecke.</p>
                         </div>
                         <div className="flex flex-col items-center">
                             <div className="w-16 h-16 rounded-full bg-[var(--color-brand-accent)]/20 flex items-center justify-center mb-4">
@@ -77,7 +78,7 @@ export default function About() {
                                 <PackageCheck className="w-8 h-8 text-[var(--color-brand-accent)]" />
                             </div>
                             <h4 className="font-bold mb-2 text-white">Frisch verschickt</h4>
-                            <p className="text-sm text-white/70">Heute gebacken, in wenigen Tagen schon bei dir.</p>
+                            <p className="text-sm text-white/70">Einmal pro Woche gebacken und direkt auf den Weg zu dir gebracht.</p>
                         </div>
                     </div>
                 </div>

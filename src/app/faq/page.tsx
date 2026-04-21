@@ -4,31 +4,61 @@ import FaqAccordion, { FaqItem } from "@/components/FaqAccordion";
 
 export const metadata: Metadata = {
     title: "FAQ – The Cookie Lady | Häufige Fragen zu Bestellung & Versand",
-    description: "Hier findest du Antworten auf die häufigsten Fragen: Haltbarkeit, Versand, Rückgabe, Allergene und Sonderbestellungen für Hochzeiten & Events.",
+    description: "Alles was du wissen möchtest: Haltbarkeit, Versand, Dinkelmehl, Rückgabe und Events – hier beantworte ich die häufigsten Fragen.",
 };
 
 const faqItems: FaqItem[] = [
     {
-        question: "Wie lange sind die Cookies haltbar?",
+        question: "Wie lange sind die Kekse haltbar?",
         answer: (
             <p>
-                Da wir komplett auf künstliche Konservierungsstoffe verzichten und unsere Cookies frisch backen, empfehlen wir, sie innerhalb von <strong>5–7 Tagen</strong> zu genießen. Für den perfekten Geschmack wie frisch aus dem Ofen: Kurz vor dem Verzehr für 1–2 Minuten bei 150°C in den Backofen legen!
+                Da ich komplett auf künstliche Konservierungsstoffe verzichte und frisch backe, empfehle ich,
+                die Kekse innerhalb von <strong>5–7 Tagen</strong> zu genießen. Für den perfekten Geschmack wie frisch aus dem Ofen:
+                Kurz vor dem Verzehr für 1–2 Minuten bei 150 °C in den Backofen legen!
             </p>
         ),
     },
     {
-        question: "Warum werden die Kekse ausschließlich mit Dinkelmehl gebacken?",
+        question: "Warum backst du nur mit Dinkelmehl – und was ist der Unterschied zu Weizen?",
         answer: (
-            <p>
-                Dinkelmehl ist leicht verträglich und hat ganz viele tolle andere Auswirkungen
-            </p>
+            <div className="space-y-3">
+                <p>
+                    Dinkelmehl ist meine bewusste Entscheidung – und das aus gutem Grund: Im Vergleich zu herkömmlichem
+                    Weizenmehl enthält Dinkel <strong>mehr Eiweiß, Ballaststoffe und Mineralstoffe</strong> wie Magnesium und Zink.
+                    Außerdem wird Dinkel von vielen Menschen deutlich <strong>besser vertragen</strong> als Weizen,
+                    da er einen anderen Klebereiweißanteil hat.
+                </p>
+                <p>
+                    Das bedeutet nicht, dass meine Kekse glutenfrei sind – aber für Menschen mit leichter
+                    Weizenempfindlichkeit (nicht Zöliakie) ist Dinkel oft eine angenehme Alternative.
+                    Und ehrlich gesagt: Er schmeckt auch einfach besser. 😊
+                </p>
+            </div>
         ),
     },
     {
-        question: "Wie funktioniert der Versand?",
+        question: "Wie und wann wird gebacken und versendet?",
+        answer: (
+            <div className="space-y-3">
+                <p>
+                    Als kleines Einzelunternehmen backe ich <strong>einmal pro Woche</strong> frisch – mit viel Sorgfalt
+                    und ohne Abstriche bei der Qualität. Bestellungen, die bis <strong>Dienstag 12:00 Uhr</strong> eingehen,
+                    werden in der gleichen Woche gebacken und noch in derselben Woche per DHL auf den Weg zu dir gebracht.
+                </p>
+                <p>
+                    Du bekommst automatisch eine Versandbestätigung per E-Mail, sobald dein Paket unterwegs ist.
+                </p>
+            </div>
+        ),
+    },
+    {
+        question: "Warum backst du nur einmal pro Woche?",
         answer: (
             <p>
-                Wir backen deine Cookies frisch auf Bestellung. In der Regel verlässt dein Paket <strong>1–2 Werktage</strong> nach Bestelleingang unsere Backstube. Der Versand erfolgt sicher verpackt per DHL, sodass die Cookies spätestens nach 2–4 Werktagen duftend bei dir ankommen sollten.
+                Weil Qualität Zeit braucht. Ich backe jeden Keks mit der Hand, forme jeden Teigling einzeln
+                und lasse mir dabei keine Abkürzungen. Das ist kein Fließband – das ist Handwerk.
+                Einmal pro Woche gibt mir die Zeit, wirklich sorgfältig zu arbeiten und dir etwas zu schicken,
+                das es wert ist.
             </p>
         ),
     },
@@ -36,17 +66,21 @@ const faqItems: FaqItem[] = [
         question: "Kann ich meine Bestellung zurückgeben?",
         answer: (
             <p>
-                Da es sich bei unseren Cookies um frische, individuell hergestellte Lebensmittel handelt, ist ein gesetzlicher <Link href="/widerruf" className="text-[var(--color-brand-primary)] hover:underline font-medium">Widerruf bzw. eine Rückgabe</Link> leider ausgeschlossen. Sollte aber doch mal etwas mit einer Lieferung nicht in Ordnung sein, kontaktiere uns bitte sofort – wir finden eine Lösung!
+                Da es sich bei meinen Keksen um frische, individuell hergestellte Lebensmittel handelt, ist ein gesetzlicher{" "}
+                <Link href="/widerruf" className="text-[var(--color-brand-primary)] hover:underline font-medium">Widerruf bzw. eine Rückgabe</Link>{" "}
+                leider ausgeschlossen. Sollte aber doch mal etwas mit einer Lieferung nicht stimmen,
+                melde dich bitte sofort – ich finde eine Lösung!
             </p>
         ),
     },
     {
-        question: "Backt ihr auch für Hochzeiten oder Firmenevents?",
+        question: "Backst du auch für Hochzeiten oder Firmenevents?",
         answer: (
             <p>
-                Super gerne! Für größere Bestellungen, individuelle Cookie-Designs oder besondere Anlässe schreib mir einfach über Instagram oder per E-Mail an{" "}
+                Sehr gerne! Für größere Mengen, besondere Anlässe oder individuelle Wünsche schreib mir einfach
+                per E-Mail an{" "}
                 <a href="mailto:kontakt@thecookielady.de" className="text-[var(--color-brand-primary)] hover:underline font-medium">kontakt@thecookielady.de</a>.
-                Wir planen dann gemeinsam das perfekte süße Highlight für dein Event!
+                Ich plane dann mit dir gemeinsam das perfekte süße Highlight für dein Event!
             </p>
         ),
     },

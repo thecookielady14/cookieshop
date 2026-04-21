@@ -1,7 +1,7 @@
 'use client';
 
 import { useCartStore } from "@/lib/store";
-import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck } from "lucide-react";
+import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck, ShoppingBasket } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -63,8 +63,10 @@ export default function Cart() {
 
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-neutral-100">
-                        <span className="text-6xl mb-6 block">🛒</span>
-                        <p className="text-xl mb-8">Lass uns ein paar Kekse aussuchen!</p>
+                        <div className="flex justify-center mb-6">
+                            <ShoppingBasket className="w-16 h-16 text-[var(--color-brand-primary)]" />
+                        </div>
+                        <p className="text-xl mb-8">Lass mich dir ein paar Kekse aussuchen helfen!</p>
                         <Link
                             href="/shop"
                             className="inline-flex items-center gap-2 bg-[var(--color-brand-primary)] text-white px-8 py-4 rounded-full font-bold hover:bg-[#c29160] transition-transform hover:-translate-y-1"

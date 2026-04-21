@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Cookie, Flame, Truck, Handshake } from "lucide-react";
+import { ArrowRight, Cookie, Flame, Wheat, Handshake } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import ProductCard from "@/components/ProductCard";
 import AnimateIn from "@/components/AnimateIn";
@@ -52,13 +52,17 @@ export default async function Home() {
 
           {/* Right: Text Content */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
+            {/* Slogan Badge */}
+            <span className="inline-block text-[var(--color-brand-accent)] text-sm font-bold tracking-[0.2em] uppercase mb-4 border border-[var(--color-brand-accent)]/40 px-4 py-1 rounded-full">
+              Dauerhaft lecker
+            </span>
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal mb-6 text-white tracking-tight">
               Mit Liebe gebacken. <br />
               <span className="text-[var(--color-brand-accent)] font-serif italic">Für dich gemacht.</span>
             </h1>
             <p className="text-xl lg:text-2xl max-w-xl mb-12 text-white/90">
-              Entdecke handgemachte, unwiderstehliche Cookies aus besten Zutaten.
-              Jeder Keks ein kleines Stückchen Glück – direkt zu dir nach Hause!
+              Entdecke handgemachte Kekse aus regionalen Zutaten und echtem Dinkelmehl.
+              Knusprig, ehrlich und mit Herzblut gebacken – direkt zu dir nach Hause.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 mt-4">
@@ -85,7 +89,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-12">
           <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">
             <Flame className="w-4 h-4 text-[var(--color-brand-accent)] flex-shrink-0" />
-            Frisch auf Bestellung gebacken
+            Einmal pro Woche frisch gebacken
           </div>
           <div className="hidden sm:block w-px h-4 bg-white/20" />
           <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">
@@ -94,8 +98,8 @@ export default async function Home() {
           </div>
           <div className="hidden sm:block w-px h-4 bg-white/20" />
           <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">
-            <Truck className="w-4 h-4 text-[var(--color-brand-accent)] flex-shrink-0" />
-            Versand in 1–2 Werktagen
+            <Wheat className="w-4 h-4 text-[var(--color-brand-accent)] flex-shrink-0" />
+            Dinkelmehl aus der Region
           </div>
         </div>
       </div>
@@ -107,7 +111,7 @@ export default async function Home() {
             <div className="flex justify-between items-end mb-12">
               <div>
                 <h2 className="text-3xl font-bold mb-2">Bestseller</h2>
-                <p className="text-[var(--color-brand-dark)]">Die absoluten Lieblinge unserer Kunden</p>
+                <p className="text-[var(--color-brand-dark)]">Die absoluten Lieblinge meiner Kunden</p>
               </div>
               <Link href="/shop" prefetch={false} className="hidden sm:flex items-center gap-2 font-medium text-[var(--color-brand-primary)] hover:underline">
                 Alle ansehen <ArrowRight className="w-4 h-4" />
@@ -128,9 +132,11 @@ export default async function Home() {
               <div className="text-center py-16 bg-neutral-50 rounded-3xl border border-neutral-100">
                 <Cookie className="w-16 h-16 mx-auto text-neutral-300 mb-4" />
                 <h3 className="text-xl font-bold text-neutral-800 mb-2">Der Ofen glüht schon vor!</h3>
-                <p className="text-neutral-500 max-w-md mx-auto">
-                  Wir bereiten gerade die erste Fuhre frischer Cookies für die Neueröffnung vor.
-                  Schau in ein paar Tagen nochmal vorbei!
+                <p className="text-neutral-500 max-w-md mx-auto mb-3">
+                  Ich backe gerade an den ersten Sorten und freue mich darauf, dir bald meine Kekse zu schicken.
+                </p>
+                <p className="text-[var(--color-brand-primary)] font-bold text-sm bg-[var(--color-brand-accent)]/20 inline-block px-4 py-2 rounded-full">
+                  🗓️ Ab 01. Juni 2026 bestellbar!
                 </p>
               </div>
             </AnimateIn>

@@ -1,6 +1,6 @@
 'use client';
 
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBasket, Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/lib/store";
@@ -41,7 +41,7 @@ export default function Navbar() {
                             height={50}
                             className="rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform"
                         />
-                        <span className="font-serif font-black text-xl tracking-tight text-[var(--color-brand-primary)] group-hover:text-[var(--color-brand-accent)] transition-colors">
+                        <span className="font-serif font-black text-xl tracking-tight text-[var(--color-brand-accent)] group-hover:text-white transition-colors">
                             The Cookie Lady
                         </span>
                     </Link>
@@ -57,7 +57,7 @@ export default function Navbar() {
                 {/* Right Box */}
                 <div className="flex-1 flex justify-end items-center gap-3">
                     <Link href="/cart" className="relative p-2 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:shadow-md transition flex items-center justify-center">
-                        <ShoppingBag className="w-5 h-5 text-[var(--color-brand-text)]" />
+                        <ShoppingBasket className="w-5 h-5 text-[var(--color-brand-text)]" />
                         {mounted && cartCount > 0 && (
                             <span className="absolute -top-1 -right-1 bg-[var(--color-brand-primary)] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                                 {cartCount}
@@ -104,36 +104,20 @@ export default function Navbar() {
                     </button>
                 </div>
                 <div className="flex flex-col gap-2 px-8">
-                    <Link
-                        href="/"
-                        className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors"
-                    >
+                    <Link href="/" className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         Start
                     </Link>
-                    <Link
-                        href="/shop"
-                        prefetch={false}
-                        className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors"
-                    >
+                    <Link href="/shop" prefetch={false} className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         Shop
                     </Link>
-                    <Link
-                        href="/about"
-                        className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors"
-                    >
+                    <Link href="/about" className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         Über mich
                     </Link>
-                    <Link
-                        href="/faq"
-                        className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors"
-                    >
+                    <Link href="/faq" className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         FAQ
                     </Link>
-                    <Link
-                        href="/cart"
-                        className="text-[var(--color-brand-accent)] hover:text-white text-xl font-bold py-3 transition-colors flex items-center gap-2"
-                    >
-                        <ShoppingBag className="w-5 h-5" />
+                    <Link href="/cart" className="text-[var(--color-brand-accent)] hover:text-white text-xl font-bold py-3 transition-colors flex items-center gap-2">
+                        <ShoppingBasket className="w-5 h-5" />
                         Warenkorb
                         {mounted && cartCount > 0 && (
                             <span className="bg-[var(--color-brand-accent)] text-[var(--color-brand-primary)] text-xs font-bold px-2 py-0.5 rounded-full">
