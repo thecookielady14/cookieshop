@@ -73,7 +73,7 @@ export default async function Home() {
                 href="/about"
                 className="flex flex-1 items-center justify-center bg-transparent border-2 border-[var(--color-brand-accent)] text-[var(--color-brand-accent)] px-8 py-4 rounded-full font-serif font-extrabold tracking-wide text-lg hover:bg-[var(--color-brand-accent)]/10 transition-all shadow-sm"
               >
-                Geschichte
+                Über mich
               </Link>
             </div>
           </div>

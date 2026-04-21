@@ -8,7 +8,7 @@ export default function Footer() {
                 <div className="md:col-span-2">
                     <h3 className="text-2xl font-bold mb-4 text-white">The Cookie Lady</h3>
                     <p className="max-w-sm mb-6 opacity-80">
-                        Handgemachte Cookies mit puren Zutaten und ganz viel Liebe gebacken.
+                        Handgemachte Cookies mit regionalen Zutaten und ganz viel Liebe gebacken.
                         Jeder Keks ist ein kleines Kunstwerk.
                     </p>
                     <div className="flex gap-4">

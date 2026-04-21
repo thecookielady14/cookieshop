@@ -31,10 +31,10 @@ export default function About() {
 
                     <div className="w-full md:w-1/2 flex flex-col justify-center space-y-6 text-lg text-[var(--color-brand-text)]">
                         <h2 className="text-3xl font-bold text-[var(--color-brand-primary)]">
-                            Hallo, ich bin The Cookie Lady!
+                            Hallo, ich bin Tanja, auch bekannt als The Cookie Lady!
                         </h2>
                         <p>
-                            Schon als Kind stand ich am liebsten in der Küche und habe den Teigschüssel ausgekratzt.
+                            Schon als Kind stand ich am liebsten in der Küche und habe die Teigschüssel ausgekratzt.
                             Die Leidenschaft fürs Backen hat mich seitdem nie losgelassen.
                         </p>
                         <p>

@@ -17,10 +17,10 @@ const faqItems: FaqItem[] = [
         ),
     },
     {
-        question: "Sind die Cookies vegan oder glutenfrei?",
+        question: "Warum werden die Kekse ausschließlich mit Dinkelmehl gebacken?",
         answer: (
             <p>
-                Aktuell können wir in unserer Backstube Kreuzkontaminationen leider nicht zu 100% ausschließen. Daher bieten wir momentan noch keine zertifizierten veganen oder glutenfreien Cookies an. Wir arbeiten aber fleißig an neuen Rezepten! Bitte achte immer auf die Allergenhinweise bei den einzelnen Produkten.
+                Dinkelmehl ist leicht verträglich und hat ganz viele tolle andere Auswirkungen
             </p>
         ),
     },
@@ -36,7 +36,7 @@ const faqItems: FaqItem[] = [
         question: "Kann ich meine Bestellung zurückgeben?",
         answer: (
             <p>
-                Da es sich bei unseren Cookies um frische, schnell verderbliche Lebensmittel handelt, ist ein gesetzlicher <Link href="/widerruf" className="text-[var(--color-brand-primary)] hover:underline font-medium">Widerruf bzw. eine Rückgabe</Link> leider ausgeschlossen. Sollte aber doch mal etwas mit einer Lieferung nicht in Ordnung sein, kontaktiere uns bitte sofort – wir finden eine Lösung!
+                Da es sich bei unseren Cookies um frische, individuell hergestellte Lebensmittel handelt, ist ein gesetzlicher <Link href="/widerruf" className="text-[var(--color-brand-primary)] hover:underline font-medium">Widerruf bzw. eine Rückgabe</Link> leider ausgeschlossen. Sollte aber doch mal etwas mit einer Lieferung nicht in Ordnung sein, kontaktiere uns bitte sofort – wir finden eine Lösung!
             </p>
         ),
     },

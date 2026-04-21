@@ -38,7 +38,7 @@ export default async function ShopOverview() {
                         Unsere Cookies
                     </h1>
                     <p className="text-center text-lg text-[var(--color-brand-dark)] max-w-2xl mx-auto mb-16">
-                        Handgemacht, täglich frisch gebacken und mit Liebe verpackt.
+                        Handgemacht, frisch auf Bestellung gebacken und mit Liebe verpackt.
                         Suche dir deine Lieblingssorten aus.
                     </p>
                 </AnimateIn>
@@ -61,7 +61,7 @@ export default async function ShopOverview() {
                         <div className="text-center py-20 bg-white/50 rounded-3xl border border-neutral-200">
                             <span className="text-6xl mb-4 block">👩‍🍳</span>
                             <p className="text-xl font-medium text-[var(--color-brand-text)]">
-                                Wir backen gerade frisch! Bald gibt es hier wieder leckere Cookies.
+                                Wir backen gerade frisch! Bald gibt es hier die ersten leckeren Cookies.
                             </p>
                         </div>
                     </AnimateIn>
