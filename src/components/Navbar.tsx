@@ -30,7 +30,7 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="fixed top-0 w-full z-50 flex justify-between items-center p-6 lg:px-12 bg-[var(--color-brand-primary)]/80 backdrop-blur-md">
+            <nav className="fixed top-0 w-full z-50 flex justify-between items-center p-6 lg:px-12 bg-[var(--color-brand-primary)] backdrop-blur-md">
                 {/* Left Box */}
                 <div className="flex-1 flex justify-start items-center">
                     <Link href="/" className="flex items-center gap-3 group">
