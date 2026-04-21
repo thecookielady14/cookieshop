@@ -13,22 +13,25 @@ const supabase = createClient(
 export const revalidate = 0; // Disable caching for the admin dashboard
 
 export default async function AdminDashboard() {
-    // 1. Fetch Orders
-    const { data: orders, error: ordersError } = await supabase
-        .from('orders')
-        .select(`
-            *,
-            order_items (
-                quantity,
-                price_at_purchase
-            )
-        `)
-        .order('created_at', { ascending: false });
+    // Fetch Orders and Products in parallel for faster loading
+    const [ordersResult, productsResult] = await Promise.all([
+        supabase
+            .from('orders')
+            .select(`
+                *,
+                order_items (
+                    quantity,
+                    price_at_purchase
+                )
+            `)
+            .order('created_at', { ascending: false }),
+        supabase
+            .from('products')
+            .select('id, is_available'),
+    ]);
 
-    // 2. Fetch Products
-    const { data: products, error: productsError } = await supabase
-        .from('products')
-        .select('id, is_available');
+    const { data: orders, error: ordersError } = ordersResult;
+    const { data: products, error: productsError } = productsResult;
 
     if (ordersError) console.error("Error fetching orders:", ordersError);
     if (productsError) console.error("Error fetching products:", productsError);
