@@ -18,6 +18,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
     const [allergens, setAllergens] = useState('');
     const [consumerInfo, setConsumerInfo] = useState('');
     const [isActive, setIsActive] = useState(true);
+    const [category, setCategory] = useState('classic');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -44,6 +45,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     setAllergens(data.allergens || '');
                     setConsumerInfo(data.consumer_info || '');
                     setIsActive(data.is_available);
+                    setCategory(data.category || 'classic');
                     setExistingImageUrl(data.image_url);
                 }
             } catch (err: any) {
@@ -97,6 +99,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                     weight_grams: parseInt(weight) || 0,
                     stock_count: parseInt(stockCount) || 0,
                     image_url: imageUrl,
+                    category,
                     is_available: isActive
                 })
                 .eq('id', id);
@@ -194,6 +197,18 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                 />
                             </div>
                         </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
+                            <select
+                                value={category}
+                                onChange={e => setCategory(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all bg-white"
+                            >
+                                <option value="classic">Classic</option>
+                                <option value="kids">Kids</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -208,7 +223,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                 rows={3}
                                 value={ingredients}
                                 onChange={e => setIngredients(e.target.value)}
-                                placeholder="z.B. Mehl, Butter, Zucker, Brauner Zucker, Eier, Vanille..."
+                                placeholder="z.B. Dinkelmehl, Butter, Zucker, Eier, Vanille..."
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
                                 required
                             />
@@ -220,7 +235,7 @@ export default function EditProduct({ params }: { params: Promise<{ id: string }
                                 rows={2}
                                 value={allergens}
                                 onChange={e => setAllergens(e.target.value)}
-                                placeholder="z.B. Enthält Gluten (Weizen), Eier, Milch, Soja. Kann Spuren von Nüssen enthalten."
+                                placeholder="z.B. Enthält Gluten (Dinkel), Eier, Milch. Kann Spuren von Nüssen enthalten."
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
                             />
                         </div>

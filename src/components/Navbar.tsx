@@ -35,7 +35,7 @@ export default function Navbar() {
                 <div className="flex-1 flex justify-start items-center">
                     <Link href="/" className="flex items-center gap-3 group">
                         <Image
-                            src="/logo.jpeg"
+                            src="/logo_transparent.png"
                             alt="The Cookie Lady Logo"
                             width={50}
                             height={50}

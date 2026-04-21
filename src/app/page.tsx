@@ -52,17 +52,15 @@ export default async function Home() {
 
           {/* Right: Text Content */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
-            {/* Slogan Badge */}
-            <span className="inline-block text-[var(--color-brand-accent)] text-sm font-bold tracking-[0.2em] uppercase mb-4 border border-[var(--color-brand-accent)]/40 px-4 py-1 rounded-full">
-              Dauerhaft lecker
-            </span>
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal mb-6 text-white tracking-tight">
+              <span className="text-[var(--color-brand-accent)] font-serif italic">Dauerhaft lecker.</span>
+              <br />
               Mit Liebe gebacken. <br />
               <span className="text-[var(--color-brand-accent)] font-serif italic">Für dich gemacht.</span>
             </h1>
             <p className="text-xl lg:text-2xl max-w-xl mb-12 text-white/90">
               Entdecke handgemachte Kekse aus regionalen Zutaten und echtem Dinkelmehl.
-              Knusprig, ehrlich und mit Herzblut gebacken – direkt zu dir nach Hause.
+              Knusprig, ehrlich und mit Liebe gebacken – direkt zu dir nach Hause.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 mt-4">
@@ -131,12 +129,13 @@ export default async function Home() {
             <AnimateIn>
               <div className="text-center py-16 bg-neutral-50 rounded-3xl border border-neutral-100">
                 <Cookie className="w-16 h-16 mx-auto text-neutral-300 mb-4" />
-                <h3 className="text-xl font-bold text-neutral-800 mb-2">Der Ofen glüht schon vor!</h3>
-                <p className="text-neutral-500 max-w-md mx-auto mb-3">
-                  Ich backe gerade an den ersten Sorten und freue mich darauf, dir bald meine Kekse zu schicken.
+                <h3 className="text-xl font-bold text-neutral-800 mb-2 font-serif">Der Ofen glüht schon vor!</h3>
+                <p className="text-neutral-500 max-w-md mx-auto mb-4">
+                  Ich bereite gerade die ersten Sorten für die Neueröffnung vor.
+                  Schau bald wieder vorbei!
                 </p>
-                <p className="text-[var(--color-brand-primary)] font-bold text-sm bg-[var(--color-brand-accent)]/20 inline-block px-4 py-2 rounded-full">
-                  🗓️ Ab 01. Juni 2026 bestellbar!
+                <p className="text-[var(--color-brand-primary)] font-semibold text-sm">
+                  Ab 01. Juni 2026 bestellbar
                 </p>
               </div>
             </AnimateIn>

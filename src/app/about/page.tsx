@@ -1,15 +1,15 @@
 import Image from "next/image";
-import { Gem, PackageCheck, HeartHandshake } from "lucide-react";
+import { MapPin, PackageCheck, HeartHandshake } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Über mich – The Cookie Lady | Die Geschichte hinter den Keksen",
-    description: "Lern The Cookie Lady kennen! Ich backe mit Leidenschaft handgemachte Kekse aus regionalem Dinkelmehl – ohne Kompromisse, dafür mit ganz viel Herzblut.",
+    description: "Lern The Cookie Lady kennen! Ich backe mit Leidenschaft handgemachte Kekse aus regionalem Dinkelmehl – ohne Kompromisse, dafür mit ganz viel Liebe.",
 };
 
 export default function About() {
     return (
-        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
+        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-4xl lg:text-5xl font-extrabold mb-12 text-center text-[var(--color-brand-text)]">
                     Meine Geschichte
@@ -41,15 +41,15 @@ export default function About() {
                         <p>
                             Nach unzähligen Versuchen und vielen verbrannten Blechen habe ich meinen
                             eigenen Stil gefunden: Kekse, die durch und durch knusprig sind, intensiv im Geschmack
-                            und bei denen man sofort merkt, dass da jemand mit Herzblut dabei war.
+                            und bei denen man sofort merkt, dass da jemand mit Leidenschaft am Werk war.
                         </p>
                         <p>
                             Ich backe ausschließlich mit <strong>Dinkelmehl</strong> – weil es verträglicher
-                            ist als Weizen und einfach besser schmeckt. Dazu kommen regionale Zutaten,
+                            ist als Weizen und meiner Meinung nach einfach die bessere Wahl ist. Dazu kommen regionale Zutaten,
                             keine künstlichen Konservierungsstoffe und kein Schnickschnack.
                             Nur das, was wirklich reingehört.
                         </p>
-                        <p className="font-medium text-xl italic mt-4 text-[var(--color-brand-dark)]">
+                        <p className="font-medium text-xl italic mt-4 text-[var(--color-brand-dark)] text-center">
                             „Kekse backen ist für mich Herzensarbeit – und das schmeckt man."
                         </p>
                     </div>
@@ -61,7 +61,7 @@ export default function About() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                         <div className="flex flex-col items-center">
                             <div className="w-16 h-16 rounded-full bg-[var(--color-brand-accent)]/20 flex items-center justify-center mb-4">
-                                <Gem className="w-8 h-8 text-[var(--color-brand-accent)]" />
+                                <MapPin className="w-8 h-8 text-[var(--color-brand-accent)]" />
                             </div>
                             <h4 className="font-bold mb-2 text-white">Regionale Zutaten</h4>
                             <p className="text-sm text-white/70">Dinkelmehl von der Mühle nebenan, Eier vom Bauernhof um die Ecke.</p>
@@ -78,7 +78,7 @@ export default function About() {
                                 <PackageCheck className="w-8 h-8 text-[var(--color-brand-accent)]" />
                             </div>
                             <h4 className="font-bold mb-2 text-white">Frisch verschickt</h4>
-                            <p className="text-sm text-white/70">Einmal pro Woche gebacken und direkt auf den Weg zu dir gebracht.</p>
+                            <p className="text-sm text-white/70">Heute gebacken, in wenigen Tagen schon bei dir.</p>
                         </div>
                     </div>
                 </div>

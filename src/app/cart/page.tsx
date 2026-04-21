@@ -1,7 +1,7 @@
 'use client';
 
 import { useCartStore } from "@/lib/store";
-import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck, ShoppingBasket } from "lucide-react";
+import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -54,7 +54,7 @@ export default function Cart() {
     const shipping = total > 30 ? 0 : 4.90;
 
     return (
-        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
+        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
             <div className="max-w-5xl mx-auto">
                 <h1 className="text-4xl font-extrabold mb-2 text-[var(--color-brand-text)]">Dein Warenkorb</h1>
                 <p className="text-[var(--color-brand-dark)] mb-12">
@@ -63,10 +63,8 @@ export default function Cart() {
 
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-neutral-100">
-                        <div className="flex justify-center mb-6">
-                            <ShoppingBasket className="w-16 h-16 text-[var(--color-brand-primary)]" />
-                        </div>
-                        <p className="text-xl mb-8">Lass mich dir ein paar Kekse aussuchen helfen!</p>
+                        <span className="text-6xl mb-6 block">🧺</span>
+                        <p className="text-xl mb-8">Dein Korb ist noch leer – stöber doch mal im Shop!</p>
                         <Link
                             href="/shop"
                             className="inline-flex items-center gap-2 bg-[var(--color-brand-primary)] text-white px-8 py-4 rounded-full font-bold hover:bg-[#c29160] transition-transform hover:-translate-y-1"

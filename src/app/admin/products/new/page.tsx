@@ -17,6 +17,7 @@ export default function NewProduct() {
     const [allergens, setAllergens] = useState('');
     const [consumerInfo, setConsumerInfo] = useState('');
     const [isActive, setIsActive] = useState(true);
+    const [category, setCategory] = useState('classic');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -59,7 +60,8 @@ export default function NewProduct() {
                         weight_grams: parseInt(weight) || 0,
                         stock_count: parseInt(stockCount) || 0,
                         image_url: imageUrl,
-                        is_bestseller: false, // We can add a separate toggle for this later if needed
+                        category,
+                        is_bestseller: false,
                         is_available: isActive
                     }
                 ]);
@@ -154,6 +156,18 @@ export default function NewProduct() {
                                 />
                             </div>
                         </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
+                            <select
+                                value={category}
+                                onChange={e => setCategory(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all bg-white"
+                            >
+                                <option value="classic">Classic</option>
+                                <option value="kids">Kids</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -168,7 +182,7 @@ export default function NewProduct() {
                                 rows={3}
                                 value={ingredients}
                                 onChange={e => setIngredients(e.target.value)}
-                                placeholder="z.B. Mehl, Butter, Zucker, Brauner Zucker, Eier, Vanille..."
+                                placeholder="z.B. Dinkelmehl, Butter, Zucker, Eier, Vanille..."
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
                                 required
                             />
@@ -180,7 +194,7 @@ export default function NewProduct() {
                                 rows={2}
                                 value={allergens}
                                 onChange={e => setAllergens(e.target.value)}
-                                placeholder="z.B. Enthält Gluten (Weizen), Eier, Milch, Soja. Kann Spuren von Nüssen enthalten."
+                                placeholder="z.B. Enthält Gluten (Dinkel), Eier, Milch. Kann Spuren von Nüssen enthalten."
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all"
                             />
                         </div>

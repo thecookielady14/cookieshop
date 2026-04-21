@@ -31,7 +31,23 @@ const faqItems: FaqItem[] = [
                 <p>
                     Das bedeutet nicht, dass meine Kekse glutenfrei sind – aber für Menschen mit leichter
                     Weizenempfindlichkeit (nicht Zöliakie) ist Dinkel oft eine angenehme Alternative.
-                    Und ehrlich gesagt: Er schmeckt auch einfach besser. 😊
+                </p>
+            </div>
+        ),
+    },
+    {
+        question: "Was macht die Kids-Kekse so besonders?",
+        answer: (
+            <div className="space-y-3">
+                <p>
+                    Als Mama ist es mir besonders wichtig, dass Kinder bewusst naschen können – ohne schlechtes Gewissen.
+                    Meine <strong>Kids-Kekse kommen komplett ohne zugesetzten Zucker</strong> aus. Stattdessen süße ich
+                    sie mit <strong>Fruchtpulver und echten Früchten</strong>, sodass der Geschmack natürlich und fruchtig ist.
+                </p>
+                <p>
+                    Wie bei allen meinen Keksen verwende ich regionale Zutaten, von denen viele aus
+                    <strong> biologischer Landwirtschaft</strong> stammen. So können die Kleinen bedenkenlos
+                    zugreifen – und die Großen natürlich auch!
                 </p>
             </div>
         ),
@@ -88,7 +104,7 @@ const faqItems: FaqItem[] = [
 
 export default function FAQ() {
     return (
-        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
+        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold mb-4 text-center text-[var(--color-brand-primary)] font-serif">
                     Häufig gestellte Fragen
