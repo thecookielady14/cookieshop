@@ -42,12 +42,18 @@ function SuccessContent() {
                     </p>
                 </div>
 
-                <div>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link
+                        href="/shop"
+                        className="inline-flex items-center justify-center gap-2 border-2 border-[var(--color-brand-primary)] text-[var(--color-brand-primary)] px-8 py-4 rounded-full font-bold text-lg hover:bg-[var(--color-brand-primary)]/10 transition-all"
+                    >
+                        Weiter shoppen
+                    </Link>
                     <Link
                         href="/"
                         className="inline-flex items-center justify-center gap-2 bg-[var(--color-brand-primary)] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#c29160] transition-transform hover:-translate-y-1 shadow-md"
                     >
-                        Zurück zur Startseite <ArrowRight className="w-5 h-5" />
+                        Zur Startseite <ArrowRight className="w-5 h-5" />
                     </Link>
                 </div>
             </div>

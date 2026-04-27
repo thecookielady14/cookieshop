@@ -1,7 +1,7 @@
 'use client';
 
 import { useCartStore } from "@/lib/store";
-import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck } from "lucide-react";
+import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -166,7 +166,16 @@ export default function Cart() {
                                     disabled={loading || !acceptedTerms}
                                     className="w-full flex items-center justify-center gap-2 bg-[var(--color-brand-primary)] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#c29160] transition-transform hover:-translate-y-1 shadow-md mb-4 disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
                                 >
-                                    {loading ? 'Lade Kasse...' : 'Zur Kasse'} <ArrowRight className="w-5 h-5" />
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            Einen Moment...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Zur Kasse <ArrowRight className="w-5 h-5" />
+                                        </>
+                                    )}
                                 </button>
 
                                 <p className="text-xs text-center text-neutral-400 flex items-center justify-center gap-1">

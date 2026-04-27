@@ -8,9 +8,37 @@ import CookieBanner from "@/components/CookieBanner";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://thecookielady.de';
+
 export const metadata: Metadata = {
-  title: "The Cookie Lady - Handgemachte Cookies",
+  title: {
+    default: "The Cookie Lady – Handgemachte Cookies",
+    template: "%s | The Cookie Lady",
+  },
   description: "Entdecke handgemachte, unwiderstehliche Cookies aus besten Zutaten. Jeder Keks ein kleines Stückchen Glück.",
+  openGraph: {
+    title: "The Cookie Lady – Handgemachte Cookies",
+    description: "Handgemachte Kekse aus regionalem Dinkelmehl, frisch gebacken und direkt zu dir nach Hause geliefert.",
+    url: baseUrl,
+    siteName: "The Cookie Lady",
+    locale: "de_DE",
+    type: "website",
+    images: [
+      {
+        url: `${baseUrl}/logo.jpeg`,
+        width: 800,
+        height: 800,
+        alt: "The Cookie Lady – Handgemachte Cookies",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Cookie Lady – Handgemachte Cookies",
+    description: "Handgemachte Kekse aus regionalem Dinkelmehl, frisch gebacken und direkt zu dir nach Hause geliefert.",
+    images: [`${baseUrl}/logo.jpeg`],
+  },
+  metadataBase: new URL(baseUrl),
 };
 
 export const viewport: Viewport = {

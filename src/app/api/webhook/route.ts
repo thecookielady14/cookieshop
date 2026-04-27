@@ -99,6 +99,101 @@ export async function POST(req: Request) {
 
             console.log(`Order ${orderData.id} created successfully for ${customerEmail}`);
 
+            // Send order confirmation email if RESEND_API_KEY is configured
+            if (process.env.RESEND_API_KEY && items.length > 0) {
+                try {
+                    // Fetch product names for the email
+                    const productIds = items.map((i: any) => i.id);
+                    const { data: productRows } = await supabaseAdmin
+                        .from('products')
+                        .select('id, name')
+                        .in('id', productIds);
+
+                    const productMap = new Map((productRows || []).map((p: any) => [p.id, p.name]));
+
+                    const itemsHtml = items.map((item: any) => {
+                        const name = productMap.get(item.id) || 'Unbekanntes Produkt';
+                        return `<tr>
+                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;">${name}</td>
+                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;text-align:center;">${item.qty}x</td>
+                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;text-align:right;">${item.price.toFixed(2).replace('.', ',')} €</td>
+                        </tr>`;
+                    }).join('');
+
+                    const customerName = session.customer_details?.name || 'liebe Kundin / lieber Kunde';
+                    const shippingCost = totalAmount >= 30 ? '0,00 €' : '4,90 €';
+                    const productTotal = items.reduce((sum: number, i: any) => sum + i.price * i.qty, 0);
+
+                    const emailHtml = `
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#f2d98b;margin:0;padding:20px;">
+  <div style="max-width:580px;margin:0 auto;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <div style="background:#331f16;padding:32px;text-align:center;">
+      <p style="color:#e6b840;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">The Cookie Lady</p>
+      <h1 style="color:#fff;font-size:26px;margin:0;font-weight:bold;">Deine Bestellung ist eingegangen! 🍪</h1>
+    </div>
+    <div style="padding:32px;">
+      <p style="color:#331f16;font-size:16px;">Hallo ${customerName},</p>
+      <p style="color:#5a4a3a;font-size:15px;line-height:1.6;">vielen Dank für deine Bestellung! Ich werde deine Kekse jetzt mit viel Liebe backen und frisch für dich verpacken.</p>
+
+      <div style="background:#fef5e7;border-radius:16px;padding:20px;margin:24px 0;">
+        <h2 style="color:#331f16;font-size:16px;margin:0 0 16px;font-weight:bold;">Deine Bestellung</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;color:#5a4a3a;">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:4px 0;color:#9c7a4a;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Produkt</th>
+              <th style="text-align:center;padding:4px 0;color:#9c7a4a;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Menge</th>
+              <th style="text-align:right;padding:4px 0;color:#9c7a4a;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Preis</th>
+            </tr>
+          </thead>
+          <tbody>${itemsHtml}</tbody>
+        </table>
+        <div style="margin-top:12px;padding-top:12px;border-top:2px solid #e6b840;display:flex;justify-content:space-between;font-size:14px;color:#5a4a3a;">
+          <span>Versandkosten</span><span>${shippingCost}</span>
+        </div>
+        <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:17px;font-weight:bold;color:#331f16;">
+          <span>Gesamtbetrag</span><span>${totalAmount.toFixed(2).replace('.', ',')} €</span>
+        </div>
+      </div>
+
+      <p style="color:#5a4a3a;font-size:14px;line-height:1.6;">Du erhältst eine separate E-Mail von Stripe mit deiner Rechnung als PDF. Bei Fragen melde dich gerne unter <a href="mailto:thecookielady2025@gmail.com" style="color:#e6b840;">thecookielady2025@gmail.com</a>.</p>
+
+      <div style="text-align:center;margin-top:28px;">
+        <a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://thecookielady.de'}/shop" style="background:#331f16;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:15px;display:inline-block;">
+          Weitere Kekse entdecken
+        </a>
+      </div>
+    </div>
+    <div style="background:#fef5e7;padding:20px;text-align:center;">
+      <p style="color:#9c7a4a;font-size:12px;margin:0;">The Cookie Lady · Handgemachte Kekse mit Liebe</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+                    await fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            from: 'The Cookie Lady <bestellung@thecookielady.de>',
+                            to: [customerEmail],
+                            subject: `Deine Bestellung ist eingegangen! 🍪 (#${orderData.id.slice(0, 8).toUpperCase()})`,
+                            html: emailHtml,
+                        }),
+                    });
+
+                    console.log(`Order confirmation email sent to ${customerEmail}`);
+                } catch (emailError) {
+                    // Email failure must not block the order
+                    console.error('Failed to send confirmation email:', emailError);
+                }
+            }
+
         } catch (error: any) {
             console.error('Error processing webhook:', error);
             return new NextResponse('Error saving order to database', { status: 500 });
