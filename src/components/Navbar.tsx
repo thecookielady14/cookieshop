@@ -49,9 +49,27 @@ export default function Navbar() {
 
                 {/* Center Box – Desktop only */}
                 <div className="hidden md:flex flex-1 justify-center gap-10 font-bold text-lg">
-                    <Link href="/" className="text-[var(--color-brand-secondary)] hover:text-white transition">Start</Link>
-                    <Link href="/shop" prefetch={false} className="text-[var(--color-brand-secondary)] hover:text-white transition">Shop</Link>
-                    <Link href="/about" className="text-[var(--color-brand-secondary)] hover:text-white transition">Über mich</Link>
+                    {[
+                        { href: '/', label: 'Start', exact: true },
+                        { href: '/shop', label: 'Shop', exact: false },
+                        { href: '/about', label: 'Über mich', exact: false },
+                        { href: '/faq', label: 'FAQ', exact: false },
+                    ].map(({ href, label, exact }) => {
+                        const isActive = exact ? pathname === href : pathname?.startsWith(href);
+                        return (
+                            <Link
+                                key={href}
+                                href={href}
+                                prefetch={false}
+                                className={`relative transition pb-0.5 ${isActive ? 'text-white' : 'text-[var(--color-brand-secondary)] hover:text-white'}`}
+                            >
+                                {label}
+                                {isActive && (
+                                    <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-[var(--color-brand-accent)] rounded-full" />
+                                )}
+                            </Link>
+                        );
+                    })}
                 </div>
 
                 {/* Right Box */}

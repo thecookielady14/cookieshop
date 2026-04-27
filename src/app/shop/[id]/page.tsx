@@ -134,32 +134,38 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
                         {/* Detailed Information (Accordions/Sections) */}
                         <div className="space-y-6">
-                            <div>
-                                <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                    🌾 Zutatenverzeichnis
-                                </h3>
-                                <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
-                                    {product.ingredients || 'Keine Zutaten hinterlegt.'}
-                                </p>
-                            </div>
+                            {product.ingredients && (
+                                <div>
+                                    <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
+                                        🌾 Zutatenverzeichnis
+                                    </h3>
+                                    <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
+                                        {product.ingredients}
+                                    </p>
+                                </div>
+                            )}
 
-                            <div>
-                                <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                    ⚠️ Allergene
-                                </h3>
-                                <p className="text-sm text-red-800 font-medium leading-relaxed bg-red-50 p-4 rounded-xl border border-red-100">
-                                    {product.allergens || 'Keine Allergene hinterlegt.'}
-                                </p>
-                            </div>
+                            {product.allergens && (
+                                <div>
+                                    <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
+                                        ⚠️ Allergene
+                                    </h3>
+                                    <p className="text-sm text-red-800 font-medium leading-relaxed bg-red-50 p-4 rounded-xl border border-red-100">
+                                        {product.allergens}
+                                    </p>
+                                </div>
+                            )}
 
-                            <div>
-                                <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                    💡 Verbraucherhinweise
-                                </h3>
-                                <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
-                                    {product.consumer_info || 'Keine Verbraucherhinweise hinterlegt.'}
-                                </p>
-                            </div>
+                            {product.consumer_info && (
+                                <div>
+                                    <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
+                                        💡 Verbraucherhinweise
+                                    </h3>
+                                    <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
+                                        {product.consumer_info}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                     </div>
