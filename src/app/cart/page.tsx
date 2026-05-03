@@ -69,6 +69,8 @@ export default function Cart() {
                             <line x1="18" y1="67" x2="82" y2="67" stroke="#8B5520" strokeWidth="2" opacity="0.45"/>
                             <line x1="20" y1="78" x2="80" y2="78" stroke="#8B5520" strokeWidth="2" opacity="0.45"/>
                             <rect x="13" y="51" width="74" height="10" rx="5" fill="#7A4A1F"/>
+                            <path d="M24 56 Q50 8 76 56" stroke="#6B3F1F" strokeWidth="6" strokeLinecap="round" fill="none"/>
+                            <path d="M24 56 Q50 8 76 56" stroke="#9B6030" strokeWidth="3" strokeLinecap="round" fill="none"/>
                             <circle cx="35" cy="43" r="11" fill="#E6B840"/>
                             <circle cx="31" cy="40" r="2.2" fill="#5C3317"/>
                             <circle cx="38" cy="46" r="2.2" fill="#5C3317"/>
@@ -82,8 +84,6 @@ export default function Cart() {
                             <circle cx="54" cy="39" r="2.5" fill="#5C3317"/>
                             <circle cx="50" cy="28" r="2" fill="#5C3317"/>
                             <circle cx="50" cy="46" r="2" fill="#5C3317"/>
-                            <path d="M24 56 Q50 8 76 56" stroke="#6B3F1F" strokeWidth="6" strokeLinecap="round" fill="none"/>
-                            <path d="M24 56 Q50 8 76 56" stroke="#9B6030" strokeWidth="3" strokeLinecap="round" fill="none"/>
                         </svg>
                         <p className="text-xl mb-8">Dein Korb ist noch leer – stöber doch mal im Shop!</p>
                         <Link
