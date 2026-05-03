@@ -63,7 +63,37 @@ export default function Cart() {
 
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-neutral-100">
-                        <span className="text-6xl mb-6 block" style={{fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'}}>🧺</span>
+                        <svg className="w-24 h-24 mx-auto mb-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            {/* handle */}
+                            <path d="M30 42 Q50 18 70 42" stroke="#8B5E3C" strokeWidth="5" strokeLinecap="round" fill="none"/>
+                            {/* basket body */}
+                            <path d="M18 48 L25 82 L75 82 L82 48 Z" fill="#C8914A" stroke="#8B5E3C" strokeWidth="2"/>
+                            {/* basket weave lines horizontal */}
+                            <line x1="19" y1="58" x2="81" y2="58" stroke="#8B5E3C" strokeWidth="1.5" opacity="0.5"/>
+                            <line x1="21" y1="68" x2="79" y2="68" stroke="#8B5E3C" strokeWidth="1.5" opacity="0.5"/>
+                            {/* basket weave lines vertical */}
+                            <line x1="35" y1="48" x2="30" y2="82" stroke="#8B5E3C" strokeWidth="1.2" opacity="0.4"/>
+                            <line x1="50" y1="48" x2="50" y2="82" stroke="#8B5E3C" strokeWidth="1.2" opacity="0.4"/>
+                            <line x1="65" y1="48" x2="70" y2="82" stroke="#8B5E3C" strokeWidth="1.2" opacity="0.4"/>
+                            {/* basket rim */}
+                            <rect x="16" y="44" width="68" height="8" rx="4" fill="#A0682A" stroke="#7A4E20" strokeWidth="1.5"/>
+                            {/* cookie left */}
+                            <circle cx="36" cy="40" r="10" fill="#E6B840" stroke="#C8914A" strokeWidth="1.5"/>
+                            <circle cx="33" cy="38" r="1.5" fill="#8B5E3C"/>
+                            <circle cx="38" cy="41" r="1.5" fill="#8B5E3C"/>
+                            <circle cx="36" cy="36" r="1.2" fill="#8B5E3C"/>
+                            {/* cookie right */}
+                            <circle cx="64" cy="40" r="10" fill="#E6B840" stroke="#C8914A" strokeWidth="1.5"/>
+                            <circle cx="61" cy="38" r="1.5" fill="#8B5E3C"/>
+                            <circle cx="66" cy="41" r="1.5" fill="#8B5E3C"/>
+                            <circle cx="64" cy="36" r="1.2" fill="#8B5E3C"/>
+                            {/* cookie middle (slightly higher) */}
+                            <circle cx="50" cy="35" r="11" fill="#E6B840" stroke="#C8914A" strokeWidth="1.5"/>
+                            <circle cx="47" cy="33" r="1.5" fill="#8B5E3C"/>
+                            <circle cx="53" cy="36" r="1.5" fill="#8B5E3C"/>
+                            <circle cx="50" cy="30" r="1.2" fill="#8B5E3C"/>
+                            <circle cx="50" cy="40" r="1.2" fill="#8B5E3C"/>
+                        </svg>
                         <p className="text-xl mb-8">Dein Korb ist noch leer – stöber doch mal im Shop!</p>
                         <Link
                             href="/shop"
