@@ -64,7 +64,6 @@ export default function Cart() {
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-neutral-100">
                         <svg className="w-28 h-28 mx-auto mb-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M28 54 Q50 18 72 54" stroke="#6B3F1F" strokeWidth="5" strokeLinecap="round" fill="none"/>
                             <path d="M16 57 L24 88 Q24 93 30 93 L70 93 Q76 93 76 88 L84 57 Z" fill="#A06428"/>
                             <path d="M16 57 L24 86 Q24 91 30 91 L70 91 Q76 91 76 86 L84 57 Z" fill="#C8873A"/>
                             <line x1="18" y1="67" x2="82" y2="67" stroke="#8B5520" strokeWidth="2" opacity="0.45"/>
@@ -83,6 +82,8 @@ export default function Cart() {
                             <circle cx="54" cy="39" r="2.5" fill="#5C3317"/>
                             <circle cx="50" cy="28" r="2" fill="#5C3317"/>
                             <circle cx="50" cy="46" r="2" fill="#5C3317"/>
+                            <path d="M24 56 Q50 8 76 56" stroke="#6B3F1F" strokeWidth="6" strokeLinecap="round" fill="none"/>
+                            <path d="M24 56 Q50 8 76 56" stroke="#9B6030" strokeWidth="3" strokeLinecap="round" fill="none"/>
                         </svg>
                         <p className="text-xl mb-8">Dein Korb ist noch leer – stöber doch mal im Shop!</p>
                         <Link
