@@ -63,36 +63,26 @@ export default function Cart() {
 
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-neutral-100">
-                        <svg className="w-24 h-24 mx-auto mb-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            {/* handle */}
-                            <path d="M30 42 Q50 18 70 42" stroke="#8B5E3C" strokeWidth="5" strokeLinecap="round" fill="none"/>
-                            {/* basket body */}
-                            <path d="M18 48 L25 82 L75 82 L82 48 Z" fill="#C8914A" stroke="#8B5E3C" strokeWidth="2"/>
-                            {/* basket weave lines horizontal */}
-                            <line x1="19" y1="58" x2="81" y2="58" stroke="#8B5E3C" strokeWidth="1.5" opacity="0.5"/>
-                            <line x1="21" y1="68" x2="79" y2="68" stroke="#8B5E3C" strokeWidth="1.5" opacity="0.5"/>
-                            {/* basket weave lines vertical */}
-                            <line x1="35" y1="48" x2="30" y2="82" stroke="#8B5E3C" strokeWidth="1.2" opacity="0.4"/>
-                            <line x1="50" y1="48" x2="50" y2="82" stroke="#8B5E3C" strokeWidth="1.2" opacity="0.4"/>
-                            <line x1="65" y1="48" x2="70" y2="82" stroke="#8B5E3C" strokeWidth="1.2" opacity="0.4"/>
-                            {/* basket rim */}
-                            <rect x="16" y="44" width="68" height="8" rx="4" fill="#A0682A" stroke="#7A4E20" strokeWidth="1.5"/>
-                            {/* cookie left */}
-                            <circle cx="36" cy="40" r="10" fill="#E6B840" stroke="#C8914A" strokeWidth="1.5"/>
-                            <circle cx="33" cy="38" r="1.5" fill="#8B5E3C"/>
-                            <circle cx="38" cy="41" r="1.5" fill="#8B5E3C"/>
-                            <circle cx="36" cy="36" r="1.2" fill="#8B5E3C"/>
-                            {/* cookie right */}
-                            <circle cx="64" cy="40" r="10" fill="#E6B840" stroke="#C8914A" strokeWidth="1.5"/>
-                            <circle cx="61" cy="38" r="1.5" fill="#8B5E3C"/>
-                            <circle cx="66" cy="41" r="1.5" fill="#8B5E3C"/>
-                            <circle cx="64" cy="36" r="1.2" fill="#8B5E3C"/>
-                            {/* cookie middle (slightly higher) */}
-                            <circle cx="50" cy="35" r="11" fill="#E6B840" stroke="#C8914A" strokeWidth="1.5"/>
-                            <circle cx="47" cy="33" r="1.5" fill="#8B5E3C"/>
-                            <circle cx="53" cy="36" r="1.5" fill="#8B5E3C"/>
-                            <circle cx="50" cy="30" r="1.2" fill="#8B5E3C"/>
-                            <circle cx="50" cy="40" r="1.2" fill="#8B5E3C"/>
+                        <svg className="w-28 h-28 mx-auto mb-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M28 54 Q50 18 72 54" stroke="#6B3F1F" strokeWidth="5" strokeLinecap="round" fill="none"/>
+                            <path d="M16 57 L24 88 Q24 93 30 93 L70 93 Q76 93 76 88 L84 57 Z" fill="#A06428"/>
+                            <path d="M16 57 L24 86 Q24 91 30 91 L70 91 Q76 91 76 86 L84 57 Z" fill="#C8873A"/>
+                            <line x1="18" y1="67" x2="82" y2="67" stroke="#8B5520" strokeWidth="2" opacity="0.45"/>
+                            <line x1="20" y1="78" x2="80" y2="78" stroke="#8B5520" strokeWidth="2" opacity="0.45"/>
+                            <rect x="13" y="51" width="74" height="10" rx="5" fill="#7A4A1F"/>
+                            <circle cx="35" cy="43" r="11" fill="#E6B840"/>
+                            <circle cx="31" cy="40" r="2.2" fill="#5C3317"/>
+                            <circle cx="38" cy="46" r="2.2" fill="#5C3317"/>
+                            <circle cx="37" cy="38" r="1.8" fill="#5C3317"/>
+                            <circle cx="65" cy="43" r="11" fill="#E6B840"/>
+                            <circle cx="61" cy="40" r="2.2" fill="#5C3317"/>
+                            <circle cx="68" cy="46" r="2.2" fill="#5C3317"/>
+                            <circle cx="67" cy="38" r="1.8" fill="#5C3317"/>
+                            <circle cx="50" cy="36" r="13" fill="#F0C235"/>
+                            <circle cx="45" cy="33" r="2.5" fill="#5C3317"/>
+                            <circle cx="54" cy="39" r="2.5" fill="#5C3317"/>
+                            <circle cx="50" cy="28" r="2" fill="#5C3317"/>
+                            <circle cx="50" cy="46" r="2" fill="#5C3317"/>
                         </svg>
                         <p className="text-xl mb-8">Dein Korb ist noch leer – stöber doch mal im Shop!</p>
                         <Link
