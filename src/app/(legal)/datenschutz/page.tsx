@@ -50,7 +50,7 @@ export default function Datenschutz() {
                             Tanja Lux - The Cookie Lady<br />
                             Kissinger Straße 17<br />
                             86415 Mering<br /><br />
-                            Telefon: +49 159 02193895<br />
+                            Telefon: +49 151 29786411<br />
                             E-Mail: kontakt@thecookielady.de
                         </p>
                         <p className="mt-4 mb-4">

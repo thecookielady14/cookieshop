@@ -24,7 +24,7 @@ export default function Impressum() {
                     <section>
                         <h2 className="font-bold text-xl mb-2">Kontakt</h2>
                         <p>
-                            Telefon: +49 159 02193895<br />
+                            Telefon: +49 151 29786411<br />
                             E-Mail: kontakt@thecookielady.de
                         </p>
                     </section>

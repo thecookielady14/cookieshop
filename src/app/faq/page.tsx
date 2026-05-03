@@ -72,7 +72,7 @@ const faqItems: FaqItem[] = [
         answer: (
             <p>
                 Weil Qualität Zeit braucht. Ich backe jeden Keks mit der Hand, forme jeden Teigling einzeln
-                und lasse mir dabei keine Abkürzungen. Das ist kein Fließband – das ist Handwerk.
+                Das ist kein Fließband – das ist Handwerk.
                 Einmal pro Woche gibt mir die Zeit, wirklich sorgfältig zu arbeiten und dir etwas zu schicken,
                 das es wert ist.
             </p>
@@ -85,7 +85,7 @@ const faqItems: FaqItem[] = [
                 Da es sich bei meinen Keksen um frische, individuell hergestellte Lebensmittel handelt, ist ein gesetzlicher{" "}
                 <Link href="/widerruf" className="text-[var(--color-brand-primary)] hover:underline font-medium">Widerruf bzw. eine Rückgabe</Link>{" "}
                 leider ausgeschlossen. Sollte aber doch mal etwas mit einer Lieferung nicht stimmen,
-                melde dich bitte sofort – ich finde eine Lösung!
+                melde dich bitte sofort – wir finden eine Lösung!
             </p>
         ),
     },

@@ -87,7 +87,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-12">
           <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">
             <Flame className="w-4 h-4 text-[var(--color-brand-accent)] flex-shrink-0" />
-            Einmal pro Woche frisch gebacken
+            Frisch gebacken auf Bestellung
           </div>
           <div className="hidden sm:block w-px h-4 bg-white/20" />
           <div className="flex items-center gap-2 text-[var(--color-brand-secondary)] text-sm font-semibold">

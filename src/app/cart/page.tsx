@@ -63,7 +63,7 @@ export default function Cart() {
 
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-neutral-100">
-                        <span className="text-6xl mb-6 block">🧺</span>
+                        <span className="text-6xl mb-6 block" style={{fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'}}>🧺</span>
                         <p className="text-xl mb-8">Dein Korb ist noch leer – stöber doch mal im Shop!</p>
                         <Link
                             href="/shop"
