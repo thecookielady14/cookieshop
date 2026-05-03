@@ -36,12 +36,12 @@ const faqItems: FaqItem[] = [
         ),
     },
     {
-        question: "Was macht die Kids-Kekse so besonders?",
+        question: "Was macht die Kinder-Kekse so besonders?",
         answer: (
             <div className="space-y-3">
                 <p>
                     Als Mama ist es mir besonders wichtig, dass Kinder bewusst naschen können – ohne schlechtes Gewissen.
-                    Meine <strong>Kids-Kekse kommen komplett ohne zugesetzten Zucker</strong> aus. Stattdessen süße ich
+                    Meine <strong>Kinder-Kekse kommen komplett ohne zugesetzten Zucker</strong> aus. Stattdessen süße ich
                     sie mit <strong>Fruchtpulver und echten Früchten</strong>, sodass der Geschmack natürlich und fruchtig ist.
                 </p>
                 <p>
