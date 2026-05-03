@@ -69,20 +69,7 @@ export default function Cart() {
                             <line x1="18" y1="79" x2="82" y2="79" stroke="#8B5520" strokeWidth="2" opacity="0.45"/>
                             <line x1="20" y1="89" x2="80" y2="89" stroke="#8B5520" strokeWidth="2" opacity="0.45"/>
                             <rect x="13" y="64" width="74" height="10" rx="5" fill="#7A4A1F"/>
-                            <circle cx="35" cy="59" r="10" fill="#E6B840"/>
-                            <circle cx="31" cy="56" r="2" fill="#5C3317"/>
-                            <circle cx="38" cy="62" r="2" fill="#5C3317"/>
-                            <circle cx="37" cy="54" r="1.6" fill="#5C3317"/>
-                            <circle cx="65" cy="59" r="10" fill="#E6B840"/>
-                            <circle cx="61" cy="56" r="2" fill="#5C3317"/>
-                            <circle cx="68" cy="62" r="2" fill="#5C3317"/>
-                            <circle cx="67" cy="54" r="1.6" fill="#5C3317"/>
-                            <circle cx="50" cy="53" r="12" fill="#F0C235"/>
-                            <circle cx="45" cy="50" r="2.2" fill="#5C3317"/>
-                            <circle cx="54" cy="57" r="2.2" fill="#5C3317"/>
-                            <circle cx="50" cy="45" r="1.8" fill="#5C3317"/>
-                            <circle cx="50" cy="62" r="1.8" fill="#5C3317"/>
-                            <path d="M22 69 Q50 6 78 69" stroke="#6B3F1F" strokeWidth="6" strokeLinecap="round" fill="none"/>
+<path d="M22 69 Q50 6 78 69" stroke="#6B3F1F" strokeWidth="6" strokeLinecap="round" fill="none"/>
                             <path d="M22 69 Q50 6 78 69" stroke="#9B6030" strokeWidth="3" strokeLinecap="round" fill="none"/>
                         </svg>
                         <p className="text-xl mb-8">Dein Korb ist noch leer – stöber doch mal im Shop!</p>
