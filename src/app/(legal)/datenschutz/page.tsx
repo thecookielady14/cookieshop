@@ -32,9 +32,9 @@ export default function Datenschutz() {
 
                     <section>
                         <h2 className="font-bold text-xl mb-3">2. Hosting und Content Delivery Networks (CDN)</h2>
-                        <h3 className="font-bold text-lg mb-2">Vercel</h3>
+                        <h3 className="font-bold text-lg mb-2">Netlify</h3>
                         <p>
-                            Wir hosten die Inhalte unserer Website bei Vercel. Anbieter ist die Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA (nachfolgend Vercel). Wenn Sie unsere Website besuchen, erfasst Vercel verschiedene Logfiles inklusive Ihrer IP-Adressen. Details entnehmen Sie der Datenschutzerklärung von Vercel: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://vercel.com/legal/privacy-policy</a>.
+                            Wir hosten die Inhalte unserer Website bei Netlify. Anbieter ist die Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, USA (nachfolgend Netlify). Wenn Sie unsere Website besuchen, erfasst Netlify verschiedene Logfiles inklusive Ihrer IP-Adressen. Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO – wir haben ein berechtigtes Interesse an einer möglichst zuverlässigen Darstellung unserer Website. Die Datenübertragung in die USA wird auf die Standardvertragsklauseln der EU-Kommission gestützt. Details entnehmen Sie der Datenschutzerklärung von Netlify: <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://www.netlify.com/privacy/</a>.
                         </p>
                     </section>
 
