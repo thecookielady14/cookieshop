@@ -18,11 +18,11 @@ export async function generateMetadata(
         .single();
 
     if (!product) {
-        return { title: "Cookie nicht gefunden – The Cookie Lady" };
+        return { title: "Cookie nicht gefunden" };
     }
 
     return {
-        title: `${product.name} – The Cookie Lady | Handgemachter Cookie`,
+        title: `${product.name} – Handgemachter Cookie`,
         description: product.description || `${product.name} – Handgemacht, frisch gebacken und mit Liebe verpackt. Jetzt bei The Cookie Lady bestellen.`,
     };
 }
@@ -42,7 +42,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         if (!error && data) {
             product = data;
         }
-    } catch (err) {
+    } catch {
         // Ignore supabase errors in dev mode without connection
     }
 

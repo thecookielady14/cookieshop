@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Impressum – The Cookie Lady",
+    title: "Impressum",
     description: "Impressum und Anbieterkennzeichnung gemäß § 5 TMG für The Cookie Lady.",
 };
 

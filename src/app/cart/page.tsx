@@ -4,17 +4,14 @@ import { useCartStore } from "@/lib/store";
 import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMounted } from "@/lib/useMounted";
 
 export default function Cart() {
     const { items, removeItem, updateQuantity, getCartTotal, getCartCount } = useCartStore();
-    const [mounted, setMounted] = useState(false);
+    const mounted = useMounted();
     const [loading, setLoading] = useState(false);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     const handleCheckout = async () => {
         if (!acceptedTerms) {

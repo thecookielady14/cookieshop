@@ -102,6 +102,26 @@ export async function POST(req: Request) {
 
             console.log(`Order ${orderData.id} created successfully for ${customerEmail}`);
 
+            // Decrement stock; failures here must not block the order
+            for (const item of items) {
+                try {
+                    const { data: prod } = await supabaseAdmin
+                        .from('products')
+                        .select('stock_count')
+                        .eq('id', item.id)
+                        .single();
+                    if (prod && typeof prod.stock_count === 'number') {
+                        const newStock = Math.max(0, prod.stock_count - item.qty);
+                        await supabaseAdmin
+                            .from('products')
+                            .update({ stock_count: newStock, ...(newStock === 0 ? { is_available: false } : {}) })
+                            .eq('id', item.id);
+                    }
+                } catch (stockError) {
+                    console.error(`Failed to decrement stock for product ${item.id}:`, stockError);
+                }
+            }
+
             // Send order confirmation email if RESEND_API_KEY is configured
             if (process.env.RESEND_API_KEY && items.length > 0) {
                 try {
@@ -125,7 +145,6 @@ export async function POST(req: Request) {
 
                     const customerName = session.customer_details?.name || 'liebe Kundin / lieber Kunde';
                     const shippingCost = totalAmount >= 30 ? '0,00 €' : '4,90 €';
-                    const productTotal = items.reduce((sum: number, i: any) => sum + i.price * i.qty, 0);
 
                     const emailHtml = `
 <!DOCTYPE html>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Widerrufsbelehrung – The Cookie Lady",
+    title: "Widerrufsbelehrung",
     description: "Informationen zum Widerrufsrecht und dessen Ausschluss bei frischen Lebensmitteln im Online-Shop The Cookie Lady.",
 };
 

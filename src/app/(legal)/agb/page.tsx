@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "AGB – The Cookie Lady | Allgemeine Geschäftsbedingungen",
+    title: "AGB – Allgemeine Geschäftsbedingungen",
     description: "Allgemeine Geschäftsbedingungen für den Online-Shop The Cookie Lady. Informationen zu Vertragsschluss, Zahlung, Lieferung und Gewährleistung.",
 };
 

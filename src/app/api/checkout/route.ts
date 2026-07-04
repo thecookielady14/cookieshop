@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         const productIds = items.map((i: any) => i.id);
         const { data: dbProducts, error: dbError } = await supabase
             .from('products')
-            .select('id, name, price, is_available')
+            .select('id, name, price, is_available, stock_count')
             .in('id', productIds);
 
         if (dbError || !dbProducts) {
@@ -42,6 +42,13 @@ export async function POST(req: Request) {
             }
             if (realProduct.is_available === false) {
                 throw new Error(`${realProduct.name} ist zurzeit leider ausverkauft.`);
+            }
+            if (typeof realProduct.stock_count === 'number' && item.quantity > realProduct.stock_count) {
+                throw new Error(
+                    realProduct.stock_count === 0
+                        ? `${realProduct.name} ist zurzeit leider ausverkauft.`
+                        : `Von "${realProduct.name}" sind leider nur noch ${realProduct.stock_count} Stück verfügbar.`
+                );
             }
 
             lineItems.push({

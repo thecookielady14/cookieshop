@@ -29,25 +29,25 @@
 
 **Letztes Update:** 2026-07-04 (Vorprüfungen abgeschlossen, warte auf User für Netlify-Login)
 
-**Aktueller Schritt:** `PHASE_C_WAITING_USER` – Site läuft auf https://thecookielady.netlify.app; warte auf User für: (1) GitHub-Repo im Netlify-Dashboard verknüpfen, (2) Stripe-Webhook anlegen + Signing Secret in .env.local eintragen. (RESEND_API_KEY: geklärt, war nie gesetzt – siehe Env-Block)
+**Aktueller Schritt:** `PHASE_E_DNS_PROPAGATION` – Domain www.thecookielady.de läuft auf Netlify mit SSL, 3× E2E-Checkout grün. Offen: (1) weltweite DNS-Propagation abwarten → dann Stripe-Webhook-URL von thecookielady.netlify.app auf Domain umstellen, (2) danach Vercel-Projekt löschen (User im Vercel-Dashboard), (3) Testdaten-Rest löschen: orders #1000 + #1003-Marker, sobald Stripe-Nachlieferungen bestätigt sind (Monitor läuft)
 
 **Vorprüfungen (2026-07-04, alle grün):**
 - [x] Lokaler Production-Build erfolgreich (`npm run build`, 16 Seiten, TypeScript OK)
 - [x] Alle Env-Variablen in `.env.local` vorhanden
 - [x] Webhook-Route läuft explizit als Node-Runtime (`export const runtime = 'nodejs'`) – Netlify-kompatibel
 - [x] Git-Repo sauber und synchron mit `origin/main`
-- [ ] ESLint meldet 41 Fehler – blockiert den Build NICHT (Next 16 lintet nicht im Build), separates Aufräumthema
+- [x] ESLint: alle Fehler behoben (04.07.2026) – meiste kamen aus generiertem .netlify/-Ordner (jetzt ignoriert); Rest gefixt, `no-explicit-any` auf warn gestuft
 
 **Checkliste (von Claude zu pflegen):**
 - [x] Phase A: Netlify-Account erstellt, Site `thecookielady` per CLI angelegt, erster Production-Deploy live (04.07.2026, Build 2m17s, Next.js Runtime v5.15.12). **Noch offen: GitHub-Repo im Dashboard verknüpfen** (Site configuration → Build & deploy → Link repository), sonst kein Auto-Deploy bei `git push` – aktuell nur CLI-Deploys
 - [x] Phase B: 8 von 9 Env-Variablen per CLI gesetzt; verifiziert: Homepage/Shop/Impressum 200, Admin-Redirect 307→Login, next/image-Optimierung OK. Offen: `STRIPE_WEBHOOK_SECRET` (planmäßig Phase C) und `RESEND_API_KEY` (User prüft Vercel). Hinweis: Shop zeigt keine Produkte – DB ist leer, ist auf Vercel identisch, KEIN Migrationsfehler
-- [~] Phase C: Webhook-Endpoint per Stripe-API angelegt (we_1TpPooJZKtqwsQ9w0P9sedTE, nur checkout.session.completed), Secret in Netlify gesetzt. Test-Checkout am 04.07.2026 durchgeführt → **zwei vorbestehende Bugs entdeckt (auch auf Vercel kaputt!):**
-  - **Bug 1:** Spalte `customer_name` fehlt in der `orders`-Tabelle, Webhook-INSERT schlägt fehl (42703) → KEINE Bestellung wurde je gespeichert. Fix: `alter table orders add column customer_name text;` in Supabase SQL Editor (USER-AKTION OFFEN)
-  - **Bug 2:** Code las Versandadresse von `session.shipping_details` – existiert seit Stripe-API 2025-03-31 nicht mehr (jetzt `collected_information.shipping_details`) → Adresse wäre immer NULL gewesen. Fix in `src/app/api/webhook/route.ts` lokal umgesetzt, muss noch gepusht/deployt werden
-  - Stripe wiederholt die fehlgeschlagene Zustellung (evt_1TpPyyJZKtqwsQ9wRkZTfwH7) automatisch bis zu 3 Tage → nach beiden Fixes sollte die Testbestellung automatisch auftauchen
-- [ ] Phase D: End-to-End-Test auf Netlify-URL grün (Checkout, Admin, Cart)
-- [ ] Phase E: Domain auf Netlify umgestellt, SSL aktiv
-- [ ] Phase F: Vercel-Projekt deaktiviert (nach 7 Tagen Beobachtung)
+- [x] Phase C: Webhook-Endpoint per Stripe-API angelegt (we_1TpPooJZKtqwsQ9w0P9sedTE, nur checkout.session.completed), Secret in Netlify gesetzt. Test-Checkouts deckten **zwei vorbestehende Bugs auf (waren auch auf Vercel kaputt!)** – beide am 04.07.2026 behoben:
+  - **Bug 1 (behoben):** Spalte `customer_name` fehlte in `orders` → Webhook-INSERT schlug immer fehl, keine Bestellung wurde je gespeichert. User hat Spalte per SQL Editor ergänzt
+  - **Bug 2 (behoben):** Versandadresse wurde von `session.shipping_details` gelesen – seit Stripe-API 2025-03-31 liegt sie unter `collected_information.shipping_details` → wäre immer NULL gewesen. Fix in webhook/route.ts, deployt
+  - GitHub-Repo wurde verknüpft (Auto-Deploy bei git push funktioniert, verifiziert), alter Vercel-Stripe-Webhook (we_1T5Pze…) gelöscht
+- [x] Phase D: E2E-Test auf Netlify-URL grün (04.07.2026): Checkout komplett (Bestellung #1000 mit customer_name + shipping_address in Supabase, order_items korrekt), Cart/Zustand OK, Admin-Redirect OK. Nicht getestet: Admin-Login mit echten Credentials, /api/notify-shipped (kein RESEND_API_KEY)
+- [~] Phase E: Domain umgestellt (04.07.2026): custom_domain www.thecookielady.de + Alias apex in Netlify, User hat IONOS-DNS geändert (A @ → 75.2.60.5, CNAME www → thecookielady.netlify.app), SSL issued, NEXT_PUBLIC_BASE_URL auf Domain umgestellt + Redeploy. OFFEN: weltweite DNS-Propagation abwarten, dann Stripe-Webhook-URL auf Domain umstellen + Finaltest. OFFEN (User, optional): Supabase Auth → Site URL auf https://www.thecookielady.de
+- [ ] Phase F: Vercel-Projekt löschen – User wünscht sofortige Löschung statt 7 Tage Beobachtung; OK weil noch keine Verkäufe laufen. NICHT VOR erfolgreichem Finaltest auf der Domain. Danach auch alten Vercel-Stripe-Webhook (we_1T5PzeJZKtqwsQ9wSiJ6wRsB) löschen
 
 **Vom User einzutragen:**
 - Domain: `thecookielady.de` → leitet auf `https://www.thecookielady.de` weiter (per curl bestätigt, 04.07.2026; läuft auf Vercel/fra1). **Phase E: Apex UND www auf Netlify einrichten, www ist kanonisch.**
@@ -73,7 +73,7 @@ NEXT_PUBLIC_BASE_URL          ← MUSS auf Netlify-URL geändert werden
 SUPABASE_SERVICE_ROLE_KEY
 STRIPE_WEBHOOK_SECRET         ← MUSS neu generiert werden (Phase C)
 NOTIFY_SHIPPED_SECRET
-NEXT_PUBLIC_NOTIFY_SECRET
+# NEXT_PUBLIC_NOTIFY_SECRET     ← entfernt 04.07.2026 (Sicherheitsfix: Secret lag im Browser-Bundle)
 ```
 
 **RESEND_API_KEY (geklärt 04.07.2026):** War in Vercel NICHT gesetzt → Bestellbestätigungs-Mails

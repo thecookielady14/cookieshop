@@ -5,7 +5,7 @@ import ShopTabs from "@/components/ShopTabs";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Shop – The Cookie Lady | Handgemachte Kekse bestellen",
+    title: "Shop – Handgemachte Kekse bestellen",
     description: "Entdecke alle handgemachten Kekse von The Cookie Lady. Frisch gebacken, aus besten Zutaten – jetzt online bestellen und nach Hause liefern lassen.",
 };
 
@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ShopOverview() {
     // Fetch real products from our Supabase Database
-    let { data: products, error } = await supabase
+    const { data: products, error } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });

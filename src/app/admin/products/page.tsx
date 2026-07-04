@@ -7,13 +7,13 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminProducts() {
     // Fetch products
-    let { data: fetchedProducts, error } = await supabase
+    const { data: fetchedProducts } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
     // Use only the real backend data now
-    let products = fetchedProducts || [];
+    const products = fetchedProducts || [];
 
     return (
         <div>

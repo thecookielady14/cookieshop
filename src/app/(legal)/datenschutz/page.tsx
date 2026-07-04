@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Datenschutzerklärung – The Cookie Lady",
+    title: "Datenschutzerklärung",
     description: "Datenschutzerklärung gemäß DSGVO für den Online-Shop The Cookie Lady. Informationen zu Datenverarbeitung, Cookies, Supabase und Stripe.",
 };
 
@@ -69,7 +69,7 @@ export default function Datenschutz() {
                             Unsere Internetseiten verwenden so genannte „Cookies“ und ähnliche Technologien (z.B. Local Storage). Diese Technologien richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren. Sie dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen.
                         </p>
                         <p className="mb-4">
-                            Zum Speichern Ihres aktuellen Warenkorbs nutzen wir den sogenannten "Local Storage" Ihres Browsers. Diese Daten verbleiben lokal auf Ihrem Endgerät und werden erst an unsere Server übertragen, wenn Sie aktiv eine Bestellung aufgeben.
+                            Zum Speichern Ihres aktuellen Warenkorbs nutzen wir den sogenannten &bdquo;Local Storage&ldquo; Ihres Browsers. Diese Daten verbleiben lokal auf Ihrem Endgerät und werden erst an unsere Server übertragen, wenn Sie aktiv eine Bestellung aufgeben.
                         </p>
                         <p className="mb-4">
                             Ihre Cookie-Entscheidung (ob Sie technisch nicht notwendige Cookies akzeptieren oder ablehnen) wird in einem technisch notwendigen Cookie gespeichert. Grundlage für die Speicherung technisch notwendiger Daten ist Art. 6 Abs. 1 lit. f DSGVO, da wir ein berechtigtes Interesse an der fehlerfreien und sicheren Bereitstellung unseres Online-Shops haben.

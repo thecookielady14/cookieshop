@@ -1,32 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Cookie } from 'lucide-react';
+import { useMounted } from '@/lib/useMounted';
 
 export default function CookieBanner() {
-    const [showBanner, setShowBanner] = useState(false);
-
-    useEffect(() => {
-        // Check if user has already accepted/declined cookies
-        const consent = localStorage.getItem('cookie_consent');
-        if (!consent) {
-            setShowBanner(true);
-        }
-    }, []);
+    const mounted = useMounted();
+    const [dismissed, setDismissed] = useState(false);
 
     const handleAccept = () => {
         localStorage.setItem('cookie_consent', 'accepted');
-        setShowBanner(false);
+        setDismissed(true);
         // In a real scenario, you'd initialize Google Analytics / Pixel here
     };
 
     const handleDecline = () => {
         localStorage.setItem('cookie_consent', 'declined');
-        setShowBanner(false);
+        setDismissed(true);
     };
 
-    if (!showBanner) return null;
+    // Only render client-side and while no consent decision is stored
+    if (!mounted || dismissed || localStorage.getItem('cookie_consent')) return null;
 
     return (
         <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 lg:p-6 pointer-events-none">

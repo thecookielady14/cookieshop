@@ -32,7 +32,7 @@ export default function NewProduct() {
             if (imageFile) {
                 const fileExt = imageFile.name.split('.').pop();
                 const fileName = `${Math.random()}.${fileExt}`;
-                const { data: uploadData, error: uploadError } = await supabase.storage
+                const { error: uploadError } = await supabase.storage
                     .from('products')
                     .upload(fileName, imageFile);
 

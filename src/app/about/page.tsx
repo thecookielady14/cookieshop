@@ -3,7 +3,7 @@ import { MapPin, PackageCheck, HeartHandshake } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Über mich – The Cookie Lady | Die Geschichte hinter den Keksen",
+    title: "Über mich – Die Geschichte hinter den Keksen",
     description: "Lern The Cookie Lady kennen! Ich backe mit Leidenschaft handgemachte Kekse aus regionalem Dinkelmehl – ohne Kompromisse, dafür mit ganz viel Liebe.",
 };
 
@@ -50,7 +50,7 @@ export default function About() {
                             Nur das, was wirklich reingehört.
                         </p>
                         <p className="font-medium text-xl italic mt-4 text-[var(--color-brand-dark)] text-center">
-                            „Kekse backen ist für mich Herzensarbeit – und das schmeckt man."
+                            &bdquo;Kekse backen ist für mich Herzensarbeit – und das schmeckt man.&ldquo;
                         </p>
                     </div>
                 </div>

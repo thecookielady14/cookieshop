@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import FaqAccordion, { FaqItem } from "@/components/FaqAccordion";
 
 export const metadata: Metadata = {
-    title: "FAQ – The Cookie Lady | Häufige Fragen zu Bestellung & Versand",
+    title: "FAQ – Häufige Fragen zu Bestellung & Versand",
     description: "Alles was du wissen möchtest: Haltbarkeit, Versand, Dinkelmehl, Rückgabe und Events – hier beantworte ich die häufigsten Fragen.",
 };
 

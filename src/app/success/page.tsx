@@ -1,19 +1,19 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
+import { useMounted } from '@/lib/useMounted';
 
 function SuccessContent() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('session_id');
     const clearCart = useCartStore((state) => state.clearCart);
-    const [mounted, setMounted] = useState(false);
+    const mounted = useMounted();
 
     useEffect(() => {
-        setMounted(true);
         if (sessionId) {
             // Clear the local cart because the order is complete
             clearCart();

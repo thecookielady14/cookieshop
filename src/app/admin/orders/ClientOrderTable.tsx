@@ -27,11 +27,12 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
 
             // Send shipping notification email automatically
             if (newStatus === 'shipped') {
+                const { data: { session } } = await supabase.auth.getSession();
                 const res = await fetch('/api/notify-shipped', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-notify-secret': process.env.NEXT_PUBLIC_NOTIFY_SECRET || '',
+                        'Authorization': `Bearer ${session?.access_token ?? ''}`,
                     },
                     body: JSON.stringify({ orderId }),
                 });

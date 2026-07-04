@@ -1,10 +1,7 @@
 'use client';
 
-import { useCartStore } from "@/lib/store";
-import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 interface Product {
     id: string;

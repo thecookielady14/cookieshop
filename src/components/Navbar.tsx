@@ -4,24 +4,16 @@ import { ShoppingBasket, Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/lib/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useMounted } from "@/lib/useMounted";
 
 export default function Navbar() {
-    const [mounted, setMounted] = useState(false);
+    // Avoid hydration mismatch for persisted store
+    const mounted = useMounted();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const cartCount = useCartStore((state) => state.getCartCount());
     const pathname = usePathname();
-
-    // Avoid hydration mismatch for persisted store
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    // Close mobile menu on route change
-    useEffect(() => {
-        setMobileMenuOpen(false);
-    }, [pathname]);
 
     // Hide Navbar completely in admin panel
     if (pathname?.startsWith('/admin')) {
@@ -48,7 +40,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Center Box – Desktop only */}
-                <div className="hidden md:flex flex-1 justify-center gap-10 font-bold text-lg">
+                <div className="hidden lg:flex flex-1 justify-center gap-6 xl:gap-10 font-bold text-lg">
                     {[
                         { href: '/', label: 'Start', exact: true },
                         { href: '/shop', label: 'Shop', exact: false },
@@ -61,7 +53,7 @@ export default function Navbar() {
                                 key={href}
                                 href={href}
                                 prefetch={false}
-                                className={`relative transition pb-0.5 ${isActive ? 'text-white' : 'text-[var(--color-brand-secondary)] hover:text-white'}`}
+                                className={`relative whitespace-nowrap transition pb-0.5 ${isActive ? 'text-white' : 'text-[var(--color-brand-secondary)] hover:text-white'}`}
                             >
                                 {label}
                                 {isActive && (
@@ -86,7 +78,7 @@ export default function Navbar() {
                     {/* Hamburger Button – Mobile only */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden p-2 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:shadow-md transition flex items-center justify-center"
+                        className="lg:hidden p-2 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:shadow-md transition flex items-center justify-center"
                         aria-label="Menü öffnen"
                     >
                         {mobileMenuOpen ? (
@@ -101,14 +93,14 @@ export default function Navbar() {
             {/* Mobile Menu Overlay */}
             {mobileMenuOpen && (
                 <div
-                    className="fixed inset-0 bg-black/40 z-40 md:hidden"
+                    className="fixed inset-0 bg-black/40 z-40 lg:hidden"
                     onClick={() => setMobileMenuOpen(false)}
                 />
             )}
 
             {/* Mobile Menu Panel */}
             <div
-                className={`fixed top-0 right-0 h-full w-72 bg-[var(--color-brand-primary)] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+                className={`fixed top-0 right-0 h-full w-72 bg-[var(--color-brand-primary)] z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
                     mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
                 }`}
             >
@@ -122,19 +114,19 @@ export default function Navbar() {
                     </button>
                 </div>
                 <div className="flex flex-col gap-2 px-8">
-                    <Link href="/" className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
+                    <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         Start
                     </Link>
-                    <Link href="/shop" prefetch={false} className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
+                    <Link href="/shop" prefetch={false} onClick={() => setMobileMenuOpen(false)} className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         Shop
                     </Link>
-                    <Link href="/about" className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
+                    <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         Über mich
                     </Link>
-                    <Link href="/faq" className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
+                    <Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="text-white/90 hover:text-white text-xl font-bold py-3 border-b border-white/10 transition-colors">
                         FAQ
                     </Link>
-                    <Link href="/cart" className="text-[var(--color-brand-accent)] hover:text-white text-xl font-bold py-3 transition-colors flex items-center gap-2">
+                    <Link href="/cart" onClick={() => setMobileMenuOpen(false)} className="text-[var(--color-brand-accent)] hover:text-white text-xl font-bold py-3 transition-colors flex items-center gap-2">
                         <ShoppingBasket className="w-5 h-5" />
                         Warenkorb
                         {mounted && cartCount > 0 && (

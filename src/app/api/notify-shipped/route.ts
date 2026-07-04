@@ -7,9 +7,20 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(req: Request) {
-    // Auth: only allow calls from our own admin panel
+    // Auth: admin panel sends the Supabase access token of the logged-in admin;
+    // the server-side secret remains as fallback for manual/scripted calls
+    let authorized = false;
     const secret = req.headers.get('x-notify-secret');
-    if (!secret || secret !== process.env.NOTIFY_SHIPPED_SECRET) {
+    if (secret && secret === process.env.NOTIFY_SHIPPED_SECRET) {
+        authorized = true;
+    } else {
+        const authHeader = req.headers.get('authorization');
+        if (authHeader?.startsWith('Bearer ')) {
+            const { data: { user } } = await supabaseAdmin.auth.getUser(authHeader.slice(7));
+            if (user) authorized = true;
+        }
+    }
+    if (!authorized) {
         return new NextResponse('Unauthorized', { status: 401 });
     }
 
