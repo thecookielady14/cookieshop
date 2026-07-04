@@ -39,7 +39,10 @@ export async function POST(req: Request) {
         try {
             // 1. Get customer email and shipping details
             const customerEmail = session.customer_details?.email || 'unknown@email.com';
-            const shippingAddress = (session as any).shipping_details?.address || null;
+            // Stripe API >= 2025-03-31: shipping_details lives under collected_information
+            const shippingAddress = (session as any).collected_information?.shipping_details?.address
+                ?? (session as any).shipping_details?.address
+                ?? null;
             const totalAmount = (session.amount_total || 0) / 100;
 
             // 2. Parse the items from metadata

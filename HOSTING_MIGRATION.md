@@ -1,6 +1,8 @@
 # Hosting-Migration: Vercel → Netlify
 
 > **Für die nächste Claude-Session:** Alter Plan (Hetzner + Coolify) wurde verworfen. Neues Ziel ist **Netlify Free** – erlaubt im Gegensatz zu Vercel Hobby kommerzielle Nutzung. DSGVO-Optimierung (DE-Server) ist bewusst keine Priorität. Starte beim STATUS-Block.
+>
+> **Update 2026-07-04:** Fakten erneut geprüft, Entscheidung für Netlify bestätigt. Netlify hat auf Credit-Billing umgestellt (Details unten). Shop ist live auf Vercel, verkauft aber noch nichts → Migration soll **vor Verkaufsstart** abgeschlossen sein, solange der Umzug risikofrei ist.
 
 ---
 
@@ -12,34 +14,45 @@
 
 **Warum nicht Hetzner+Coolify:** Zu viel Aufwand und Risiko 3 Wochen vor Launch. Verworfen.
 
-**Warum nicht Cloudflare Pages:** Edge Runtime hat bekannte Quirks mit `force-dynamic`, `@supabase/ssr` und Stripe Raw-Body. Mehr Debugging-Risiko.
+**Warum nicht Cloudflare:** ~~Edge Runtime Quirks~~ (überholt: OpenNext-Adapter 1.0 seit Feb 2026, Node-Runtime, Next.js 16 unterstützt). Aktueller Grund: höherer Migrationsaufwand (Adapter einbauen, `wrangler`-Config, ISR-Caching über KV) und **kein eingebauter `next/image`-Optimierer** (Cloudflare Images kostet extra). Cloudflare bleibt **Plan B**, falls Netlifys Credits knapp werden – Free-Tier dort: 100k Requests/Tag mit täglichem Reset.
 
-**Netlify Free Tier Limits (reichen für den Start locker):**
-- 100 GB Bandbreite/Monat
-- 300 Build-Minuten/Monat
-- 125.000 Serverless Function Invocations/Monat
-- Function Timeout: 10 Sekunden
+**Netlify Free Tier (Stand Juli 2026 – Credit-Billing seit Sept 2025):**
+- **300 Credits/Monat mit hartem Limit** – alle Nutzung (Bandbreite, Builds, Functions) zieht aus diesem Topf
+- Innerhalb der Credits gelten weiterhin ca.: 100 GB Bandbreite, 300 Build-Minuten, 125.000 Function Invocations, Function Timeout 10 s
+- **Achtung:** Sind die Credits aufgebraucht, pausieren alle Sites bis zum Monatsanfang (Shop offline!). Netlify warnt per Mail bei 50/75/90 % Verbrauch – diese Mails ernst nehmen
+- Upgrade-Pfad falls nötig: Personal-Plan 9 $/Monat (1.000 Credits, Auto-Recharge möglich)
+- Für den Start reicht das Free-Tier mit großem Puffer (realistischer Verbrauch anfangs <5 %)
 
 ---
 
 ## STATUS / RESUME POINT
 
-**Letztes Update:** 2026-05-13 (Plan fertig, noch nicht gestartet)
+**Letztes Update:** 2026-07-04 (Vorprüfungen abgeschlossen, warte auf User für Netlify-Login)
 
-**Aktueller Schritt:** `PHASE_A_NOT_STARTED`
+**Aktueller Schritt:** `PHASE_C_WAITING_USER` – Site läuft auf https://thecookielady.netlify.app; warte auf User für: (1) GitHub-Repo im Netlify-Dashboard verknüpfen, (2) Stripe-Webhook anlegen + Signing Secret in .env.local eintragen. (RESEND_API_KEY: geklärt, war nie gesetzt – siehe Env-Block)
+
+**Vorprüfungen (2026-07-04, alle grün):**
+- [x] Lokaler Production-Build erfolgreich (`npm run build`, 16 Seiten, TypeScript OK)
+- [x] Alle Env-Variablen in `.env.local` vorhanden
+- [x] Webhook-Route läuft explizit als Node-Runtime (`export const runtime = 'nodejs'`) – Netlify-kompatibel
+- [x] Git-Repo sauber und synchron mit `origin/main`
+- [ ] ESLint meldet 41 Fehler – blockiert den Build NICHT (Next 16 lintet nicht im Build), separates Aufräumthema
 
 **Checkliste (von Claude zu pflegen):**
-- [ ] Phase A: Netlify-Account erstellt, Repo verbunden, erstes Build erfolgreich
-- [ ] Phase B: Alle Env-Variablen in Netlify gesetzt
-- [ ] Phase C: Stripe-Webhook auf Netlify-Preview-URL umgestellt + getestet
+- [x] Phase A: Netlify-Account erstellt, Site `thecookielady` per CLI angelegt, erster Production-Deploy live (04.07.2026, Build 2m17s, Next.js Runtime v5.15.12). **Noch offen: GitHub-Repo im Dashboard verknüpfen** (Site configuration → Build & deploy → Link repository), sonst kein Auto-Deploy bei `git push` – aktuell nur CLI-Deploys
+- [x] Phase B: 8 von 9 Env-Variablen per CLI gesetzt; verifiziert: Homepage/Shop/Impressum 200, Admin-Redirect 307→Login, next/image-Optimierung OK. Offen: `STRIPE_WEBHOOK_SECRET` (planmäßig Phase C) und `RESEND_API_KEY` (User prüft Vercel). Hinweis: Shop zeigt keine Produkte – DB ist leer, ist auf Vercel identisch, KEIN Migrationsfehler
+- [~] Phase C: Webhook-Endpoint per Stripe-API angelegt (we_1TpPooJZKtqwsQ9w0P9sedTE, nur checkout.session.completed), Secret in Netlify gesetzt. Test-Checkout am 04.07.2026 durchgeführt → **zwei vorbestehende Bugs entdeckt (auch auf Vercel kaputt!):**
+  - **Bug 1:** Spalte `customer_name` fehlt in der `orders`-Tabelle, Webhook-INSERT schlägt fehl (42703) → KEINE Bestellung wurde je gespeichert. Fix: `alter table orders add column customer_name text;` in Supabase SQL Editor (USER-AKTION OFFEN)
+  - **Bug 2:** Code las Versandadresse von `session.shipping_details` – existiert seit Stripe-API 2025-03-31 nicht mehr (jetzt `collected_information.shipping_details`) → Adresse wäre immer NULL gewesen. Fix in `src/app/api/webhook/route.ts` lokal umgesetzt, muss noch gepusht/deployt werden
+  - Stripe wiederholt die fehlgeschlagene Zustellung (evt_1TpPyyJZKtqwsQ9wRkZTfwH7) automatisch bis zu 3 Tage → nach beiden Fixes sollte die Testbestellung automatisch auftauchen
 - [ ] Phase D: End-to-End-Test auf Netlify-URL grün (Checkout, Admin, Cart)
 - [ ] Phase E: Domain auf Netlify umgestellt, SSL aktiv
 - [ ] Phase F: Vercel-Projekt deaktiviert (nach 7 Tagen Beobachtung)
 
 **Vom User einzutragen:**
-- Domain: `_________________`
-- Netlify-Site-Name (auto-generiert oder custom): `_________________`
-- GitHub-Repo-URL: `_________________`
+- Domain: `thecookielady.de` → leitet auf `https://www.thecookielady.de` weiter (per curl bestätigt, 04.07.2026; läuft auf Vercel/fra1). **Phase E: Apex UND www auf Netlify einrichten, www ist kanonisch.**
+- Netlify-Site-Name: `thecookielady` → `https://thecookielady.netlify.app` (angelegt 04.07.2026 per CLI, Project ID `20f3c93f-74c1-484a-bb48-6f7d3b7826e6`, Account `kontakt@thecookielady.de`)
+- GitHub-Repo-URL: `https://github.com/thecookielady14/cookieshop`
 
 ---
 
@@ -62,6 +75,17 @@ STRIPE_WEBHOOK_SECRET         ← MUSS neu generiert werden (Phase C)
 NOTIFY_SHIPPED_SECRET
 NEXT_PUBLIC_NOTIFY_SECRET
 ```
+
+**RESEND_API_KEY (geklärt 04.07.2026):** War in Vercel NICHT gesetzt → Bestellbestätigungs-Mails
+(src/app/api/webhook/route.ts) wurden in Produktion nie verschickt. Kein Migrationsthema.
+**Offenes To-do vor Verkaufsstart:** Resend-Account anlegen, Domain thecookielady.de dort
+verifizieren (Code sendet von bestellung@thecookielady.de), RESEND_API_KEY in Netlify setzen.
+
+**Stripe läuft komplett im TESTMODUS (bestätigt 04.07.2026):** Alle Keys sind pk_test/sk_test –
+es floss noch nie echtes Geld. Die Migration wird vollständig im Testmodus durchgeführt.
+**Weiteres To-do vor Verkaufsstart (unabhängig vom Hosting):** Stripe-Konto für Live-Zahlungen
+aktivieren, Live-Keys (pk_live/sk_live) in Netlify setzen, Live-Webhook-Endpoint anlegen
+(eigenes whsec_-Secret!), einmal echten Kauf mit kleiner Summe testen.
 
 ---
 
@@ -229,4 +253,5 @@ Falls irgendwas brennt nach Domain-Umstellung:
 4. **Nach jeder Phase:** Checkliste aktualisieren
 5. **Code-Änderungen sind minimal** – nur `netlify.toml` falls nötig (Function-Timeout). Kein App-Code anfassen.
 6. **Bei Fehlern:** Netlify Function Log lesen (Dashboard → Functions), dann fragen. Nicht raten.
-7. **Zeitdruck:** Launch ist 01.06.2026. Migration muss spätestens 27.05. durch sein um 5 Tage Puffer zu haben.
+7. **Zeitdruck:** Kein fixes Datum mehr (Launch-Termin 01.06.2026 ist überholt). Stattdessen: Migration **vor Verkaufsstart** abschließen – solange nichts verkauft wird, ist der Umzug risikofrei; sobald Bestellungen laufen, wird Vercels Abschalt-Recht (ToS-Verstoß Hobby-Plan) zum echten Risiko.
+8. **Alternative zum Dashboard:** Netlify CLI ist via `npx netlify` verfügbar. Nach einmaligem `npx netlify login` des Users können Site-Anlage (`netlify init`), Env-Variablen (`netlify env:set`) und Deploys per CLI laufen – schneller als Klicken, und Claude kann mehr selbst übernehmen.
