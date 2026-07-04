@@ -29,7 +29,7 @@
 
 **Letztes Update:** 2026-07-04 (Vorprüfungen abgeschlossen, warte auf User für Netlify-Login)
 
-**Aktueller Schritt:** `PHASE_F_VERCEL_DELETE` – Migration technisch abgeschlossen (04.07.2026): DNS weltweit propagiert, SSL aktiv, Stripe-Webhook auf https://www.thecookielady.de/api/webhook umgestellt, alle Testdaten gelöscht (orders und products = 0 Zeilen). LETZTER SCHRITT (User): Vercel-Projekt im Dashboard löschen (Settings → Delete Project). Danach ist die Migration komplett.
+**Aktueller Schritt:** `MIGRATION_ABGESCHLOSSEN` – Vercel-Projekt am 04.07.2026 gelöscht, alte Vercel-URL liefert 404. Shop läuft vollständig auf Netlify (Domain, SSL, Webhook, Auto-Deploy). Offene To-dos vor Verkaufsstart: siehe Env-Block (Stripe Live-Modus, Resend, Produkte anlegen).
 
 **Vorprüfungen (2026-07-04, alle grün):**
 - [x] Lokaler Production-Build erfolgreich (`npm run build`, 16 Seiten, TypeScript OK)
@@ -47,7 +47,7 @@
   - GitHub-Repo wurde verknüpft (Auto-Deploy bei git push funktioniert, verifiziert), alter Vercel-Stripe-Webhook (we_1T5Pze…) gelöscht
 - [x] Phase D: E2E-Test auf Netlify-URL grün (04.07.2026): Checkout komplett (Bestellung #1000 mit customer_name + shipping_address in Supabase, order_items korrekt), Cart/Zustand OK, Admin-Redirect OK. Nicht getestet: Admin-Login mit echten Credentials, /api/notify-shipped (kein RESEND_API_KEY)
 - [x] Phase E: Domain komplett umgestellt (04.07.2026): custom_domain www.thecookielady.de + Apex-Redirect in Netlify, IONOS-DNS geändert (A @ → 75.2.60.5, CNAME www → thecookielady.netlify.app), weltweit propagiert, SSL aktiv, NEXT_PUBLIC_BASE_URL auf Domain, Supabase Site URL vom User umgestellt, Stripe-Webhook-URL auf Domain umgestellt, Finaltest-Checkout auf Domain grün (Bestellung #1002 korrekt)
-- [~] Phase F: Alter Vercel-Stripe-Webhook gelöscht, alle Testdaten bereinigt (orders + products leer, Stripe-Events alle zugestellt). OFFEN (User): Vercel-Projekt im Dashboard löschen – sofortige Löschung statt 7 Tage OK, weil noch keine Verkäufe laufen und DNS vollständig propagiert ist
+- [x] Phase F: Vercel-Projekt gelöscht (04.07.2026, User; alte URL 404), alter Vercel-Stripe-Webhook gelöscht, alle Testdaten bereinigt (orders + products leer, Stripe-Events alle zugestellt). MIGRATION KOMPLETT.
 
 **Vom User einzutragen:**
 - Domain: `thecookielady.de` → leitet auf `https://www.thecookielady.de` weiter (per curl bestätigt, 04.07.2026; läuft auf Vercel/fra1). **Phase E: Apex UND www auf Netlify einrichten, www ist kanonisch.**
