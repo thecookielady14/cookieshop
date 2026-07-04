@@ -3,6 +3,7 @@
 import { ShoppingBasket, Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useCartStore } from "@/lib/store";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -69,9 +70,15 @@ export default function Navbar() {
                     <Link href="/cart" className="relative p-2 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:shadow-md transition flex items-center justify-center">
                         <ShoppingBasket className="w-5 h-5 text-[var(--color-brand-text)]" />
                         {mounted && cartCount > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-[var(--color-brand-primary)] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                            <motion.span
+                                key={cartCount}
+                                initial={{ scale: 0.3, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                                className="absolute -top-1 -right-1 bg-[var(--color-brand-primary)] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                            >
                                 {cartCount}
-                            </span>
+                            </motion.span>
                         )}
                     </Link>
 

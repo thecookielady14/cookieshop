@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ShoppingBag, Plus, Minus } from 'lucide-react';
+import { ShoppingBag, Check, Plus, Minus } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '@/lib/store';
 
 export default function AddToCartButton({ product }: { product: any }) {
@@ -61,16 +62,44 @@ export default function AddToCartButton({ product }: { product: any }) {
             </div>
 
             {/* Add Button */}
-            <button
+            <motion.button
                 onClick={handleAddToCart}
+                whileTap={{ scale: 0.94 }}
+                animate={added ? { scale: [1, 1.06, 1] } : { scale: 1 }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
                 className={`flex-1 flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all ${added
                     ? 'bg-green-500 text-white'
                     : 'bg-[var(--color-brand-primary)] text-white hover:bg-[#c29160]'
                     }`}
             >
-                <ShoppingBag className="w-5 h-5" />
-                {added ? 'Im Warenkorb ✓' : 'In den Korb'}
-            </button>
+                <AnimatePresence mode="wait" initial={false}>
+                    {added ? (
+                        <motion.span
+                            key="added"
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="flex items-center gap-2"
+                        >
+                            <Check className="w-5 h-5" />
+                            Im Warenkorb
+                        </motion.span>
+                    ) : (
+                        <motion.span
+                            key="default"
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="flex items-center gap-2"
+                        >
+                            <ShoppingBag className="w-5 h-5" />
+                            In den Korb
+                        </motion.span>
+                    )}
+                </AnimatePresence>
+            </motion.button>
         </div>
     );
 }
