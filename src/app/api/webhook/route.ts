@@ -150,10 +150,10 @@ export async function POST(req: Request) {
 <!DOCTYPE html>
 <html lang="de">
 <head><meta charset="UTF-8"></head>
-<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#f2d98b;margin:0;padding:20px;">
+<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#f7ecd6;margin:0;padding:20px;">
   <div style="max-width:580px;margin:0 auto;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
     <div style="background:#331f16;padding:32px;text-align:center;">
-      <p style="color:#e6b840;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">The Cookie Lady</p>
+      <p style="color:#b0813b;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">The Cookie Lady</p>
       <h1 style="color:#fff;font-size:26px;margin:0;font-weight:bold;">Deine Bestellung ist eingegangen! 🍪</h1>
     </div>
     <div style="padding:32px;">
@@ -172,7 +172,7 @@ export async function POST(req: Request) {
           </thead>
           <tbody>${itemsHtml}</tbody>
         </table>
-        <div style="margin-top:12px;padding-top:12px;border-top:2px solid #e6b840;display:flex;justify-content:space-between;font-size:14px;color:#5a4a3a;">
+        <div style="margin-top:12px;padding-top:12px;border-top:2px solid #b0813b;display:flex;justify-content:space-between;font-size:14px;color:#5a4a3a;">
           <span>Versandkosten</span><span>${shippingCost}</span>
         </div>
         <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:17px;font-weight:bold;color:#331f16;">
@@ -180,7 +180,7 @@ export async function POST(req: Request) {
         </div>
       </div>
 
-      <p style="color:#5a4a3a;font-size:14px;line-height:1.6;">Du erhältst eine separate E-Mail von Stripe mit deiner Rechnung als PDF. Bei Fragen melde dich gerne unter <a href="mailto:thecookielady2025@gmail.com" style="color:#e6b840;">thecookielady2025@gmail.com</a>.</p>
+      <p style="color:#5a4a3a;font-size:14px;line-height:1.6;">Du erhältst eine separate E-Mail von Stripe mit deiner Rechnung als PDF. Bei Fragen melde dich gerne unter <a href="mailto:thecookielady2025@gmail.com" style="color:#b0813b;">thecookielady2025@gmail.com</a>.</p>
 
       <div style="text-align:center;margin-top:28px;">
         <a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://thecookielady.de'}/shop" style="background:#331f16;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:15px;display:inline-block;">

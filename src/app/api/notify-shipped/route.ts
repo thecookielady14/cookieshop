@@ -56,12 +56,12 @@ export async function POST(req: Request) {
 <!DOCTYPE html>
 <html lang="de">
 <head><meta charset="UTF-8"></head>
-<body style="font-family: Georgia, serif; background: #fae4a0; margin: 0; padding: 20px;">
+<body style="font-family: Georgia, serif; background: #f7ecd6; margin: 0; padding: 20px;">
   <div style="max-width: 580px; margin: 0 auto; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
     
     <!-- Header -->
     <div style="background: #331f16; padding: 40px 40px 32px; text-align: center;">
-      <h1 style="color: #e6b840; font-size: 28px; margin: 0 0 8px;">The Cookie Lady 🍪</h1>
+      <h1 style="color: #b0813b; font-size: 28px; margin: 0 0 8px;">The Cookie Lady 🍪</h1>
       <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 14px;">Handgemacht mit Liebe</p>
     </div>
 
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
       </p>
 
       <!-- Order Info Box -->
-      <div style="background: #fae4a0; border-radius: 16px; padding: 20px 24px; margin: 0 0 24px;">
+      <div style="background: #f7ecd6; border-radius: 16px; padding: 20px 24px; margin: 0 0 24px;">
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
             <td style="color: #3e2723; padding: 4px 0; font-size: 14px;">Bestellnummer</td>
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
       <!-- CTA Button -->
       <div style="text-align: center; margin: 0 0 32px;">
         <a href="https://thecookielady.de/shop" 
-           style="background: #331f16; color: #e6b840; text-decoration: none; padding: 14px 32px; border-radius: 100px; font-weight: bold; font-size: 16px; display: inline-block;">
+           style="background: #331f16; color: #b0813b; text-decoration: none; padding: 14px 32px; border-radius: 100px; font-weight: bold; font-size: 16px; display: inline-block;">
           Mehr Cookies bestellen →
         </a>
       </div>
