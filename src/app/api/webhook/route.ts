@@ -150,7 +150,7 @@ export async function POST(req: Request) {
 <!DOCTYPE html>
 <html lang="de">
 <head><meta charset="UTF-8"></head>
-<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#f7ecd6;margin:0;padding:20px;">
+<body style="font-family:'Helvetica Neue',Arial,sans-serif;background:#ece0c4;margin:0;padding:20px;">
   <div style="max-width:580px;margin:0 auto;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
     <div style="background:#331f16;padding:32px;text-align:center;">
       <p style="color:#b0813b;font-size:14px;letter-spacing:3px;margin:0 0 8px;text-transform:uppercase;">The Cookie Lady</p>

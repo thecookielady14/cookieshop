@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 <!DOCTYPE html>
 <html lang="de">
 <head><meta charset="UTF-8"></head>
-<body style="font-family: Georgia, serif; background: #f7ecd6; margin: 0; padding: 20px;">
+<body style="font-family: Georgia, serif; background: #ece0c4; margin: 0; padding: 20px;">
   <div style="max-width: 580px; margin: 0 auto; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
     
     <!-- Header -->
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
       </p>
 
       <!-- Order Info Box -->
-      <div style="background: #f7ecd6; border-radius: 16px; padding: 20px 24px; margin: 0 0 24px;">
+      <div style="background: #ece0c4; border-radius: 16px; padding: 20px 24px; margin: 0 0 24px;">
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
             <td style="color: #3e2723; padding: 4px 0; font-size: 14px;">Bestellnummer</td>
