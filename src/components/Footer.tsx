@@ -11,7 +11,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export default function Footer() {
     return (
-        <footer className="bg-[var(--color-brand-text)] text-[var(--color-brand-secondary)] py-12 px-6 lg:px-12 mt-20 rounded-t-3xl">
+        <footer className="bg-[var(--color-brand-text)] text-[var(--color-brand-secondary)] py-12 px-6 lg:px-12 mt-20">
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div className="md:col-span-2">
                     <h3 className="text-2xl font-bold mb-4 text-white">The Cookie Lady</h3>
