@@ -35,7 +35,7 @@ export default async function ShopOverview() {
                         Such dir deine Lieblingssorten aus.
                     </p>
                     <p className="text-center text-[var(--color-brand-primary)] font-semibold text-sm mb-10">
-                        Ab 10. August 2026 bestellbar
+                        Ab 01. Oktober 2026 bestellbar
                     </p>
                 </AnimateIn>
 
@@ -51,7 +51,7 @@ export default async function ShopOverview() {
                                 Schau bald wieder vorbei!
                             </p>
                             <p className="text-[var(--color-brand-primary)] font-semibold text-sm">
-                                Ab 10. August 2026 bestellbar
+                                Ab 01. Oktober 2026 bestellbar
                             </p>
                         </div>
                     </AnimateIn>

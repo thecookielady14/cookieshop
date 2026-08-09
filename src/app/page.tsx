@@ -135,7 +135,7 @@ export default async function Home() {
                   Schau bald wieder vorbei!
                 </p>
                 <p className="text-[var(--color-brand-primary)] font-semibold text-sm">
-                  Ab 10. August 2026 bestellbar
+                  Ab 01. Oktober 2026 bestellbar
                 </p>
               </div>
             </AnimateIn>
