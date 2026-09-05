@@ -5,7 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
 import OrdersClosedBanner from "@/components/OrdersClosedBanner";
 import type { Metadata } from "next";
-import { siteUrl, VAT_PERCENTAGE } from "@/lib/site";
+import { siteUrl, VAT_PERCENTAGE, foodBusinessOperator } from "@/lib/site";
+import { highlightAllergens } from "@/lib/allergens";
 
 export const dynamic = 'force-dynamic';
 
@@ -81,6 +82,20 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     };
     const emoji = emojiMap[product.name] || '🍪';
 
+    // Nährwerte je 100 g – nur anzeigen, wenn überhaupt Werte gepflegt sind.
+    const fmt = (v: unknown, unit: string) =>
+        v === null || v === undefined ? null : `${Number(v).toString().replace('.', ',')} ${unit}`;
+    const nutritionRows = [
+        { label: 'Energie', value: [fmt(product.energy_kj, 'kJ'), fmt(product.energy_kcal, 'kcal')].filter(Boolean).join(' / '), indented: false },
+        { label: 'Fett', value: fmt(product.fat_g, 'g'), indented: false },
+        { label: 'davon gesättigte Fettsäuren', value: fmt(product.saturated_fat_g, 'g'), indented: true },
+        { label: 'Kohlenhydrate', value: fmt(product.carbs_g, 'g'), indented: false },
+        { label: 'davon Zucker', value: fmt(product.sugar_g, 'g'), indented: true },
+        { label: 'Eiweiß', value: fmt(product.protein_g, 'g'), indented: false },
+        { label: 'Salz', value: fmt(product.salt_g, 'g'), indented: false },
+    ].filter((row): row is { label: string; value: string; indented: boolean } => Boolean(row.value));
+    const hasNutrition = nutritionRows.length > 0;
+
     // Strukturierte Daten: Google zeigt damit Preis und Verfügbarkeit direkt
     // in den Suchergebnissen an.
     const productJsonLd = {
@@ -154,6 +169,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             {product.name}
                         </h1>
 
+                        {product.legal_name && (
+                            <p className="text-sm text-neutral-500 mb-4 -mt-2">
+                                Bezeichnung: {product.legal_name}
+                            </p>
+                        )}
+
                         <p className="text-lg text-[var(--color-brand-dark)] mb-8 leading-relaxed">
                             {product.description}
                         </p>
@@ -169,7 +190,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                     inkl. {VAT_PERCENTAGE} % MwSt., zzgl. <Link href="/versand" className="underline hover:text-[var(--color-brand-primary)]">Versandkosten</Link>
                                 </span>
                                 <span className="text-sm font-bold text-[var(--color-brand-primary)] bg-[var(--color-brand-primary)]/10 px-3 py-1 rounded-md inline-block w-max mt-2">
-                                    Gewicht: ca. {product.weight_grams}g
+                                    Nettofüllmenge: {product.weight_grams} g
                                 </span>
                             </div>
 
@@ -185,7 +206,14 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                         🌾 Zutatenverzeichnis
                                     </h3>
                                     <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
-                                        {product.ingredients}
+                                        {highlightAllergens(product.ingredients, product.allergens).map((part, i) =>
+                                            part.isAllergen
+                                                ? <strong key={i} className="font-bold text-[var(--color-brand-text)]">{part.text}</strong>
+                                                : <span key={i}>{part.text}</span>
+                                        )}
+                                    </p>
+                                    <p className="text-xs text-neutral-400 mt-2">
+                                        Allergene sind <strong className="font-bold">fett</strong> hervorgehoben.
                                     </p>
                                 </div>
                             )}
@@ -211,6 +239,39 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                     </p>
                                 </div>
                             )}
+
+                            {hasNutrition && (
+                                <div>
+                                    <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
+                                        📊 Nährwerte je 100 g
+                                    </h3>
+                                    <table className="w-full text-sm text-[var(--color-brand-dark)]">
+                                        <tbody>
+                                            {nutritionRows.map((row) => (
+                                                <tr key={row.label} className="border-b border-neutral-100 last:border-0">
+                                                    <td className={`py-1.5 ${row.indented ? 'pl-4 text-neutral-500' : ''}`}>{row.label}</td>
+                                                    <td className="py-1.5 text-right font-medium whitespace-nowrap">{row.value}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+
+                            <div>
+                                <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
+                                    🏠 Lebensmittelunternehmer
+                                </h3>
+                                <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
+                                    {foodBusinessOperator.name}<br />
+                                    {foodBusinessOperator.street}<br />
+                                    {foodBusinessOperator.city}<br />
+                                    {foodBusinessOperator.country}
+                                </p>
+                                <p className="text-xs text-neutral-400 mt-2">
+                                    Mindestens haltbar bis: siehe Aufdruck auf der Verpackung.
+                                </p>
+                            </div>
                         </div>
 
                     </div>
