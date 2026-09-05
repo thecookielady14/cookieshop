@@ -81,7 +81,8 @@ export default async function Versand() {
                             Eine Selbstabholung ist leider nicht möglich.
                         </p>
                         <p>
-                            Deine Kekse werden bruchsicher und frischegeschützt verpackt. Sollte trotzdem einmal
+                            Deine Kekse werden sorgfältig und luftdicht verpackt, damit sie so frisch bei dir
+                            ankommen, wie sie aus dem Ofen kamen. Sollte trotzdem einmal
                             etwas nicht in Ordnung sein, melde dich bitte umgehend unter{' '}
                             <a href="mailto:kontakt@thecookielady.de" className="text-[var(--color-brand-primary)] hover:underline">
                                 kontakt@thecookielady.de

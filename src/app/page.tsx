@@ -127,7 +127,7 @@ export default async function Home() {
               {
                 Icon: Package,
                 title: 'Noch dieselbe Woche unterwegs',
-                text: 'Bruchsicher verpackt und mit DHL zu dir, in 2–4 Werktagen.',
+                text: 'Sorgfältig verpackt und mit DHL zu dir, in 2–4 Werktagen.',
               },
             ].map((step, index) => (
               <AnimateIn key={step.title} delay={index * 120}>
