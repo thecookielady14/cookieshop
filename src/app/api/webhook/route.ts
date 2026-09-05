@@ -41,7 +41,12 @@ export async function POST(req: Request) {
 
         try {
             // 1. Get customer email and shipping details
-            const customerEmail = session.customer_details?.email || 'unknown@email.com';
+            // Stripe verlangt im Checkout immer eine E-Mail; fehlt sie wider
+            // Erwarten, wird das protokolliert statt eine Fantasieadresse zu speichern.
+            const customerEmail = session.customer_details?.email ?? null;
+            if (!customerEmail) {
+                console.warn(`Session ${session.id} kam ohne E-Mail-Adresse an.`);
+            }
             // Stripe API >= 2025-03-31: shipping_details lives under collected_information
             const shippingAddress = (session as any).collected_information?.shipping_details?.address
                 ?? (session as any).shipping_details?.address
@@ -77,6 +82,7 @@ export async function POST(req: Request) {
                     stripe_session_id: session.id,
                     total_amount: totalAmount,
                     status: 'paid',
+                    source: 'online',
                     shipping_address: shippingAddress
                 }])
                 .select()
@@ -120,7 +126,7 @@ export async function POST(req: Request) {
             }
 
             // Send order confirmation email if RESEND_API_KEY is configured
-            if (process.env.RESEND_API_KEY && items.length > 0) {
+            if (process.env.RESEND_API_KEY && items.length > 0 && customerEmail) {
                 try {
                     // Fetch product names for the email
                     const productIds = items.map((i) => i.id);

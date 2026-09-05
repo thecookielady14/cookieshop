@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { isAdminEmail } from '@/lib/admin-auth';
 
 export async function middleware(request: NextRequest) {
     if (
@@ -28,10 +29,19 @@ export async function middleware(request: NextRequest) {
             }
         );
 
-        const { data: { session } } = await supabase.auth.getSession();
+        // getUser() statt getSession(): der Token wird dabei serverseitig
+        // gegen Supabase geprüft und lässt sich nicht im Browser fälschen.
+        const { data: { user } } = await supabase.auth.getUser();
 
-        if (!session) {
+        if (!user) {
             return NextResponse.redirect(new URL('/admin/login', request.url));
+        }
+
+        // Angemeldet zu sein reicht nicht – es muss ein Adminkonto sein.
+        if (!isAdminEmail(user.email)) {
+            const denied = new URL('/admin/login', request.url);
+            denied.searchParams.set('error', 'no-access');
+            return NextResponse.redirect(denied);
         }
 
         return response;

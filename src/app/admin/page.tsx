@@ -21,7 +21,7 @@ export default async function AdminDashboard() {
                 *,
                 order_items (
                     quantity,
-                    price_at_purchase
+                    price_at_time
                 )
             `)
             .order('created_at', { ascending: false }),

@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import Link from "next/link";
+import { Phone } from "lucide-react";
 import ClientOrderTable from "./ClientOrderTable";
 
 // Initialize Supabase client for Server Component
@@ -27,6 +29,13 @@ export default async function AdminOrders() {
         <div>
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">Bestellungen</h1>
+                <Link
+                    href="/admin/orders/new"
+                    className="flex items-center gap-2 bg-[var(--color-brand-primary)] text-white px-5 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity"
+                >
+                    <Phone className="w-4 h-4" />
+                    Telefonbestellung
+                </Link>
             </div>
 
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">

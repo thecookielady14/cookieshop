@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import { Lock } from 'lucide-react';
@@ -12,6 +12,15 @@ export default function AdminLogin() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+
+    // Die Middleware leitet mit ?error=no-access hierher um, wenn jemand
+    // angemeldet ist, aber kein Adminkonto verwendet.
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('error') === 'no-access') {
+            setError('Dieses Konto hat keinen Zugriff auf den Adminbereich.');
+        }
+    }, []);
 
     // createBrowserClient from @supabase/ssr stores the session in cookies
     // so the middleware can verify the JWT on every request

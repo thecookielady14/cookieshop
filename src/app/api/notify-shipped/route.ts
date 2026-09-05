@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { isAdminEmail } from '@/lib/admin-auth';
 
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,7 +18,8 @@ export async function POST(req: Request) {
         const authHeader = req.headers.get('authorization');
         if (authHeader?.startsWith('Bearer ')) {
             const { data: { user } } = await supabaseAdmin.auth.getUser(authHeader.slice(7));
-            if (user) authorized = true;
+            // Angemeldet zu sein reicht nicht – es muss ein Adminkonto sein.
+            if (user && isAdminEmail(user.email)) authorized = true;
         }
     }
     if (!authorized) {
@@ -40,6 +42,12 @@ export async function POST(req: Request) {
 
         if (error || !order) {
             return new NextResponse('Bestellung nicht gefunden', { status: 404 });
+        }
+
+        // Telefonbestellungen haben oft keine E-Mail – die Bestätigung liegt
+        // dann als ausgedruckte Rechnung im Paket.
+        if (!order.customer_email) {
+            return NextResponse.json({ sent: false, reason: 'Keine E-Mail-Adresse hinterlegt' });
         }
 
         const resendApiKey = process.env.RESEND_API_KEY;

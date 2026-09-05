@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { useState } from "react";
-import { CheckCircle, Truck, Package, Clock } from "lucide-react";
+import { CheckCircle, Truck, Package, Clock, Phone } from "lucide-react";
 
 export default function ClientOrderTable({ initialOrders }: { initialOrders: any[] }) {
     const [orders, setOrders] = useState(initialOrders);
@@ -25,8 +25,12 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                 order.id === orderId ? { ...order, status: newStatus } : order
             ));
 
-            // Send shipping notification email automatically
-            if (newStatus === 'shipped') {
+            // Versandbenachrichtigung nur, wenn eine E-Mail vorliegt. Bei
+            // Telefonbestellungen liegt die Rechnung oft ausgedruckt im Paket.
+            const order = orders.find(o => o.id === orderId);
+            if (newStatus === 'shipped' && !order?.customer_email) {
+                alert('✅ Status aktualisiert. Es ist keine E-Mail hinterlegt, daher wurde keine Versandbenachrichtigung verschickt.');
+            } else if (newStatus === 'shipped') {
                 const { data: { session } } = await supabase.auth.getSession();
                 const res = await fetch('/api/notify-shipped', {
                     method: 'POST',
@@ -89,10 +93,21 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                                 <span className="text-xs text-gray-500">{totalItems} Artikel • {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount)}</span>
                             </td>
                             <td className="p-4">
-                                <span className="font-medium text-gray-900 block">{order.customer_email}</span>
+                                <span className="font-medium text-gray-900 block">
+                                    {order.customer_name || order.customer_email || 'Ohne Namen'}
+                                </span>
+                                {order.source === 'phone' && (
+                                    <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[11px] font-bold my-1">
+                                        <Phone className="w-3 h-3" /> Telefon
+                                        {order.invoice_reference ? ` · ${order.invoice_reference}` : ''}
+                                    </span>
+                                )}
+                                {order.customer_email
+                                    ? <span className="text-xs text-gray-500 block">{order.customer_email}</span>
+                                    : <span className="text-xs text-gray-400 block italic">keine E-Mail hinterlegt</span>}
                                 {order.shipping_address && (
                                     <span className="text-xs text-gray-500 block truncate max-w-[200px]" title={`${order.shipping_address.line1}, ${order.shipping_address.city}`}>
-                                        {order.shipping_address.name || order.customer_email} • {order.shipping_address.city}
+                                        {order.shipping_address.name || order.customer_email || '—'} • {order.shipping_address.city}
                                     </span>
                                 )}
                             </td>
@@ -114,6 +129,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                                         <option value="paid">Bezahlt / Bearbeitung</option>
                                         <option value="shipped">Versendet</option>
                                         <option value="delivered">Zugestellt</option>
+                                        <option value="cancelled">Storniert</option>
                                     </select>
                                 </div>
                             </td>
