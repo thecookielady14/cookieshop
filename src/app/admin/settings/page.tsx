@@ -68,6 +68,17 @@ export default function AdminSettings() {
         ordersClosedMessage: closedMessage.trim() || null,
     };
 
+    // Die Vorschau zeigt genau die Kante, an der es kippt – ein frei gewählter
+    // Beispielbetrag würde nichts verraten, was nicht schon im Feld darüber steht.
+    const threshold = previewSettings.freeShippingThreshold;
+    const previewCases =
+        threshold === null || threshold <= 0
+            ? [{ label: 'Jeder Warenkorb', subtotal: 0 }]
+            : [
+                  { label: `Warenkorb ${formatEuro(Math.max(0, threshold - 0.01))} – knapp darunter`, subtotal: Math.max(0, threshold - 0.01) },
+                  { label: `Warenkorb ${formatEuro(threshold)} – genau die Freigrenze`, subtotal: threshold },
+              ];
+
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
@@ -282,24 +293,16 @@ export default function AdminSettings() {
                         So sieht es der Kunde
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-700">
-                        <li className="flex justify-between border-b border-black/5 pb-2">
-                            <span>Warenkorb 15,00 €</span>
-                            <strong>
-                                {calculateShipping(15, previewSettings) === 0
-                                    ? 'Versand kostenlos'
-                                    : `Versand ${formatEuro(calculateShipping(15, previewSettings))}`}
-                            </strong>
-                        </li>
-                        {previewSettings.freeShippingThreshold !== null && (
-                            <li className="flex justify-between border-b border-black/5 pb-2">
-                                <span>Warenkorb {formatEuro(previewSettings.freeShippingThreshold)} (genau die Freigrenze)</span>
+                        {previewCases.map((c) => (
+                            <li key={c.label} className="flex justify-between border-b border-black/5 pb-2">
+                                <span>{c.label}</span>
                                 <strong>
-                                    {calculateShipping(previewSettings.freeShippingThreshold, previewSettings) === 0
+                                    {calculateShipping(c.subtotal, previewSettings) === 0
                                         ? 'Versand kostenlos'
-                                        : `Versand ${formatEuro(calculateShipping(previewSettings.freeShippingThreshold, previewSettings))}`}
+                                        : `Versand ${formatEuro(calculateShipping(c.subtotal, previewSettings))}`}
                                 </strong>
                             </li>
-                        )}
+                        ))}
                         <li className="flex justify-between">
                             <span>Lieferzeit</span>
                             <strong>
