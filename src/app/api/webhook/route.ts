@@ -2,6 +2,8 @@ import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { formatEuro } from '@/lib/shipping';
+import { decodeItemsFromMetadata } from '@/lib/checkout-items';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
     apiVersion: '2026-01-28.clover',
@@ -45,11 +47,8 @@ export async function POST(req: Request) {
                 ?? null;
             const totalAmount = (session.amount_total || 0) / 100;
 
-            // 2. Parse the items from metadata
-            let items = [];
-            if (session.metadata?.items) {
-                items = JSON.parse(session.metadata.items);
-            }
+            // 2. Positionen aus der Metadata lesen (kompaktes Format, siehe lib/checkout-items.ts)
+            const items = decodeItemsFromMetadata(session.metadata);
 
             // 3. Insert the order into Supabase using the service role key (bypasses RLS)
             const supabaseAdmin = createClient(
@@ -86,7 +85,7 @@ export async function POST(req: Request) {
 
             // 4. Insert the order items (price_at_time comes from validated server-side metadata)
             if (items.length > 0 && orderData) {
-                const orderItemsToInsert = items.map((item: any) => ({
+                const orderItemsToInsert = items.map((item) => ({
                     order_id: orderData.id,
                     product_id: item.id,
                     quantity: item.qty,
@@ -102,21 +101,18 @@ export async function POST(req: Request) {
 
             console.log(`Order ${orderData.id} created successfully for ${customerEmail}`);
 
-            // Decrement stock; failures here must not block the order
+            // Lagerbestand abziehen. Bewusst über eine Datenbankfunktion: Lesen,
+            // Rechnen und Schreiben in getrennten Schritten würde bei zwei
+            // gleichzeitigen Bestellungen denselben Ausgangswert lesen und den
+            // Bestand nur einmal reduzieren. Fehler hier dürfen die Bestellung
+            // niemals blockieren – bezahlt ist bezahlt.
             for (const item of items) {
                 try {
-                    const { data: prod } = await supabaseAdmin
-                        .from('products')
-                        .select('stock_count')
-                        .eq('id', item.id)
-                        .single();
-                    if (prod && typeof prod.stock_count === 'number') {
-                        const newStock = Math.max(0, prod.stock_count - item.qty);
-                        await supabaseAdmin
-                            .from('products')
-                            .update({ stock_count: newStock, ...(newStock === 0 ? { is_available: false } : {}) })
-                            .eq('id', item.id);
-                    }
+                    const { error: stockError } = await supabaseAdmin.rpc('decrement_stock', {
+                        p_product_id: item.id,
+                        p_quantity: item.qty,
+                    });
+                    if (stockError) throw stockError;
                 } catch (stockError) {
                     console.error(`Failed to decrement stock for product ${item.id}:`, stockError);
                 }
@@ -126,7 +122,7 @@ export async function POST(req: Request) {
             if (process.env.RESEND_API_KEY && items.length > 0) {
                 try {
                     // Fetch product names for the email
-                    const productIds = items.map((i: any) => i.id);
+                    const productIds = items.map((i) => i.id);
                     const { data: productRows } = await supabaseAdmin
                         .from('products')
                         .select('id, name')
@@ -134,7 +130,7 @@ export async function POST(req: Request) {
 
                     const productMap = new Map((productRows || []).map((p: any) => [p.id, p.name]));
 
-                    const itemsHtml = items.map((item: any) => {
+                    const itemsHtml = items.map((item) => {
                         const name = productMap.get(item.id) || 'Unbekanntes Produkt';
                         return `<tr>
                             <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;">${name}</td>
@@ -144,7 +140,10 @@ export async function POST(req: Request) {
                     }).join('');
 
                     const customerName = session.customer_details?.name || 'liebe Kundin / lieber Kunde';
-                    const shippingCost = totalAmount >= 30 ? '0,00 €' : '4,90 €';
+                    // Tatsächlich berechneter Versand aus der Stripe-Session – nicht schätzen:
+                    // totalAmount enthält den Versand bereits und taugt nicht als Vergleichswert.
+                    const shippingAmount = (session.shipping_cost?.amount_total ?? 0) / 100;
+                    const shippingCost = shippingAmount === 0 ? 'Kostenlos' : formatEuro(shippingAmount);
 
                     const emailHtml = `
 <!DOCTYPE html>
@@ -173,14 +172,17 @@ export async function POST(req: Request) {
           <tbody>${itemsHtml}</tbody>
         </table>
         <div style="margin-top:12px;padding-top:12px;border-top:2px solid #b0813b;display:flex;justify-content:space-between;font-size:14px;color:#5a4a3a;">
+          <span>Zwischensumme</span><span>${formatEuro(totalAmount - shippingAmount)}</span>
+        </div>
+        <div style="margin-top:4px;display:flex;justify-content:space-between;font-size:14px;color:#5a4a3a;">
           <span>Versandkosten</span><span>${shippingCost}</span>
         </div>
         <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:17px;font-weight:bold;color:#331f16;">
-          <span>Gesamtbetrag</span><span>${totalAmount.toFixed(2).replace('.', ',')} €</span>
+          <span>Gesamtbetrag</span><span>${formatEuro(totalAmount)}</span>
         </div>
       </div>
 
-      <p style="color:#5a4a3a;font-size:14px;line-height:1.6;">Du erhältst eine separate E-Mail von Stripe mit deiner Rechnung als PDF. Bei Fragen melde dich gerne unter <a href="mailto:thecookielady2025@gmail.com" style="color:#b0813b;">thecookielady2025@gmail.com</a>.</p>
+      <p style="color:#5a4a3a;font-size:14px;line-height:1.6;">Du erhältst eine separate E-Mail von Stripe mit deiner Rechnung als PDF. Bei Fragen melde dich gerne unter <a href="mailto:kontakt@thecookielady.de" style="color:#b0813b;">kontakt@thecookielady.de</a>.</p>
 
       <div style="text-align:center;margin-top:28px;">
         <a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://thecookielady.de'}/shop" style="background:#331f16;color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:bold;font-size:15px;display:inline-block;">
@@ -202,7 +204,7 @@ export async function POST(req: Request) {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            from: 'The Cookie Lady <bestellung@thecookielady.de>',
+                            from: 'The Cookie Lady <kontakt@thecookielady.de>',
                             to: [customerEmail],
                             subject: `Deine Bestellung ist eingegangen! 🍪 (#${orderData.id.slice(0, 8).toUpperCase()})`,
                             html: emailHtml,

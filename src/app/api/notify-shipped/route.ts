@@ -129,7 +129,7 @@ export async function POST(req: Request) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from: 'The Cookie Lady <bestellungen@thecookielady.de>',
+                from: 'The Cookie Lady <kontakt@thecookielady.de>',
                 to: [order.customer_email],
                 subject: `Deine Kekse sind unterwegs! 🚀 (${orderNumber})`,
                 html: emailHtml,

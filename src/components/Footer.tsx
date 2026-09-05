@@ -32,6 +32,7 @@ export default function Footer() {
                         <li><Link href="/shop" prefetch={false} className="hover:text-white hover:underline transition">Alle Cookies</Link></li>
                         <li><Link href="/about" className="hover:text-white hover:underline transition">Über Mich</Link></li>
                         <li><Link href="/faq" className="hover:text-white hover:underline transition">FAQ</Link></li>
+                        <li><Link href="/versand" className="hover:text-white hover:underline transition">Versand &amp; Lieferung</Link></li>
                     </ul>
                 </div>
 

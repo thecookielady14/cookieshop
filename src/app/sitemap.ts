@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { siteUrl } from '@/lib/site';
 import { supabase } from '@/lib/supabase';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.thecookielady.de';
+const baseUrl = siteUrl;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const staticRoutes: MetadataRoute.Sitemap = [
@@ -9,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${baseUrl}/shop`, changeFrequency: 'weekly', priority: 0.9 },
         { url: `${baseUrl}/about`, changeFrequency: 'monthly', priority: 0.5 },
         { url: `${baseUrl}/faq`, changeFrequency: 'monthly', priority: 0.5 },
+        { url: `${baseUrl}/versand`, changeFrequency: 'monthly', priority: 0.4 },
         { url: `${baseUrl}/agb`, changeFrequency: 'yearly', priority: 0.2 },
         { url: `${baseUrl}/datenschutz`, changeFrequency: 'yearly', priority: 0.2 },
         { url: `${baseUrl}/impressum`, changeFrequency: 'yearly', priority: 0.2 },

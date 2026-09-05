@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
 import type { Metadata } from "next";
+import { siteUrl } from "@/lib/site";
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,13 @@ export async function generateMetadata(
     return {
         title: `${product.name} – Handgemachter Cookie`,
         description: product.description || `${product.name} – Handgemacht, frisch gebacken und mit Liebe verpackt. Jetzt bei The Cookie Lady bestellen.`,
+        alternates: { canonical: `${siteUrl}/shop/${id}` },
+        openGraph: {
+            title: `${product.name} – Handgemachter Cookie`,
+            description: product.description || undefined,
+            url: `${siteUrl}/shop/${id}`,
+            type: 'website',
+        },
     };
 }
 
@@ -72,8 +80,43 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     };
     const emoji = emojiMap[product.name] || '🍪';
 
+    // Strukturierte Daten: Google zeigt damit Preis und Verfügbarkeit direkt
+    // in den Suchergebnissen an.
+    const productJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.name,
+        description: product.description || undefined,
+        image: product.image_url ? [product.image_url] : undefined,
+        brand: { "@type": "Brand", name: "The Cookie Lady" },
+        ...(product.weight_grams
+            ? { weight: { "@type": "QuantitativeValue", value: product.weight_grams, unitCode: "GRM" } }
+            : {}),
+        offers: {
+            "@type": "Offer",
+            url: `${siteUrl}/shop/${product.id}`,
+            priceCurrency: "EUR",
+            price: product.price.toFixed(2),
+            availability: product.is_available === false
+                ? "https://schema.org/OutOfStock"
+                : "https://schema.org/InStock",
+            itemCondition: "https://schema.org/NewCondition",
+            shippingDetails: {
+                "@type": "OfferShippingDetails",
+                shippingDestination: {
+                    "@type": "DefinedRegion",
+                    addressCountry: "DE",
+                },
+            },
+        },
+    };
+
     return (
         <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+            />
             <div className="max-w-6xl mx-auto">
 
                 <Link href="/shop" className="inline-flex items-center gap-2 text-[var(--color-brand-dark)] hover:text-[var(--color-brand-primary)] transition-colors mb-8 font-medium">
@@ -121,7 +164,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                 </span>
                                 <span className="text-sm text-neutral-500 font-medium">
                                     Grundpreis: {pricePerKg.toFixed(2).replace('.', ',')} € / kg <br />
-                                    inkl. MwSt., zzgl. <Link href="/widerruf" className="underline hover:text-[var(--color-brand-primary)]">Versand</Link>
+                                    inkl. MwSt., zzgl. <Link href="/versand" className="underline hover:text-[var(--color-brand-primary)]">Versandkosten</Link>
                                 </span>
                                 <span className="text-sm font-bold text-[var(--color-brand-primary)] bg-[var(--color-brand-primary)]/10 px-3 py-1 rounded-md inline-block w-max mt-2">
                                     Gewicht: ca. {product.weight_grams}g

@@ -79,7 +79,7 @@ NOTIFY_SHIPPED_SECRET
 **RESEND_API_KEY (geklärt 04.07.2026):** War in Vercel NICHT gesetzt → Bestellbestätigungs-Mails
 (src/app/api/webhook/route.ts) wurden in Produktion nie verschickt. Kein Migrationsthema.
 **Offenes To-do vor Verkaufsstart:** Resend-Account anlegen, Domain thecookielady.de dort
-verifizieren (Code sendet von bestellung@thecookielady.de), RESEND_API_KEY in Netlify setzen.
+verifizieren (Code sendet von kontakt@thecookielady.de), RESEND_API_KEY in Netlify setzen.
 
 **Stripe läuft komplett im TESTMODUS (bestätigt 04.07.2026):** Alle Keys sind pk_test/sk_test –
 es floss noch nie echtes Geld. Die Migration wird vollständig im Testmodus durchgeführt.

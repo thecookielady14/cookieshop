@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "AGB – Allgemeine Geschäftsbedingungen",
@@ -46,8 +47,10 @@ export default function AGB() {
                     <section>
                         <h2 className="font-bold text-xl mb-3">4. Lieferbedingungen</h2>
                         <p>
-                            Zuzüglich zu den angegebenen Produktpreisen kommen noch Versandkosten hinzu. Näheres zur Höhe der Versandkosten
-                            erfahren Sie bei den Angeboten. Wir liefern nur im Versandweg. Eine Selbstabholung der Ware ist leider nicht möglich.
+                            Zuzüglich zu den angegebenen Produktpreisen kommen noch Versandkosten hinzu. Die genaue Höhe der
+                            Versandkosten sowie die Lieferzeiten entnehmen Sie unserer Seite{" "}
+                            <Link href="/versand" className="text-[var(--color-brand-primary)] hover:underline">Versand &amp; Lieferung</Link>.
+                            Wir liefern nur im Versandweg. Eine Selbstabholung der Ware ist leider nicht möglich.
                         </p>
                     </section>
 

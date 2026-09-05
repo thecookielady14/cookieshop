@@ -3,12 +3,12 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CookieBanner from "@/components/CookieBanner";
+import { siteUrl, siteName } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://thecookielady.de';
+const baseUrl = siteUrl;
 
 export const metadata: Metadata = {
   title: {
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${baseUrl}/logo.jpeg`,
-        width: 800,
-        height: 800,
+        url: `${baseUrl}/opengraph-image`,
+        width: 1200,
+        height: 630,
         alt: "The Cookie Lady – Handgemachte Cookies",
       },
     ],
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Cookie Lady – Handgemachte Cookies",
     description: "Handgemachte Kekse aus regionalem Dinkelmehl, frisch gebacken und direkt zu dir nach Hause geliefert.",
-    images: [`${baseUrl}/logo.jpeg`],
+    images: [`${baseUrl}/opengraph-image`],
   },
   metadataBase: new URL(baseUrl),
 };
@@ -44,8 +44,26 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Kein maximumScale/userScalable: Zoom zu sperren verstößt gegen WCAG 1.4.4
+  // und macht die Seite für Menschen mit Sehschwäche unbenutzbar.
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Bakery",
+  name: siteName,
+  url: siteUrl,
+  logo: `${siteUrl}/logo.jpeg`,
+  email: "kontakt@thecookielady.de",
+  telephone: "+49 151 29786411",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Kissinger Straße 17",
+    postalCode: "86415",
+    addressLocality: "Mering",
+    addressCountry: "DE",
+  },
+  sameAs: ["https://www.instagram.com/the.cookie_lady"],
 };
 
 export default function RootLayout({
@@ -56,12 +74,15 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased min-h-screen flex flex-col`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <Navbar />
         <main className="flex-1">
           {children}
         </main>
         <Footer />
-        <CookieBanner />
       </body>
     </html>
   );

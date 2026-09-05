@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
+import { siteUrl } from '@/lib/site';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.thecookielady.de';
+const baseUrl = siteUrl;
 
 export default function robots(): MetadataRoute.Robots {
     return {
