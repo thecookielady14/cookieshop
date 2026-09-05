@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Cookie, Flame, Wheat, Handshake } from "lucide-react";
+import { ArrowRight, Cookie, Flame, Wheat, Handshake, CalendarCheck, ChefHat, Package } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import ProductCard from "@/components/ProductCard";
 import AnimateIn from "@/components/AnimateIn";
@@ -101,6 +101,48 @@ export default async function Home() {
           </div>
         </div>
       </div>
+
+      {/* So läuft's – die Backwoche erklären, bevor jemand fragt */}
+      <section className="py-16 px-6 lg:px-12">
+        <div className="max-w-5xl mx-auto">
+          <AnimateIn>
+            <h2 className="font-serif text-3xl font-bold text-center mb-3">Frisch gebacken, nicht auf Vorrat</h2>
+            <p className="text-center text-[var(--color-brand-dark)] mb-12 max-w-2xl mx-auto">
+              Ich backe einmal pro Woche – damit jeder Keks so ankommt, wie er aus dem Ofen kommt.
+            </p>
+          </AnimateIn>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {[
+              {
+                Icon: CalendarCheck,
+                title: 'Bis Dienstag bestellen',
+                text: 'Alles, was bis Dienstag 12 Uhr eingeht, kommt in die Backwoche.',
+              },
+              {
+                Icon: ChefHat,
+                title: 'Von Hand gebacken',
+                text: 'Jeder Teigling wird einzeln geformt – kein Fließband, kein Vorrat.',
+              },
+              {
+                Icon: Package,
+                title: 'Noch dieselbe Woche unterwegs',
+                text: 'Bruchsicher verpackt und mit DHL zu dir, in 2–4 Werktagen.',
+              },
+            ].map((step, index) => (
+              <AnimateIn key={step.title} delay={index * 120}>
+                <div className="text-center">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[var(--color-brand-primary)] flex items-center justify-center">
+                    <step.Icon className="w-7 h-7 text-[var(--color-brand-accent)]" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2 text-[var(--color-brand-text)]">{step.title}</h3>
+                  <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">{step.text}</p>
+                </div>
+              </AnimateIn>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Featured Products Preview */}
       <section className="py-20 px-6 lg:px-12 bg-transparent">

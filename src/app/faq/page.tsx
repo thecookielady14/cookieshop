@@ -104,7 +104,7 @@ const faqItems: FaqItem[] = [
 
 export default function FAQ() {
     return (
-        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
+        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold mb-4 text-center text-[var(--color-brand-primary)] font-serif">
                     Häufig gestellte Fragen

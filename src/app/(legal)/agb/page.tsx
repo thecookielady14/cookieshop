@@ -10,7 +10,7 @@ export default function AGB() {
     return (
         <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
             <div className="max-w-4xl mx-auto bg-white p-8 lg:p-12 rounded-3xl shadow-sm">
-                <h1 className="text-3xl font-bold mb-8">Allgemeine Geschäftsbedingungen (AGB)</h1>
+                <h1 className="font-serif text-3xl font-bold mb-8">Allgemeine Geschäftsbedingungen (AGB)</h1>
 
                 <div className="space-y-8 text-neutral-700 leading-relaxed">
                     <section>

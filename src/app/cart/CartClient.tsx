@@ -72,9 +72,9 @@ export default function CartClient({ settings }: { settings: ShopSettings }) {
     const shipping = calculateShipping(total, settings);
 
     return (
-        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
+        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
             <div className="max-w-5xl mx-auto">
-                <h1 className="text-4xl font-extrabold mb-2 text-[var(--color-brand-text)]">Dein Warenkorb</h1>
+                <h1 className="font-serif text-4xl font-extrabold mb-2 text-[var(--color-brand-text)]">Dein Warenkorb</h1>
                 <p className="text-[var(--color-brand-dark)] mb-12">
                     {count > 0 ? `Du hast ${count} leckere Kekse im Korb.` : 'Dein Warenkorb ist noch hungrig!'}
                 </p>

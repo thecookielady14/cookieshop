@@ -79,7 +79,7 @@ export default function AdminLayout({
             </aside>
 
             {/* Main Admin Content */}
-            <main className="flex-1 md:ml-64 p-4 md:p-8 md:pt-32 max-w-full overflow-x-hidden">
+            <main className="flex-1 md:ml-64 p-4 md:p-8 max-w-full overflow-x-hidden">
                 {children}
             </main>
         </div>

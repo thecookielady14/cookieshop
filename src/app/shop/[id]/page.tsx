@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Wheat, AlertTriangle, Lightbulb, BarChart3, Building2 } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
 import OrdersClosedBanner from "@/components/OrdersClosedBanner";
 import type { Metadata } from "next";
@@ -203,7 +203,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             {product.ingredients && (
                                 <div>
                                     <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                        🌾 Zutatenverzeichnis
+                                        <Wheat className="w-5 h-5 text-[var(--color-brand-primary)] flex-shrink-0" /> Zutatenverzeichnis
                                     </h3>
                                     <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
                                         {highlightAllergens(product.ingredients, product.allergens).map((part, i) =>
@@ -221,7 +221,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             {product.allergens && (
                                 <div>
                                     <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                        ⚠️ Allergene
+                                        <AlertTriangle className="w-5 h-5 text-[var(--color-brand-primary)] flex-shrink-0" /> Allergene
                                     </h3>
                                     <p className="text-sm text-red-800 font-medium leading-relaxed bg-red-50 p-4 rounded-xl border border-red-100">
                                         {product.allergens}
@@ -232,7 +232,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             {product.consumer_info && (
                                 <div>
                                     <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                        💡 Verbraucherhinweise
+                                        <Lightbulb className="w-5 h-5 text-[var(--color-brand-primary)] flex-shrink-0" /> Verbraucherhinweise
                                     </h3>
                                     <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
                                         {product.consumer_info}
@@ -243,7 +243,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                             {hasNutrition && (
                                 <div>
                                     <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                        📊 Nährwerte je 100 g
+                                        <BarChart3 className="w-5 h-5 text-[var(--color-brand-primary)] flex-shrink-0" /> Nährwerte je 100 g
                                     </h3>
                                     <table className="w-full text-sm text-[var(--color-brand-dark)]">
                                         <tbody>
@@ -260,7 +260,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
                             <div>
                                 <h3 className="font-bold text-lg text-[var(--color-brand-text)] mb-2 flex items-center gap-2">
-                                    🏠 Lebensmittelunternehmer
+                                    <Building2 className="w-5 h-5 text-[var(--color-brand-primary)] flex-shrink-0" /> Lebensmittelunternehmer
                                 </h3>
                                 <p className="text-sm text-[var(--color-brand-dark)] leading-relaxed">
                                     {foodBusinessOperator.name}<br />

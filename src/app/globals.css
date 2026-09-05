@@ -14,6 +14,18 @@
 }
 
 @layer base {
+  /*
+   * Sichtbarer Fokus für Tastaturbedienung. Messing statt Braun, weil die
+   * Farbe sowohl auf dem hellen Seitenhintergrund als auch auf den dunklen
+   * Flächen (Hero, Fußzeile) erkennbar bleibt. :focus-visible trifft nur
+   * Tastatur- und Assistenznutzung, nicht den Mausklick.
+   */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
   body {
     background-color: var(--color-brand-bg);
     color: var(--color-brand-text);

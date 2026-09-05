@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 export default function About() {
     return (
-        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
+        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
             <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl lg:text-5xl font-extrabold mb-12 text-center text-[var(--color-brand-text)]">
+                <h1 className="font-serif text-4xl lg:text-5xl font-extrabold mb-12 text-center text-[var(--color-brand-text)]">
                     Meine Geschichte
                 </h1>
 

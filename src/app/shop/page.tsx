@@ -25,11 +25,11 @@ export default async function ShopOverview() {
     }
 
     return (
-        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
+        <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">
             <div className="max-w-7xl mx-auto">
                 <OrdersClosedBanner />
                 <AnimateIn>
-                    <h1 className="text-4xl lg:text-5xl font-extrabold mb-4 text-[var(--color-brand-text)] text-center">
+                    <h1 className="font-serif text-4xl lg:text-5xl font-extrabold mb-4 text-[var(--color-brand-text)] text-center">
                         Meine Kekse
                     </h1>
                     <p className="text-center text-lg text-[var(--color-brand-dark)] max-w-2xl mx-auto mb-4">

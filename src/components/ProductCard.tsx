@@ -35,7 +35,7 @@ export default function ProductCard({ product }: { product: Product }) {
             <h3 className="text-xl font-bold mb-1 group-hover:text-[var(--color-brand-primary)] transition-colors">
                 {product.name}
             </h3>
-            <p className="text-[var(--color-brand-dark)] mb-4 h-12 overflow-hidden text-sm">
+            <p className="text-[var(--color-brand-dark)] mb-4 text-sm line-clamp-2 min-h-[2.5rem]">
                 {product.description}
             </p>
 
