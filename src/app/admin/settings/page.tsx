@@ -68,14 +68,17 @@ export default function AdminSettings() {
         ordersClosedMessage: closedMessage.trim() || null,
     };
 
-    // Die Regel als ein Satz, so wie sie auch ein Kunde formulieren würde.
+    // Kurze Merkzeilen, keine Beispielrechnung.
     const threshold = previewSettings.freeShippingThreshold;
-    const shippingSentence =
-        threshold === null
-            ? `Versand kostet ${formatEuro(previewSettings.shippingCost)} – bei jeder Bestellung.`
-            : threshold <= 0
-                ? 'Versand ist immer kostenlos.'
-                : `Bei Bestellungen ab ${formatEuro(threshold)} ist der Versand kostenlos, darunter kostet er ${formatEuro(previewSettings.shippingCost)}.`;
+    const previewLines =
+        threshold !== null && threshold <= 0
+            ? ['Versandkosten: versandkostenfrei']
+            : [
+                  `Versandkosten: ${formatEuro(previewSettings.shippingCost)}`,
+                  ...(threshold !== null
+                      ? [`Bei Bestellungen ab ${formatEuro(threshold)}: versandkostenfrei`]
+                      : []),
+              ];
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -290,12 +293,14 @@ export default function AdminSettings() {
                     <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4">
                         So sieht es der Kunde
                     </h2>
-                    <p className="text-gray-800 leading-relaxed">
-                        {shippingSentence}
-                    </p>
-                    <p className="text-gray-800 leading-relaxed mt-2">
-                        Lieferung in {previewSettings.deliveryDaysMin}–{previewSettings.deliveryDaysMax} Werktagen.
-                    </p>
+                    <ul className="text-gray-800 space-y-1">
+                        {previewLines.map((line) => (
+                            <li key={line}>{line}</li>
+                        ))}
+                        <li>
+                            Lieferzeit: {previewSettings.deliveryDaysMin}–{previewSettings.deliveryDaysMax} Werktage
+                        </li>
+                    </ul>
                 </div>
 
                 <div className="flex items-center gap-4">
