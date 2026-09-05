@@ -72,7 +72,7 @@ export default function Datenschutz() {
                             Zum Speichern Ihres aktuellen Warenkorbs nutzen wir den sogenannten &bdquo;Local Storage&ldquo; Ihres Browsers. Diese Daten verbleiben lokal auf Ihrem Endgerät und werden erst an unsere Server übertragen, wenn Sie aktiv eine Bestellung aufgeben.
                         </p>
                         <p className="mb-4">
-                            Ihre Cookie-Entscheidung (ob Sie technisch nicht notwendige Cookies akzeptieren oder ablehnen) wird in einem technisch notwendigen Cookie gespeichert. Grundlage für die Speicherung technisch notwendiger Daten ist Art. 6 Abs. 1 lit. f DSGVO, da wir ein berechtigtes Interesse an der fehlerfreien und sicheren Bereitstellung unseres Online-Shops haben.
+                            Wir setzen ausschließlich technisch notwendige Cookies und Speichertechniken ein. Analyse-, Tracking- oder Marketing-Werkzeuge verwenden wir nicht, weshalb auch keine Einwilligung eingeholt werden muss. Grundlage für die Speicherung technisch notwendiger Daten ist Art. 6 Abs. 1 lit. f DSGVO, da wir ein berechtigtes Interesse an der fehlerfreien und sicheren Bereitstellung unseres Online-Shops haben.
                         </p>
                     </section>
 
@@ -93,6 +93,19 @@ export default function Datenschutz() {
                         <p className="mb-4">
                             Wir erheben, verarbeiten und nutzen personenbezogene Daten nur, soweit sie für die Begründung, inhaltliche Ausgestaltung oder Änderung des Rechtsverhältnisses erforderlich sind (Bestandsdaten). Dies erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, der die Verarbeitung von Daten zur Erfüllung eines Vertrags oder vorvertraglicher Maßnahmen gestattet.
                         </p>
+                        <h3 className="font-bold text-lg mb-2">Resend (E-Mail-Versand)</h3>
+                        <p className="mb-4">
+                            Für den Versand von Bestell- und Versandbestätigungen nutzen wir den E-Mail-Versanddienst Resend. Anbieter ist die Resend, Inc., USA.
+                        </p>
+                        <p className="mb-4">
+                            Wenn Sie eine Bestellung aufgeben, werden Ihr Name, Ihre E-Mail-Adresse und die Angaben zu Ihrer Bestellung an Resend übermittelt, damit Ihnen die Bestätigungen zugestellt werden können. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Erfüllung des Vertrags). Die Datenübertragung in die USA wird auf die Standardvertragsklauseln der EU-Kommission gestützt. Mit Resend besteht ein Vertrag zur Auftragsverarbeitung.
+                        </p>
+                        <p className="mb-4">
+                            Weitere Informationen entnehmen Sie der Datenschutzerklärung von Resend unter: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://resend.com/legal/privacy-policy</a>.
+                        </p>
+                    </section>
+
+                    <section>
                         <h3 className="font-bold text-lg mb-2">Stripe</h3>
                         <p className="mb-4">
                             Wir bieten die Möglichkeit an, den Zahlungsvorgang über den Zahlungsdienstleister Stripe abzuwickeln. Anbieter für Kunden innerhalb der EU ist die Stripe Payments Europe, Ltd., 1 Grand Canal Street Lower, Grand Canal Dock, Dublin, Irland (nachfolgend „Stripe“).
