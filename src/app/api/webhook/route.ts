@@ -108,23 +108,6 @@ export async function POST(req: Request) {
 
             console.log(`Order ${orderData.id} created successfully for ${customerEmail}`);
 
-            // Lagerbestand abziehen. Bewusst über eine Datenbankfunktion: Lesen,
-            // Rechnen und Schreiben in getrennten Schritten würde bei zwei
-            // gleichzeitigen Bestellungen denselben Ausgangswert lesen und den
-            // Bestand nur einmal reduzieren. Fehler hier dürfen die Bestellung
-            // niemals blockieren – bezahlt ist bezahlt.
-            for (const item of items) {
-                try {
-                    const { error: stockError } = await supabaseAdmin.rpc('decrement_stock', {
-                        p_product_id: item.id,
-                        p_quantity: item.qty,
-                    });
-                    if (stockError) throw stockError;
-                } catch (stockError) {
-                    console.error(`Failed to decrement stock for product ${item.id}:`, stockError);
-                }
-            }
-
             // Send order confirmation email if RESEND_API_KEY is configured
             if (process.env.RESEND_API_KEY && items.length > 0 && customerEmail) {
                 try {

@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         const productIds = items.map((i: any) => i.id);
         const { data: dbProducts, error: dbError } = await supabase
             .from('products')
-            .select('id, name, price, is_available, stock_count')
+            .select('id, name, price, is_available')
             .in('id', productIds);
 
         if (dbError || !dbProducts) {
@@ -53,19 +53,11 @@ export async function POST(req: Request) {
                     { status: 400 }
                 );
             }
+            // Es wird auf Bestellung gebacken – kein Lagerbestand. Ob ein Keks
+            // bestellbar ist, steuerst du im Admin über is_available.
             if (realProduct.is_available === false) {
                 return NextResponse.json(
-                    { error: `"${realProduct.name}" ist zurzeit leider ausverkauft.` },
-                    { status: 400 }
-                );
-            }
-            if (typeof realProduct.stock_count === 'number' && item.quantity > realProduct.stock_count) {
-                return NextResponse.json(
-                    {
-                        error: realProduct.stock_count === 0
-                            ? `"${realProduct.name}" ist zurzeit leider ausverkauft.`
-                            : `Von "${realProduct.name}" sind leider nur noch ${realProduct.stock_count} Stück verfügbar. Bitte passe die Menge an.`,
-                    },
+                    { error: `"${realProduct.name}" ist zurzeit leider nicht bestellbar.` },
                     { status: 400 }
                 );
             }

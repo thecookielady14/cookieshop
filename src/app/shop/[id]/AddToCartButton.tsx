@@ -33,7 +33,7 @@ export default function AddToCartButton({ product }: { product: any }) {
                     disabled
                     className="w-full flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-lg bg-gray-200 text-gray-500 cursor-not-allowed"
                 >
-                    Zurzeit ausverkauft
+                    Zurzeit nicht bestellbar
                 </button>
             </div>
         );

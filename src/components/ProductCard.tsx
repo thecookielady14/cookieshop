@@ -46,7 +46,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 </div>
                 {product.is_available === false ? (
                     <span className="flex items-center gap-1 px-4 py-2 rounded-full font-bold text-sm bg-gray-100 text-gray-500">
-                        Ausverkauft
+                        Nicht bestellbar
                     </span>
                 ) : (
                     <span className="flex items-center gap-1 px-4 py-2 rounded-full font-bold text-sm bg-[var(--color-brand-bg)] text-[var(--color-brand-primary)] group-hover:bg-[var(--color-brand-primary)] group-hover:text-white transition-all">

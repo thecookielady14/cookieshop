@@ -70,7 +70,7 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
                         <td className="p-4">
                             <span className={`px-3 py-1 rounded-full text-xs font-bold ${product.is_available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                                 }`}>
-                                {product.is_available ? 'Aktiv' : 'Ausverkauft'}
+                                {product.is_available ? 'Bestellbar' : 'Nicht bestellbar'}
                             </span>
                         </td>
                         <td className="p-4 text-gray-600">{product.weight_grams}g</td>

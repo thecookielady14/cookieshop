@@ -17,8 +17,8 @@ interface IncomingItem {
  * Erfasst eine telefonisch aufgegebene Bestellung.
  *
  * Die Rechnung dafür schreibst du in Lexware – hier geht es nur darum, dass der
- * Shop den Lagerbestand kennt und die Bestellung in der Übersicht auftaucht.
- * Sonst verkauft der Shop dieselben Kekse ein zweites Mal online.
+ * Shop die Bestellung in der Übersicht führt – Umsatz und Kundschaft an einer
+ * Stelle, statt verstreut über zwei Systeme.
  *
  * Läuft serverseitig mit dem Service-Role-Key, weil die Tabelle `orders` per
  * RLS keine Schreibzugriffe aus dem Browser zulässt.
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         // Preise immer aus der Datenbank, nie aus dem Formular
         const { data: dbProducts, error: dbError } = await supabaseAdmin
             .from('products')
-            .select('id, name, price, stock_count')
+            .select('id, name, price')
             .in('id', items.map((i) => i.id));
 
         if (dbError || !dbProducts) {
@@ -78,15 +78,6 @@ export async function POST(req: Request) {
                     { status: 400 }
                 );
             }
-            // is_available wird bewusst nicht geprüft: am Telefon weißt du selbst,
-            // ob du noch etwas da hast. Der Bestand muss aber reichen.
-            if (typeof product.stock_count === 'number' && item.quantity > product.stock_count) {
-                return NextResponse.json(
-                    { error: `Von "${product.name}" sind nur noch ${product.stock_count} Stück auf Lager.` },
-                    { status: 400 }
-                );
-            }
-
             goodsTotal += product.price * item.quantity;
             orderItems.push({
                 product_id: product.id,
@@ -131,17 +122,6 @@ export async function POST(req: Request) {
             // Halbe Bestellung ist schlimmer als gar keine: wieder aufräumen.
             await supabaseAdmin.from('orders').delete().eq('id', order.id);
             throw itemsError;
-        }
-
-        // Lagerbestand abziehen – dieselbe Funktion wie beim Online-Kauf.
-        for (const item of orderItems) {
-            const { error: stockError } = await supabaseAdmin.rpc('decrement_stock', {
-                p_product_id: item.product_id,
-                p_quantity: item.quantity,
-            });
-            if (stockError) {
-                console.error(`Bestand für ${item.product_id} nicht abgezogen:`, stockError);
-            }
         }
 
         return NextResponse.json({ order });

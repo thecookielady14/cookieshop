@@ -12,7 +12,6 @@ interface Product {
     id: string;
     name: string;
     price: number;
-    stock_count: number | null;
 }
 
 export default function NewPhoneOrder() {
@@ -47,7 +46,7 @@ export default function NewPhoneOrder() {
     useEffect(() => {
         const load = async () => {
             const [{ data: prods }, { data: cfg }] = await Promise.all([
-                supabase.from('products').select('id, name, price, stock_count').order('name'),
+                supabase.from('products').select('id, name, price').order('name'),
                 supabase.from('shop_settings').select('*').eq('id', 1).maybeSingle(),
             ]);
             setProducts(prods ?? []);
@@ -159,8 +158,8 @@ export default function NewPhoneOrder() {
                 <h1 className="text-3xl font-bold text-gray-900">Telefonbestellung erfassen</h1>
             </div>
             <p className="text-gray-500 mb-8 ml-14">
-                Die Rechnung schreibst du wie gewohnt in Lexware. Hier wird nur der Lagerbestand
-                abgezogen, damit der Shop dieselben Kekse nicht noch einmal online verkauft.
+                Die Rechnung schreibst du wie gewohnt in Lexware. Hier landet die Bestellung
+                nur in deiner Übersicht, damit Umsatz und Kundschaft an einer Stelle stehen.
             </p>
 
             {error && (
@@ -185,13 +184,12 @@ export default function NewPhoneOrder() {
                         <div className="space-y-3">
                             {products.map((p) => {
                                 const qty = quantities[p.id] ?? 0;
-                                const stock = p.stock_count ?? 0;
                                 return (
                                     <div key={p.id} className={`flex items-center gap-4 p-3 rounded-2xl border ${qty > 0 ? 'border-[var(--color-brand-primary)]/30 bg-[var(--color-brand-secondary)]/40' : 'border-gray-100'}`}>
                                         <div className="flex-1 min-w-0">
                                             <span className="font-medium text-gray-900 block truncate">{p.name}</span>
                                             <span className="text-sm text-gray-500">
-                                                {formatEuro(p.price)} · Lager: {stock}
+                                                {formatEuro(p.price)}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -208,7 +206,6 @@ export default function NewPhoneOrder() {
                                             <button
                                                 type="button"
                                                 onClick={() => changeQuantity(p.id, 1)}
-                                                disabled={qty >= stock}
                                                 aria-label={`Menge von ${p.name} erhöhen`}
                                                 className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-30"
                                             >
