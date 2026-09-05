@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Save, Truck, AlertTriangle, Check, Power } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
-import { DEFAULT_SHOP_SETTINGS, DEFAULT_ORDERS_CLOSED_MESSAGE, calculateShipping, formatEuro } from '@/lib/shop-settings';
+import { DEFAULT_SHOP_SETTINGS, DEFAULT_ORDERS_CLOSED_MESSAGE, formatEuro } from '@/lib/shop-settings';
 
 export default function AdminSettings() {
     // createBrowserClient liest die Admin-Session aus den Cookies – nötig, damit
@@ -68,16 +68,14 @@ export default function AdminSettings() {
         ordersClosedMessage: closedMessage.trim() || null,
     };
 
-    // Die Vorschau zeigt genau die Kante, an der es kippt – ein frei gewählter
-    // Beispielbetrag würde nichts verraten, was nicht schon im Feld darüber steht.
+    // Die Regel als ein Satz, so wie sie auch ein Kunde formulieren würde.
     const threshold = previewSettings.freeShippingThreshold;
-    const previewCases =
-        threshold === null || threshold <= 0
-            ? [{ label: 'Jeder Warenkorb', subtotal: 0 }]
-            : [
-                  { label: `Warenkorb ${formatEuro(Math.max(0, threshold - 0.01))} – knapp darunter`, subtotal: Math.max(0, threshold - 0.01) },
-                  { label: `Warenkorb ${formatEuro(threshold)} – genau die Freigrenze`, subtotal: threshold },
-              ];
+    const shippingSentence =
+        threshold === null
+            ? `Versand kostet ${formatEuro(previewSettings.shippingCost)} – bei jeder Bestellung.`
+            : threshold <= 0
+                ? 'Versand ist immer kostenlos.'
+                : `Bei Bestellungen ab ${formatEuro(threshold)} ist der Versand kostenlos, darunter kostet er ${formatEuro(previewSettings.shippingCost)}.`;
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -292,24 +290,12 @@ export default function AdminSettings() {
                     <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4">
                         So sieht es der Kunde
                     </h2>
-                    <ul className="space-y-2 text-sm text-gray-700">
-                        {previewCases.map((c) => (
-                            <li key={c.label} className="flex justify-between border-b border-black/5 pb-2">
-                                <span>{c.label}</span>
-                                <strong>
-                                    {calculateShipping(c.subtotal, previewSettings) === 0
-                                        ? 'Versand kostenlos'
-                                        : `Versand ${formatEuro(calculateShipping(c.subtotal, previewSettings))}`}
-                                </strong>
-                            </li>
-                        ))}
-                        <li className="flex justify-between">
-                            <span>Lieferzeit</span>
-                            <strong>
-                                {previewSettings.deliveryDaysMin}–{previewSettings.deliveryDaysMax} Werktage
-                            </strong>
-                        </li>
-                    </ul>
+                    <p className="text-gray-800 leading-relaxed">
+                        {shippingSentence}
+                    </p>
+                    <p className="text-gray-800 leading-relaxed mt-2">
+                        Lieferung in {previewSettings.deliveryDaysMin}–{previewSettings.deliveryDaysMax} Werktagen.
+                    </p>
                 </div>
 
                 <div className="flex items-center gap-4">
