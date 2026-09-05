@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
 import type { Metadata } from "next";
-import { siteUrl } from "@/lib/site";
+import { siteUrl, VAT_PERCENTAGE } from "@/lib/site";
 
 export const dynamic = 'force-dynamic';
 
@@ -164,7 +164,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                 </span>
                                 <span className="text-sm text-neutral-500 font-medium">
                                     Grundpreis: {pricePerKg.toFixed(2).replace('.', ',')} € / kg <br />
-                                    inkl. MwSt., zzgl. <Link href="/versand" className="underline hover:text-[var(--color-brand-primary)]">Versandkosten</Link>
+                                    inkl. {VAT_PERCENTAGE} % MwSt., zzgl. <Link href="/versand" className="underline hover:text-[var(--color-brand-primary)]">Versandkosten</Link>
                                 </span>
                                 <span className="text-sm font-bold text-[var(--color-brand-primary)] bg-[var(--color-brand-primary)]/10 px-3 py-1 rounded-md inline-block w-max mt-2">
                                     Gewicht: ca. {product.weight_grams}g

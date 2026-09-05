@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { VAT_PERCENTAGE } from "@/lib/site";
 
 interface Product {
     id: string;
@@ -41,7 +42,7 @@ export default function ProductCard({ product }: { product: Product }) {
             <div className="flex justify-between items-center mt-auto">
                 <div className="flex flex-col">
                     <span className="font-bold text-xl text-[var(--color-brand-text)]">{product.price.toFixed(2).replace('.', ',')} €</span>
-                    <span className="text-[11px] text-neutral-400 leading-tight">inkl. MwSt., zzgl. Versand</span>
+                    <span className="text-[11px] text-neutral-400 leading-tight">inkl. {VAT_PERCENTAGE} % MwSt., zzgl. Versand</span>
                 </div>
                 {product.is_available === false ? (
                     <span className="flex items-center gap-1 px-4 py-2 rounded-full font-bold text-sm bg-gray-100 text-gray-500">

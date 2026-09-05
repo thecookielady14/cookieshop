@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, Clock, Package, CreditCard } from "lucide-react";
 import { getShippingSettings, formatEuro } from "@/lib/shipping";
+import { VAT_PERCENTAGE } from "@/lib/site";
 
 export const dynamic = 'force-dynamic';
 
@@ -48,7 +49,7 @@ export default async function Versand() {
                             </table>
                         </div>
                         <p className="text-sm text-neutral-500 mt-3">
-                            Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer. Die Versandkosten
+                            Alle Preise verstehen sich inklusive {VAT_PERCENTAGE} % Mehrwertsteuer – Lebensmittel unterliegen dem ermäßigten Steuersatz, die Versandkosten als Nebenleistung ebenfalls. Die Versandkosten
                             fallen einmalig pro Bestellung an, unabhängig von der Anzahl der Kekse.
                         </p>
                     </section>

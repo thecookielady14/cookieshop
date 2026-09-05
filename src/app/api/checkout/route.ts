@@ -3,6 +3,8 @@ import Stripe from 'stripe';
 import { supabase } from '@/lib/supabase';
 import { getShippingSettings, calculateShipping } from '@/lib/shipping';
 import { encodeItemsToMetadata } from '@/lib/checkout-items';
+import { getVatTaxRateId } from '@/lib/stripe-tax';
+import { siteUrl, invoiceIssuer } from '@/lib/site';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
     apiVersion: '2026-01-28.clover',
@@ -36,6 +38,9 @@ export async function POST(req: Request) {
                 { status: 503 }
             );
         }
+
+        // 7 % MwSt. (Lebensmittel); Preise im Shop sind Bruttopreise.
+        const taxRateId = await getVatTaxRateId(stripe);
 
         // Convert cart items to Stripe line items using secure DB prices
         const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
@@ -75,6 +80,7 @@ export async function POST(req: Request) {
                     unit_amount: Math.round(realProduct.price * 100), // Secure server-side price
                 },
                 quantity: item.quantity,
+                tax_rates: [taxRateId],
             });
         }
 
@@ -87,22 +93,23 @@ export async function POST(req: Request) {
         const shippingSettings = await getShippingSettings();
         const shippingCost = calculateShipping(cartTotal, shippingSettings);
 
-        const shippingOptions = [
-            {
-                shipping_rate_data: {
-                    type: 'fixed_amount' as const,
-                    fixed_amount: {
-                        amount: Math.round(shippingCost * 100),
-                        currency: 'eur',
+        // Versand als eigene, besteuerte Position: Stripe erlaubt an
+        // shipping_options keine Steuersätze, der Versand bliebe dort
+        // unversteuert. Als Nebenleistung teilt er den Satz der Ware.
+        if (shippingCost > 0) {
+            lineItems.push({
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: 'Versandkosten',
+                        description: `Lieferung in ${shippingSettings.deliveryDaysMin}–${shippingSettings.deliveryDaysMax} Werktagen`,
                     },
-                    display_name: shippingCost === 0 ? 'Kostenloser Versand' : 'Standardversand',
-                    delivery_estimate: {
-                        minimum: { unit: 'business_day' as const, value: shippingSettings.deliveryDaysMin },
-                        maximum: { unit: 'business_day' as const, value: shippingSettings.deliveryDaysMax },
-                    },
+                    unit_amount: Math.round(shippingCost * 100),
                 },
-            },
-        ];
+                quantity: 1,
+                tax_rates: [taxRateId],
+            });
+        }
 
         // Create Checkout Session
         const session = await stripe.checkout.sessions.create({
@@ -111,24 +118,33 @@ export async function POST(req: Request) {
             mode: 'payment',
             // Kompaktes, auf mehrere Schlüssel verteiltes Format – siehe lib/checkout-items.ts.
             // Preise stammen aus der DB, nie vom Client.
-            metadata: encodeItemsToMetadata(
-                items.map((i: any, idx: number) => ({
-                    id: i.id,
-                    qty: i.quantity,
-                    price: (lineItems[idx].price_data!.unit_amount ?? 0) / 100,
-                }))
-            ),
-            success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/cart`,
+            metadata: {
+                ...encodeItemsToMetadata(
+                    items.map((i: any, idx: number) => ({
+                        id: i.id,
+                        qty: i.quantity,
+                        price: (lineItems[idx].price_data!.unit_amount ?? 0) / 100,
+                    }))
+                ),
+                // Der Versand ist keine Bestellposition, wird aber für die
+                // Bestätigungsmail gebraucht.
+                shipping: shippingCost.toFixed(2),
+            },
+            success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${siteUrl}/cart`,
             shipping_address_collection: {
                 allowed_countries: ['DE'],
             },
-            shipping_options: shippingOptions,
             // Promo codes: create & manage codes in the Stripe Dashboard
             allow_promotion_codes: true,
-            // This setting automatically generates PDF invoices for the customer!
+            // Erzeugt automatisch eine PDF-Rechnung mit fortlaufender Nummer.
             invoice_creation: {
                 enabled: true,
+                invoice_data: {
+                    // Pflichtangaben des Rechnungsstellers – unabhängig davon,
+                    // was im Stripe-Dashboard hinterlegt ist.
+                    footer: invoiceIssuer,
+                },
             },
             locale: 'de',
         });

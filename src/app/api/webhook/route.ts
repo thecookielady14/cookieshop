@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { formatEuro } from '@/lib/shipping';
 import { decodeItemsFromMetadata } from '@/lib/checkout-items';
+import { VAT_PERCENTAGE } from '@/lib/site';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
     apiVersion: '2026-01-28.clover',
@@ -140,9 +141,14 @@ export async function POST(req: Request) {
                     }).join('');
 
                     const customerName = session.customer_details?.name || 'liebe Kundin / lieber Kunde';
-                    // Tatsächlich berechneter Versand aus der Stripe-Session – nicht schätzen:
-                    // totalAmount enthält den Versand bereits und taugt nicht als Vergleichswert.
-                    const shippingAmount = (session.shipping_cost?.amount_total ?? 0) / 100;
+                    // Tatsächlich berechneter Versand – nicht schätzen: totalAmount
+                    // enthält den Versand bereits und taugt nicht als Vergleichswert.
+                    // Der Versand läuft als besteuerte Position (siehe lib/stripe-tax.ts),
+                    // deshalb steht der Betrag in der Metadata; shipping_cost bleibt als
+                    // Rückfallebene für ältere Sessions.
+                    const shippingAmount = session.metadata?.shipping !== undefined
+                        ? parseFloat(session.metadata.shipping) || 0
+                        : (session.shipping_cost?.amount_total ?? 0) / 100;
                     const shippingCost = shippingAmount === 0 ? 'Kostenlos' : formatEuro(shippingAmount);
 
                     const emailHtml = `
@@ -179,6 +185,9 @@ export async function POST(req: Request) {
         </div>
         <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:17px;font-weight:bold;color:#331f16;">
           <span>Gesamtbetrag</span><span>${formatEuro(totalAmount)}</span>
+        </div>
+        <div style="margin-top:4px;display:flex;justify-content:space-between;font-size:12px;color:#9c7a4a;">
+          <span>darin enthalten ${VAT_PERCENTAGE} % MwSt.</span><span>${formatEuro(totalAmount - totalAmount / (1 + VAT_PERCENTAGE / 100))}</span>
         </div>
       </div>
 
