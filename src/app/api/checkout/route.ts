@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabase } from '@/lib/supabase';
-import { getShippingSettings, calculateShipping } from '@/lib/shipping';
+import { getShopSettings, calculateShipping, DEFAULT_ORDERS_CLOSED_MESSAGE } from '@/lib/shop-settings';
 import { encodeItemsToMetadata } from '@/lib/checkout-items';
 import { getVatTaxRateId } from '@/lib/stripe-tax';
 import { siteUrl, invoiceIssuer } from '@/lib/site';
@@ -22,6 +22,16 @@ export async function POST(req: Request) {
             return NextResponse.json(
                 { error: 'Die Bezahlung ist gerade nicht konfiguriert. Bitte melde dich unter kontakt@thecookielady.de.' },
                 { status: 500 }
+            );
+        }
+
+        // Bestellannahme geschlossen? Das ist die maßgebliche Prüfung – die
+        // Hinweise im Shop sind nur Anzeige und lassen sich umgehen.
+        const shopSettings = await getShopSettings();
+        if (!shopSettings.ordersOpen) {
+            return NextResponse.json(
+                { error: shopSettings.ordersClosedMessage || DEFAULT_ORDERS_CLOSED_MESSAGE },
+                { status: 503 }
             );
         }
 
@@ -82,8 +92,7 @@ export async function POST(req: Request) {
         }, 0) / 100; // Convert cents to euros
 
         // Versandkosten kommen aus den Shop-Einstellungen (Admin → Einstellungen)
-        const shippingSettings = await getShippingSettings();
-        const shippingCost = calculateShipping(cartTotal, shippingSettings);
+        const shippingCost = calculateShipping(cartTotal, shopSettings);
 
         // Versand als eigene, besteuerte Position: Stripe erlaubt an
         // shipping_options keine Steuersätze, der Versand bliebe dort
@@ -94,7 +103,7 @@ export async function POST(req: Request) {
                     currency: 'eur',
                     product_data: {
                         name: 'Versandkosten',
-                        description: `Lieferung in ${shippingSettings.deliveryDaysMin}–${shippingSettings.deliveryDaysMax} Werktagen`,
+                        description: `Lieferung in ${shopSettings.deliveryDaysMin}–${shopSettings.deliveryDaysMax} Werktagen`,
                     },
                     unit_amount: Math.round(shippingCost * 100),
                 },

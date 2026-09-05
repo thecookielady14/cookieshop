@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { Cookie } from "lucide-react";
 import AnimateIn from "@/components/AnimateIn";
 import ShopTabs from "@/components/ShopTabs";
+import OrdersClosedBanner from "@/components/OrdersClosedBanner";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default async function ShopOverview() {
     return (
         <div className="bg-[var(--color-brand-bg)] min-h-screen pt-36 pb-20 px-6 lg:px-12">
             <div className="max-w-7xl mx-auto">
+                <OrdersClosedBanner />
                 <AnimateIn>
                     <h1 className="text-4xl lg:text-5xl font-extrabold mb-4 text-[var(--color-brand-text)] text-center">
                         Meine Kekse

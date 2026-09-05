@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, Clock, Package, CreditCard } from "lucide-react";
-import { getShippingSettings, formatEuro } from "@/lib/shipping";
+import { getShopSettings, formatEuro } from "@/lib/shop-settings";
 import { VAT_PERCENTAGE } from "@/lib/site";
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Versand() {
-    const settings = await getShippingSettings();
+    const settings = await getShopSettings();
 
     return (
         <div className="bg-[var(--color-brand-bg)] min-h-screen pt-32 pb-20 px-6 lg:px-12">

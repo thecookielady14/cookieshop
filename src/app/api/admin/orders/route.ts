@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isAdminEmail } from '@/lib/admin-auth';
-import { getShippingSettings, calculateShipping } from '@/lib/shipping';
+import { getShopSettings, calculateShipping } from '@/lib/shop-settings';
 
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -87,7 +87,7 @@ export async function POST(req: Request) {
         }
 
         // Versandkosten: Vorgabe aus den Shop-Einstellungen, im Formular überschreibbar
-        const settings = await getShippingSettings();
+        const settings = await getShopSettings();
         const shippingCost =
             typeof body.shippingCost === 'number' && body.shippingCost >= 0
                 ? body.shippingCost

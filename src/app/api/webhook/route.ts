@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { formatEuro } from '@/lib/shipping';
+import { formatEuro } from '@/lib/shop-settings';
 import { decodeItemsFromMetadata } from '@/lib/checkout-items';
 import { VAT_PERCENTAGE } from '@/lib/site';
 

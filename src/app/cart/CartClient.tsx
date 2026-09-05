@@ -1,14 +1,14 @@
 'use client';
 
 import { useCartStore } from "@/lib/store";
-import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck, Loader2, AlertCircle } from "lucide-react";
+import { CopyMinus, CopyPlus, Trash2, ArrowRight, ShieldCheck, Loader2, AlertCircle, CalendarClock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useMounted } from "@/lib/useMounted";
-import { calculateShipping, formatEuro, type ShippingSettings } from "@/lib/shipping";
+import { calculateShipping, formatEuro, DEFAULT_ORDERS_CLOSED_MESSAGE, type ShopSettings } from "@/lib/shop-settings";
 
-export default function CartClient({ settings }: { settings: ShippingSettings }) {
+export default function CartClient({ settings }: { settings: ShopSettings }) {
     const { items, removeItem, updateQuantity, getCartTotal, getCartCount } = useCartStore();
     const mounted = useMounted();
     const [loading, setLoading] = useState(false);
@@ -18,6 +18,10 @@ export default function CartClient({ settings }: { settings: ShippingSettings })
     const handleCheckout = async () => {
         setCheckoutError(null);
 
+        if (!settings.ordersOpen) {
+            setCheckoutError(settings.ordersClosedMessage || DEFAULT_ORDERS_CLOSED_MESSAGE);
+            return;
+        }
         if (!acceptedTerms) {
             setCheckoutError("Bitte akzeptiere die AGB und Widerrufsbelehrung.");
             return;
@@ -74,6 +78,28 @@ export default function CartClient({ settings }: { settings: ShippingSettings })
                 <p className="text-[var(--color-brand-dark)] mb-12">
                     {count > 0 ? `Du hast ${count} leckere Kekse im Korb.` : 'Dein Warenkorb ist noch hungrig!'}
                 </p>
+
+                {!settings.ordersOpen && (
+                    <div
+                        role="status"
+                        className="bg-white border-2 border-[var(--color-brand-accent)] rounded-3xl p-6 lg:p-8 mb-10 flex flex-col sm:flex-row gap-5 items-center shadow-sm"
+                    >
+                        <div className="flex-shrink-0 bg-[var(--color-brand-bg)] p-4 rounded-full">
+                            <CalendarClock className="w-8 h-8 text-[var(--color-brand-primary)]" />
+                        </div>
+                        <div className="text-center sm:text-left">
+                            <h2 className="font-serif text-xl font-bold text-[var(--color-brand-text)] mb-1">
+                                Zurzeit keine Bestellannahme
+                            </h2>
+                            <p className="text-[var(--color-brand-dark)] leading-relaxed">
+                                {settings.ordersClosedMessage || DEFAULT_ORDERS_CLOSED_MESSAGE}
+                            </p>
+                            <p className="text-sm text-neutral-500 mt-2">
+                                Dein Warenkorb bleibt gespeichert – du kannst später einfach weitermachen.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-neutral-100">
@@ -197,7 +223,7 @@ export default function CartClient({ settings }: { settings: ShippingSettings })
 
                                 <button
                                     onClick={handleCheckout}
-                                    disabled={loading || !acceptedTerms}
+                                    disabled={loading || !acceptedTerms || !settings.ordersOpen}
                                     className="w-full flex items-center justify-center gap-2 bg-[var(--color-brand-primary)] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#c29160] transition-transform hover:-translate-y-1 shadow-md mb-4 disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
                                 >
                                     {loading ? (
@@ -207,7 +233,8 @@ export default function CartClient({ settings }: { settings: ShippingSettings })
                                         </>
                                     ) : (
                                         <>
-                                            Zur Kasse <ArrowRight className="w-5 h-5" />
+                                            {settings.ordersOpen ? 'Zur Kasse' : 'Bestellannahme pausiert'}
+                                            {settings.ordersOpen && <ArrowRight className="w-5 h-5" />}
                                         </>
                                     )}
                                 </button>

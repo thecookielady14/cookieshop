@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Save, Truck, AlertTriangle, Check } from 'lucide-react';
+import { Save, Truck, AlertTriangle, Check, Power } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
-import { DEFAULT_SHIPPING_SETTINGS, calculateShipping, formatEuro } from '@/lib/shipping';
+import { DEFAULT_SHOP_SETTINGS, DEFAULT_ORDERS_CLOSED_MESSAGE, calculateShipping, formatEuro } from '@/lib/shop-settings';
 
 export default function AdminSettings() {
     // createBrowserClient liest die Admin-Session aus den Cookies – nötig, damit
@@ -15,11 +15,13 @@ export default function AdminSettings() {
         )
     );
 
-    const [shippingCost, setShippingCost] = useState(String(DEFAULT_SHIPPING_SETTINGS.shippingCost));
+    const [shippingCost, setShippingCost] = useState(String(DEFAULT_SHOP_SETTINGS.shippingCost));
     const [freeShippingEnabled, setFreeShippingEnabled] = useState(true);
     const [freeShippingThreshold, setFreeShippingThreshold] = useState('30');
     const [deliveryMin, setDeliveryMin] = useState('2');
     const [deliveryMax, setDeliveryMax] = useState('4');
+    const [ordersOpen, setOrdersOpen] = useState(true);
+    const [closedMessage, setClosedMessage] = useState('');
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -46,6 +48,8 @@ export default function AdminSettings() {
                 }
                 setDeliveryMin(String(data.delivery_days_min));
                 setDeliveryMax(String(data.delivery_days_max));
+                setOrdersOpen(data.orders_open !== false);
+                setClosedMessage(data.orders_closed_message ?? '');
             }
             setLoading(false);
         };
@@ -60,6 +64,8 @@ export default function AdminSettings() {
         freeShippingThreshold: freeShippingEnabled && !isNaN(parsedThreshold) ? parsedThreshold : null,
         deliveryDaysMin: parseInt(deliveryMin) || 0,
         deliveryDaysMax: parseInt(deliveryMax) || 0,
+        ordersOpen,
+        ordersClosedMessage: closedMessage.trim() || null,
     };
 
     const handleSave = async (e: React.FormEvent) => {
@@ -89,6 +95,8 @@ export default function AdminSettings() {
                     free_shipping_threshold: freeShippingEnabled ? parsedThreshold : null,
                     delivery_days_min: previewSettings.deliveryDaysMin,
                     delivery_days_max: previewSettings.deliveryDaysMax,
+                    orders_open: ordersOpen,
+                    orders_closed_message: closedMessage.trim() || null,
                     updated_at: new Date().toISOString(),
                 })
                 .eq('id', 1);
@@ -128,6 +136,53 @@ export default function AdminSettings() {
             )}
 
             <form onSubmit={handleSave} className="space-y-8">
+                {/* Bestellannahme */}
+                <div className={`p-8 rounded-3xl shadow-sm border transition-colors ${ordersOpen ? 'bg-white border-gray-100' : 'bg-amber-50 border-amber-300'}`}>
+                    <h2 className="text-xl font-bold mb-6 border-b border-gray-100 pb-4 flex items-center gap-2">
+                        <Power className={`w-5 h-5 ${ordersOpen ? 'text-green-600' : 'text-amber-600'}`} />
+                        Bestellannahme
+                    </h2>
+
+                    <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={ordersOpen}
+                            onChange={(e) => setOrdersOpen(e.target.checked)}
+                            className="mt-1 w-4 h-4 rounded border-gray-300 text-[var(--color-brand-primary)] focus:ring-[var(--color-brand-primary)] cursor-pointer"
+                        />
+                        <span>
+                            <span className="text-sm font-medium text-gray-700 block">
+                                Der Shop nimmt Bestellungen an
+                            </span>
+                            <span className="text-xs text-gray-500 block mt-1">
+                                Häkchen entfernen, wenn du für diese Woche ausgebucht bist. Kundinnen und
+                                Kunden sehen dann einen Hinweis und können nicht zur Kasse gehen.
+                                Telefonbestellungen kannst du im Adminbereich weiterhin erfassen.
+                            </span>
+                        </span>
+                    </label>
+
+                    {!ordersOpen && (
+                        <div className="mt-6 border-t border-amber-200 pt-6">
+                            <label htmlFor="closed-message" className="block text-sm font-medium text-gray-700 mb-2">
+                                Hinweistext <span className="text-gray-400 font-normal">– optional</span>
+                            </label>
+                            <textarea
+                                id="closed-message"
+                                rows={3}
+                                value={closedMessage}
+                                onChange={(e) => setClosedMessage(e.target.value)}
+                                placeholder={DEFAULT_ORDERS_CLOSED_MESSAGE}
+                                className={inputClass}
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                                Leer lassen, um den Standardtext zu verwenden. Zum Beispiel: „Ab dem 15.
+                                nehme ich wieder Bestellungen an.“
+                            </p>
+                        </div>
+                    )}
+                </div>
+
                 <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                     <h2 className="text-xl font-bold mb-6 border-b border-gray-100 pb-4 flex items-center gap-2">
                         <Truck className="w-5 h-5 text-[var(--color-brand-primary)]" />

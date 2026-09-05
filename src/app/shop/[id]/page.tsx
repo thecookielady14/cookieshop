@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
+import OrdersClosedBanner from "@/components/OrdersClosedBanner";
 import type { Metadata } from "next";
 import { siteUrl, VAT_PERCENTAGE } from "@/lib/site";
 
@@ -118,6 +119,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
             />
             <div className="max-w-6xl mx-auto">
+                <OrdersClosedBanner />
 
                 <Link href="/shop" className="inline-flex items-center gap-2 text-[var(--color-brand-dark)] hover:text-[var(--color-brand-primary)] transition-colors mb-8 font-medium">
                     <ArrowLeft className="w-5 h-5" /> Zurück zum Shop

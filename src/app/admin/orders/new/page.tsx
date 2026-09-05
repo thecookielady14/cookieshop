@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Plus, Minus, AlertCircle, Phone } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
-import { formatEuro, calculateShipping, DEFAULT_SHIPPING_SETTINGS, type ShippingSettings } from '@/lib/shipping';
+import { formatEuro, calculateShipping, DEFAULT_SHOP_SETTINGS, type ShopSettings } from '@/lib/shop-settings';
 import { VAT_PERCENTAGE } from '@/lib/site';
 
 interface Product {
@@ -24,7 +24,7 @@ export default function NewPhoneOrder() {
     );
 
     const [products, setProducts] = useState<Product[]>([]);
-    const [settings, setSettings] = useState<ShippingSettings>(DEFAULT_SHIPPING_SETTINGS);
+    const [settings, setSettings] = useState<ShopSettings>(DEFAULT_SHOP_SETTINGS);
     const [quantities, setQuantities] = useState<Record<string, number>>({});
 
     const [customerName, setCustomerName] = useState('');
@@ -57,6 +57,8 @@ export default function NewPhoneOrder() {
                         cfg.free_shipping_threshold === null ? null : Number(cfg.free_shipping_threshold),
                     deliveryDaysMin: cfg.delivery_days_min,
                     deliveryDaysMax: cfg.delivery_days_max,
+                    ordersOpen: cfg.orders_open !== false,
+                    ordersClosedMessage: cfg.orders_closed_message ?? null,
                 });
             }
             setLoading(false);
