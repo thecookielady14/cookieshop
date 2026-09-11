@@ -248,7 +248,11 @@ export async function POST(req: Request) {
         }
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card', 'paypal'],
+            // Zahlungsarten bewusst NICHT festgelegt: Stripe nimmt, was im
+            // Dashboard freigeschaltet ist. Eine feste Liste scheitert, sobald
+            // eine davon im Konto nicht aktiv ist – dann koennte niemand
+            // bezahlen. So steuerst du die Zahlungsarten im Stripe-Dashboard,
+            // ohne dass hier etwas geaendert werden muss.
             line_items: lineItems,
             mode: 'payment',
             metadata: {

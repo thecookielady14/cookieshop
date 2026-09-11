@@ -90,13 +90,23 @@ export async function POST(req: Request) {
             //    erneut aus – und die Idempotenzprüfung fand die bereits
             //    angelegte Bestellung und übersprang sie. Die Bestellung blieb
             //    dauerhaft ohne Positionen.
+            // Nicht jede abgeschlossene Session ist auch bezahlt: Klarna, SEPA
+            // und Rechnungskauf bestaetigen erst spaeter. Nur was Stripe als
+            // bezahlt meldet, wird auch als bezahlt gefuehrt – sonst steht die
+            // Bestellung offen, bis das Geld da ist.
+            const isPaid = session.payment_status === 'paid'
+                || session.payment_status === 'no_payment_required';
+            if (!isPaid) {
+                console.log(`Session ${session.id}: Zahlungsstatus "${session.payment_status}" – Bestellung wird als offen angelegt.`);
+            }
+
             const { data: orderId, error: orderError } = await supabaseAdmin.rpc('record_order', {
                 payload: {
                     customer_name: session.customer_details?.name || null,
                     customer_email: customerEmail,
                     stripe_session_id: session.id,
                     total_amount: totalAmount,
-                    status: 'paid',
+                    status: isPaid ? 'paid' : 'pending',
                     source: 'online',
                     shipping_address: shippingAddress,
                     items: items.map((i) => ({
@@ -125,7 +135,7 @@ export async function POST(req: Request) {
             }
 
             const orderData = { id: orderId };
-            console.log(`Bestellung ${orderId} angelegt für ${customerEmail}`);
+            console.log(`Bestellung ${orderId} angelegt für ${customerEmail} (${isPaid ? 'bezahlt' : 'offen'})`);
 
             // Send order confirmation email if RESEND_API_KEY is configured
             if (process.env.RESEND_API_KEY && items.length > 0 && customerEmail) {
