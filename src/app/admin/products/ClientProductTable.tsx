@@ -38,7 +38,7 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
     if (products.length === 0) {
         return (
             <div className="p-12 text-center text-gray-500">
-                Noch keine Produkte angelegt. Lege zuerst Sorten an, dann die Kartons und Tüten darum herum.
+                Noch keine Verkaufsartikel angelegt. Lege zuerst die Sorten an, dann die Kartons und Tüten darum herum.
             </div>
         );
     }

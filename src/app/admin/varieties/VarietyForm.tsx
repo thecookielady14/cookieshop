@@ -186,8 +186,9 @@ export default function VarietyForm({ initial }: { initial: VarietyFormValues })
                 </h1>
             </div>
             <p className="text-gray-500 mb-8 ml-14">
-                Eine Sorte ist das Rezept. Verkauft wird sie nie einzeln, sondern immer über ein
-                Produkt – einen Karton, eine Tüte oder eine Packung.
+                Eine Sorte ist ein Rezept – eine Keksart, die du bäckst. Sie bekommt keinen
+                Preis: verkauft wird sie später über einen Verkaufsartikel, also einen Karton,
+                eine Tüte oder eine Packung.
             </p>
 
             {error && (

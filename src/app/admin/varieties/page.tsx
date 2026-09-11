@@ -44,9 +44,12 @@ export default async function AdminVarieties() {
                     Neue Sorte
                 </Link>
             </div>
-            <p className="text-gray-500 mb-8">
-                Hier liegen die Rezepte mit allen Pflichtangaben. Eine Sorte wird nie einzeln
-                verkauft – sie steckt in Kartons, Tüten und Packungen.
+            <p className="text-gray-500 mb-8 max-w-2xl">
+                <strong className="text-gray-700">Sorten sind deine Rezepte</strong> – also was du
+                bäckst: Schoko, Erdnuss, Zimt. Hier stehen Zutaten, Allergene und Nährwerte, und
+                zwar genau einmal. Eine Sorte hat keinen Preis und wird nie einzeln verkauft;
+                verkauft werden die <strong className="text-gray-700">Verkaufsartikel</strong>, die
+                du daraus zusammenstellst.
             </p>
 
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">

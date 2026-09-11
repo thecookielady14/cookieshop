@@ -1,4 +1,4 @@
-import { Package, ShoppingCart, TrendingUp, Users } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, Users, Cookie, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { format } from "date-fns";
@@ -63,7 +63,23 @@ export default async function AdminDashboard() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-8 text-gray-900">Hallo, Cookie Lady! 👋</h1>
+            <h1 className="text-3xl font-bold mb-2 text-gray-900">Hallo, Cookie Lady! 👋</h1>
+
+            {/* Der Unterschied zwischen Sorte und Verkaufsartikel ist der haeufigste
+                Stolperstein - deshalb steht er hier, nicht in einer Anleitung. */}
+            <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-10 flex flex-col sm:flex-row items-center gap-4 text-sm">
+                <span className="flex items-center gap-2 font-bold text-gray-900 whitespace-nowrap">
+                    <Cookie className="w-5 h-5 text-[var(--color-brand-primary)]" />
+                    Sorte
+                </span>
+                <span className="text-gray-500">das Rezept – Schoko, Erdnuss, Zimt</span>
+                <ArrowRight className="w-4 h-4 text-gray-300 hidden sm:block flex-shrink-0" />
+                <span className="flex items-center gap-2 font-bold text-gray-900 whitespace-nowrap">
+                    <Package className="w-5 h-5 text-[var(--color-brand-primary)]" />
+                    Verkaufsartikel
+                </span>
+                <span className="text-gray-500">was im Warenkorb landet – Karton, Tüte, Packung mit Preis</span>
+            </div>
 
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -94,7 +110,7 @@ export default async function AdminDashboard() {
                         <Package className="w-6 h-6" />
                     </div>
                     <div>
-                        <p className="text-sm font-medium text-gray-500">Aktive Produkte</p>
+                        <p className="text-sm font-medium text-gray-500">Artikel im Verkauf</p>
                         <p className="text-2xl font-bold text-gray-900">{activeProducts}</p>
                     </div>
                 </div>
@@ -115,10 +131,17 @@ export default async function AdminDashboard() {
                 <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 h-fit">
                     <h2 className="text-xl font-bold mb-6">Schnellzugriff</h2>
                     <div className="space-y-4">
-                        <Link href="/admin/products" className="block p-4 rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all flex justify-between items-center group">
+                        <Link href="/admin/varieties/new" className="block p-4 rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all flex justify-between items-center group">
                             <div>
-                                <h3 className="font-bold text-gray-900 group-hover:text-[var(--color-brand-primary)]">Neuen Keks hinzufügen</h3>
-                                <p className="text-sm text-gray-500">Erweitere dein Sortiment.</p>
+                                <h3 className="font-bold text-gray-900 group-hover:text-[var(--color-brand-primary)]">Neue Sorte anlegen</h3>
+                                <p className="text-sm text-gray-500">Ein neues Rezept mit Zutaten und Allergenen.</p>
+                            </div>
+                            <span className="text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
+                        </Link>
+                        <Link href="/admin/products/new" className="block p-4 rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all flex justify-between items-center group">
+                            <div>
+                                <h3 className="font-bold text-gray-900 group-hover:text-[var(--color-brand-primary)]">Neuen Verkaufsartikel anlegen</h3>
+                                <p className="text-sm text-gray-500">Einen Karton oder eine Tüte mit Preis.</p>
                             </div>
                             <span className="text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
                         </Link>

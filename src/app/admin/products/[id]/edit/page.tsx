@@ -22,8 +22,8 @@ export default async function EditProduct({ params }: { params: Promise<{ id: st
     if (!data) {
         return (
             <div className="max-w-3xl">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">Produkt nicht gefunden</h1>
-                <p className="text-gray-500 mb-8">Dieses Produkt gibt es nicht mehr.</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">Verkaufsartikel nicht gefunden</h1>
+                <p className="text-gray-500 mb-8">Diesen Verkaufsartikel gibt es nicht mehr.</p>
                 <Link href="/admin/products" className="text-[var(--color-brand-primary)] underline">
                     Zurück zur Übersicht
                 </Link>

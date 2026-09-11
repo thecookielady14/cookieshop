@@ -126,7 +126,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
             return;
         }
         if (values.kind === 'fixed' && values.is_available && values.varieties.length === 0) {
-            setError('Ein Produkt ohne Sorten lässt sich nicht in den Verkauf geben. Wähle die enthaltenen Sorten aus oder speichere es als Entwurf.');
+            setError('Ein Verkaufsartikel ohne Sorten lässt sich nicht in den Verkauf geben. Wähle die enthaltenen Sorten aus oder speichere es als Entwurf.');
             return;
         }
 
@@ -189,12 +189,13 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                     <ArrowLeft className="w-5 h-5 text-gray-500" />
                 </Link>
                 <h1 className="text-3xl font-bold text-gray-900">
-                    {isEdit ? 'Produkt bearbeiten' : 'Neues Produkt anlegen'}
+                    {isEdit ? 'Verkaufsartikel bearbeiten' : 'Neuen Verkaufsartikel anlegen'}
                 </h1>
             </div>
             <p className="text-gray-500 mb-8 ml-14">
-                Ein Produkt ist das, was im Warenkorb landet – ein Karton, eine Tüte, eine Packung.
-                Zutaten und Allergene stehen bei den{' '}
+                Ein Verkaufsartikel ist das, was im Warenkorb landet – ein Karton, eine Tüte,
+                eine Packung. Hier stehen Preis und Verpackung; Zutaten, Allergene und Nährwerte
+                stehen bei den{' '}
                 <Link href="/admin/varieties" className="text-[var(--color-brand-primary)] underline">Sorten</Link>.
             </p>
 
