@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Wheat, AlertTriangle, Lightbulb, BarChart3 } from "lucide-react";
 import { highlightAllergens } from "@/lib/allergens";
 import type { Variety } from "@/lib/catalog";
@@ -40,11 +41,21 @@ export default function VarietyLabel({
         <details className="group border border-neutral-200 rounded-2xl overflow-hidden bg-white">
             <summary className="flex items-center justify-between gap-4 p-4 cursor-pointer list-none hover:bg-[var(--color-brand-secondary)]/40 transition-colors">
                 <span className="flex items-center gap-3 min-w-0">
-                    {quantity !== undefined && (
-                        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--color-brand-primary)] text-white text-sm font-bold flex items-center justify-center">
-                            {quantity}
-                        </span>
-                    )}
+                    <span className="relative flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-[var(--color-brand-secondary)]">
+                        {variety.imageUrl ? (
+                            <Image src={variety.imageUrl} alt={variety.name} fill className="object-cover" sizes="56px" />
+                        ) : (
+                            <span className="absolute inset-0 flex items-center justify-center text-2xl">🍪</span>
+                        )}
+                        {quantity !== undefined && (
+                            <span
+                                className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[var(--color-brand-primary)] text-white text-xs font-bold flex items-center justify-center ring-2 ring-white"
+                                aria-label={`${quantity} Stück`}
+                            >
+                                {quantity}
+                            </span>
+                        )}
+                    </span>
                     <span className="min-w-0">
                         <span className="font-bold text-[var(--color-brand-text)] block truncate">{variety.name}</span>
                         {variety.legalName && (
