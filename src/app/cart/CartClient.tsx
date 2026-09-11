@@ -83,7 +83,15 @@ export default function CartClient({ settings }: { settings: ShopSettings }) {
             <div className="max-w-5xl mx-auto">
                 <h1 className="font-serif text-4xl font-extrabold mb-2 text-[var(--color-brand-text)]">Dein Warenkorb</h1>
                 <p className="text-[var(--color-brand-dark)] mb-12">
-                    {count > 0 ? `Du hast ${count} leckere Kekse im Korb.` : 'Dein Warenkorb ist noch hungrig!'}
+                    {/* „Kekse" wäre gleich doppelt falsch: getCartCount zählt
+                        Verkaufsartikel, und in einem Sechserkarton stecken sechs
+                        Kekse. „Artikel" lautet außerdem im Singular wie im Plural
+                        gleich – damit stimmt die Beugung auch bei genau einem. */}
+                    {count === 0
+                        ? 'Dein Warenkorb ist noch hungrig!'
+                        : count === 1
+                            ? 'Ein Artikel wartet im Korb.'
+                            : `${count} Artikel warten im Korb.`}
                 </p>
 
                 {!settings.ordersOpen && (
