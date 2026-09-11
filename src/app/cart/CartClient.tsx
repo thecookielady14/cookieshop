@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useMounted } from "@/lib/useMounted";
 import { calculateShipping, formatEuro, DEFAULT_ORDERS_CLOSED_MESSAGE, type ShopSettings } from "@/lib/shop-settings";
+import { describeVarieties } from "@/lib/store";
 
 export default function CartClient({ settings }: { settings: ShopSettings }) {
     const { items, removeItem, updateQuantity, getCartTotal, getCartCount } = useCartStore();
@@ -34,7 +35,13 @@ export default function CartClient({ settings }: { settings: ShopSettings }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ items }),
+                body: JSON.stringify({
+                    items: items.map((i) => ({
+                        id: i.id,
+                        quantity: i.quantity,
+                        varieties: i.varieties ?? [],
+                    })),
+                }),
             });
 
             // Antwort defensiv lesen: liefert die Route wider Erwarten kein JSON,
@@ -125,7 +132,7 @@ export default function CartClient({ settings }: { settings: ShopSettings }) {
                         {/* Cart Items List */}
                         <div className="lg:w-2/3 space-y-6">
                             {items.map((item) => (
-                                <div key={item.id} className="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 flex items-center gap-6">
+                                <div key={item.key} className="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 flex items-center gap-6">
                                     {/* Product Image */}
                                     <div className="w-24 h-24 bg-[var(--color-brand-secondary)] rounded-2xl flex items-center justify-center text-4xl flex-shrink-0 overflow-hidden relative">
                                         {item.imageUrl ? (
@@ -143,22 +150,27 @@ export default function CartClient({ settings }: { settings: ShopSettings }) {
 
                                     <div className="flex-1">
                                         <h3 className="text-xl font-bold mb-1">{item.name}</h3>
+                                        {describeVarieties(item.varieties) && (
+                                            <p className="text-sm text-[var(--color-brand-dark)] mb-1">
+                                                {describeVarieties(item.varieties)}
+                                            </p>
+                                        )}
                                         <p className="text-[var(--color-brand-dark)] font-medium mb-4">
                                             {formatEuro(item.price)} / Stück
                                         </p>
 
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center gap-3 bg-[var(--color-brand-bg)] px-3 py-1 rounded-full border border-neutral-200">
-                                                <button onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label={`Menge von ${item.name} verringern`} className="hover:text-[var(--color-brand-primary)] p-1">
+                                                <button onClick={() => updateQuantity(item.key, item.quantity - 1)} aria-label={`Menge von ${item.name} verringern`} className="hover:text-[var(--color-brand-primary)] p-1">
                                                     <CopyMinus className="w-4 h-4" />
                                                 </button>
                                                 <span className="font-bold w-4 text-center">{item.quantity}</span>
-                                                <button onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label={`Menge von ${item.name} erhöhen`} className="hover:text-[var(--color-brand-primary)] p-1">
+                                                <button onClick={() => updateQuantity(item.key, item.quantity + 1)} aria-label={`Menge von ${item.name} erhöhen`} className="hover:text-[var(--color-brand-primary)] p-1">
                                                     <CopyPlus className="w-4 h-4" />
                                                 </button>
                                             </div>
 
-                                            <button onClick={() => removeItem(item.id)} aria-label={`${item.name} aus dem Warenkorb entfernen`} className="text-neutral-400 hover:text-red-500 transition-colors p-2">
+                                            <button onClick={() => removeItem(item.key)} aria-label={`${item.name} aus dem Warenkorb entfernen`} className="text-neutral-400 hover:text-red-500 transition-colors p-2">
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
                                         </div>

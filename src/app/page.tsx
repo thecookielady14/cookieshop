@@ -1,30 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Cookie, Flame, Wheat, Handshake, CalendarCheck, ChefHat, Package } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
+import { getProducts } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
 import AnimateIn from "@/components/AnimateIn";
-
-// Initialize Supabase client for Server Component
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 // Force dynamic rendering to guarantee fresh featured products
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  // Fetch up to 3 active products for the "Bestseller" section
-  const { data: featuredProducts, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('is_available', true)
-    .limit(3);
-
-  if (error) {
-    console.error("Error fetching featured products:", error);
-  }
+  // Die Ueberschrift verspricht Lieblinge, also werden auch die hervorgehobenen
+  // Produkte zuerst gezeigt - vorher standen dort einfach die ersten drei.
+  const available = await getProducts({ onlyAvailable: true });
+  const featuredProducts = [...available]
+    .sort((a, b) => Number(b.isBestseller) - Number(a.isBestseller) || a.sortOrder - b.sortOrder)
+    .slice(0, 3);
 
   return (
     <div className="bg-[var(--color-brand-bg)]">

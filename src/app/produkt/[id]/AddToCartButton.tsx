@@ -3,37 +3,50 @@
 import { useState } from 'react';
 import { ShoppingBag, Check, Plus, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCartStore } from '@/lib/store';
+import { useCartStore, type CartVariety } from '@/lib/store';
 
-export default function AddToCartButton({ product }: { product: any }) {
+/**
+ * In den Warenkorb legen – für feste Produkte wie für zusammengestellte
+ * Kartons. Die Menge zählt Verkaufseinheiten, nicht Kekse.
+ */
+export default function AddToCartButton({
+    product,
+    selection,
+    disabled = false,
+    disabledLabel,
+}: {
+    product: { id: string; name: string; price: number; imageUrl: string | null };
+    /** Nur bei zusammengestellten Kartons gesetzt. */
+    selection?: CartVariety[];
+    disabled?: boolean;
+    disabledLabel?: string;
+}) {
     const [quantity, setQuantity] = useState(1);
     const [added, setAdded] = useState(false);
     const addItem = useCartStore((state) => state.addItem);
 
     const handleAddToCart = () => {
+        if (disabled) return;
         addItem({
             id: product.id,
             name: product.name,
             price: product.price,
-            quantity: quantity,
-            imageUrl: product.image_url,
+            quantity,
+            imageUrl: product.imageUrl ?? undefined,
+            varieties: selection && selection.length > 0 ? selection : undefined,
         });
-
         setAdded(true);
         setTimeout(() => setAdded(false), 2000);
     };
 
-    const increaseQuantity = () => setQuantity(prev => (prev < 20 ? prev + 1 : prev));
-    const decreaseQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
-
-    if (product.is_available === false) {
+    if (disabled) {
         return (
             <div className="mt-6">
                 <button
                     disabled
                     className="w-full flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-lg bg-gray-200 text-gray-500 cursor-not-allowed"
                 >
-                    Zurzeit nicht bestellbar
+                    {disabledLabel ?? 'Zurzeit nicht bestellbar'}
                 </button>
             </div>
         );
@@ -41,65 +54,55 @@ export default function AddToCartButton({ product }: { product: any }) {
 
     return (
         <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            {/* Quantity Selector */}
             <div className="flex items-center justify-between bg-white border-2 border-neutral-100 rounded-full px-4 py-3 sm:w-1/3 shadow-sm">
                 <button
-                    onClick={decreaseQuantity}
-                    className="p-1 text-neutral-400 hover:text-[var(--color-brand-primary)] transition-colors"
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     disabled={quantity <= 1}
+                    aria-label="Menge verringern"
+                    className="p-1 text-neutral-400 hover:text-[var(--color-brand-primary)] transition-colors disabled:opacity-40"
                 >
                     <Minus className="w-5 h-5" />
                 </button>
-                <span className="font-bold text-xl text-[var(--color-brand-text)] w-8 text-center">
+                <span className="font-bold text-xl text-[var(--color-brand-text)] w-8 text-center" aria-live="polite">
                     {quantity}
                 </span>
                 <button
-                    onClick={increaseQuantity}
+                    onClick={() => setQuantity((q) => (q < 20 ? q + 1 : q))}
+                    aria-label="Menge erhöhen"
                     className="p-1 text-neutral-400 hover:text-[var(--color-brand-primary)] transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                 </button>
             </div>
 
-            {/* Add Button */}
-            <motion.button
+            <button
                 onClick={handleAddToCart}
-                whileTap={{ scale: 0.94 }}
-                animate={added ? { scale: [1, 1.06, 1] } : { scale: 1 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
-                className={`flex-1 flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all ${added
-                    ? 'bg-green-500 text-white'
-                    : 'bg-[var(--color-brand-primary)] text-white hover:bg-[#c29160]'
-                    }`}
+                className="flex-1 relative overflow-hidden flex items-center justify-center gap-2 bg-[var(--color-brand-primary)] text-white px-8 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-md"
             >
                 <AnimatePresence mode="wait" initial={false}>
                     {added ? (
                         <motion.span
                             key="added"
-                            initial={{ y: 10, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -10, opacity: 0 }}
-                            transition={{ duration: 0.15 }}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -12 }}
                             className="flex items-center gap-2"
                         >
-                            <Check className="w-5 h-5" />
-                            Im Warenkorb
+                            <Check className="w-5 h-5" /> Im Warenkorb
                         </motion.span>
                     ) : (
                         <motion.span
-                            key="default"
-                            initial={{ y: 10, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -10, opacity: 0 }}
-                            transition={{ duration: 0.15 }}
+                            key="add"
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -12 }}
                             className="flex items-center gap-2"
                         >
-                            <ShoppingBag className="w-5 h-5" />
-                            In den Korb
+                            <ShoppingBag className="w-5 h-5" /> In den Warenkorb
                         </motion.span>
                     )}
                 </AnimatePresence>
-            </motion.button>
+            </button>
         </div>
     );
 }

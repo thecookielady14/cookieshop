@@ -17,21 +17,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${baseUrl}/widerruf`, changeFrequency: 'yearly', priority: 0.2 },
     ];
 
-    // Product detail pages (products are publicly readable)
-    let productRoutes: MetadataRoute.Sitemap = [];
+    // Linien- und Produktseiten. Entwuerfe bleiben draussen - was nicht
+    // bestellbar ist, gehoert nicht in die Sitemap.
+    let dynamicRoutes: MetadataRoute.Sitemap = [];
     try {
-        const { data: products } = await supabase
-            .from('products')
-            .select('id, updated_at');
-        productRoutes = (products ?? []).map((p) => ({
-            url: `${baseUrl}/shop/${p.id}`,
-            lastModified: p.updated_at ? new Date(p.updated_at) : undefined,
-            changeFrequency: 'weekly' as const,
-            priority: 0.8,
-        }));
+        const [{ data: lines }, { data: products }] = await Promise.all([
+            supabase.from('product_lines').select('slug, updated_at').eq('is_active', true),
+            supabase.from('products').select('id, updated_at').eq('is_available', true),
+        ]);
+
+        dynamicRoutes = [
+            ...(lines ?? []).map((l) => ({
+                url: `${baseUrl}/shop/${l.slug}`,
+                lastModified: l.updated_at ? new Date(l.updated_at) : undefined,
+                changeFrequency: 'weekly' as const,
+                priority: 0.8,
+            })),
+            ...(products ?? []).map((p) => ({
+                url: `${baseUrl}/produkt/${p.id}`,
+                lastModified: p.updated_at ? new Date(p.updated_at) : undefined,
+                changeFrequency: 'weekly' as const,
+                priority: 0.7,
+            })),
+        ];
     } catch {
-        // DB unreachable – deliver static routes only rather than failing the sitemap
+        // DB nicht erreichbar - lieber nur die festen Seiten ausliefern
     }
 
-    return [...staticRoutes, ...productRoutes];
+    return [...staticRoutes, ...dynamicRoutes];
 }
