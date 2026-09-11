@@ -95,10 +95,13 @@ export default function Datenschutz() {
                         </p>
                         <h3 className="font-bold text-lg mb-2">Resend (E-Mail-Versand)</h3>
                         <p className="mb-4">
-                            Für den Versand von Bestell- und Versandbestätigungen nutzen wir den E-Mail-Versanddienst Resend. Anbieter ist die Resend, Inc., USA.
+                            Für den Versand von Bestellbestätigungen und Versandbenachrichtigungen nutzen wir den E-Mail-Versanddienst Resend. Anbieter ist die Resend, Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA. Der Versand für diese Website ist auf die Verarbeitungsregion Irland (EU) eingestellt; die Nachrichten werden also innerhalb der Europäischen Union verarbeitet.
                         </p>
                         <p className="mb-4">
-                            Wenn Sie eine Bestellung aufgeben, werden Ihr Name, Ihre E-Mail-Adresse und die Angaben zu Ihrer Bestellung an Resend übermittelt, damit Ihnen die Bestätigungen zugestellt werden können. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Erfüllung des Vertrags). Die Datenübertragung in die USA wird auf die Standardvertragsklauseln der EU-Kommission gestützt. Mit Resend besteht ein Vertrag zur Auftragsverarbeitung.
+                            Wenn Sie eine Bestellung aufgeben, werden Ihr Name, Ihre E-Mail-Adresse und die Angaben zu Ihrer Bestellung an Resend übermittelt, damit Ihnen die Bestätigungen zugestellt werden können. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Erfüllung des Vertrags). Mit Resend besteht ein Vertrag zur Auftragsverarbeitung. Da es sich um ein US-amerikanisches Unternehmen handelt, ist ein Zugriff aus den USA – etwa zur Wartung – nicht auszuschließen; dieser ist auf die Standardvertragsklauseln der EU-Kommission gestützt.
+                        </p>
+                        <p className="mb-4">
+                            Wir erheben nicht, ob Sie unsere E-Mails öffnen oder Links darin anklicken. Die Nachrichten enthalten keine Zählpixel, und Links darin werden nicht über einen Messdienst umgeleitet.
                         </p>
                         <p className="mb-4">
                             Weitere Informationen entnehmen Sie der Datenschutzerklärung von Resend unter: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://resend.com/legal/privacy-policy</a>.
