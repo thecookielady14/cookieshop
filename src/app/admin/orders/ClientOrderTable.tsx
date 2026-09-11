@@ -6,6 +6,8 @@ import { de } from "date-fns/locale";
 import { useState } from "react";
 import { CheckCircle, Truck, Package, Clock, Phone, Copy, Check, AlertTriangle, ExternalLink } from "lucide-react";
 import { addressLines, addressText, isDeliverable } from "@/lib/address";
+import { CARRIERS, trackingUrl } from "@/lib/tracking";
+import { assertWritten } from "@/lib/admin-write";
 
 export default function ClientOrderTable({ initialOrders }: { initialOrders: any[] }) {
     /**
@@ -26,6 +28,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
     const [updatingId, setUpdatingId] = useState<string | null>(null);
     /** Welche Adresse gerade kopiert wurde – nur für die kurze Rückmeldung. */
     const [copiedId, setCopiedId] = useState<string | null>(null);
+    const [savingTrackingId, setSavingTrackingId] = useState<string | null>(null);
 
     const handleCopyAddress = async (orderId: string, text: string) => {
         try {
@@ -36,6 +39,30 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
             // Ohne Zwischenablage (altes Browserfenster, kein HTTPS) bleibt die
             // Adresse trotzdem lesbar – sie steht ja vollständig daneben.
             alert('Kopieren hat nicht geklappt. Die Adresse steht vollständig in der Spalte.');
+        }
+    };
+
+    /** Sendungsnummer und Dienst sichern. Wird beim Verlassen des Feldes aufgerufen. */
+    const handleTrackingSave = async (orderId: string, nummer: string, carrier: string) => {
+        setSavingTrackingId(orderId);
+        try {
+            const { data, error } = await supabase
+                .from('orders')
+                .update({
+                    tracking_number: nummer.trim() || null,
+                    tracking_carrier: nummer.trim() ? (carrier || null) : null,
+                })
+                .eq('id', orderId)
+                .select('id');
+            if (error) throw error;
+            assertWritten(data, 'Die Sendungsnummer');
+            setOrders((prev) => prev.map((o) => o.id === orderId
+                ? { ...o, tracking_number: nummer.trim() || null, tracking_carrier: nummer.trim() ? (carrier || null) : null }
+                : o));
+        } catch (err: any) {
+            alert('Sendungsnummer nicht gespeichert: ' + err.message);
+        } finally {
+            setSavingTrackingId(null);
         }
     };
 
@@ -230,10 +257,57 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                                         <option value="pending">Unbezahlt</option>
                                         <option value="paid">Bezahlt / Bearbeitung</option>
                                         <option value="shipped">Versendet</option>
-                                        <option value="delivered">Zugestellt</option>
+                                        {/* "Zugestellt" fehlt bewusst: ohne Rückmeldung
+                                            vom Paketdienst wäre es geraten, und kein
+                                            Ablauf hängt daran. Die Anzeige unten kann
+                                            den Status weiterhin darstellen, falls er
+                                            später automatisch gesetzt wird. */}
                                         <option value="cancelled">Storniert</option>
                                     </select>
                                 </div>
+                                {/* Sendungsnummer: beim Packen eintragen, dann steht
+                                    sie als Link in der Versandmail. */}
+                                <div className="flex items-center justify-end gap-2 mt-2">
+                                    <select
+                                        value={order.tracking_carrier ?? 'dhl'}
+                                        onChange={(e) => handleTrackingSave(order.id, order.tracking_number ?? '', e.target.value)}
+                                        aria-label="Paketdienst"
+                                        className="text-xs bg-white border border-gray-200 rounded-lg px-2 py-1.5 outline-none focus:border-[var(--color-brand-primary)] cursor-pointer"
+                                    >
+                                        {CARRIERS.map((c) => (
+                                            <option key={c.id} value={c.id}>{c.name}</option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        type="text"
+                                        defaultValue={order.tracking_number ?? ''}
+                                        placeholder="Sendungsnummer"
+                                        aria-label={`Sendungsnummer der Bestellung ${order.order_number ?? ''}`}
+                                        disabled={savingTrackingId === order.id}
+                                        onBlur={(e) => {
+                                            const neu = e.target.value;
+                                            if (neu.trim() !== (order.tracking_number ?? '')) {
+                                                handleTrackingSave(order.id, neu, order.tracking_carrier ?? 'dhl');
+                                            }
+                                        }}
+                                        className="w-40 text-xs bg-white border border-gray-200 rounded-lg px-2 py-1.5 outline-none focus:border-[var(--color-brand-primary)] disabled:opacity-50"
+                                    />
+                                </div>
+                                {order.tracking_number && (
+                                    <div className="text-right mt-1">
+                                        {trackingUrl(order.tracking_number, order.tracking_carrier) ? (
+                                            <a
+                                                href={trackingUrl(order.tracking_number, order.tracking_carrier)!}
+                                                target="_blank" rel="noopener noreferrer"
+                                                className="text-xs font-medium text-[var(--color-brand-primary)] hover:underline inline-flex items-center gap-1"
+                                            >
+                                                Sendung verfolgen <ExternalLink className="w-3 h-3" />
+                                            </a>
+                                        ) : (
+                                            <span className="text-xs text-gray-400">kein Verfolgungslink für diesen Dienst</span>
+                                        )}
+                                    </div>
+                                )}
                             </td>
                         </tr>
                     );

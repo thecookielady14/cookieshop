@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isAdminEmail } from '@/lib/admin-auth';
 import { sendMail } from '@/lib/email';
+import { carrierName, trackingUrl } from '@/lib/tracking';
 
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
         // Fetch order details from DB
         const { data: order, error } = await supabaseAdmin
             .from('orders')
-            .select('customer_email, customer_name, order_number, total_amount, shipping_address')
+            .select('customer_email, customer_name, order_number, total_amount, shipping_address, tracking_number, tracking_carrier')
             .eq('id', orderId)
             .single();
 
@@ -55,6 +56,11 @@ export async function POST(req: Request) {
         const customerName = order.customer_name || order.customer_email;
         const orderNumber = order.order_number ? `#${order.order_number}` : `#${orderId.substring(0, 8)}`;
         const totalFormatted = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount);
+
+        // Sendungsverfolgung – nur wenn eine Nummer hinterlegt wurde. Fehlt sie,
+        // bleibt die Mail wie bisher: "ist unterwegs", ohne falsches Versprechen.
+        const trackingLink = trackingUrl(order.tracking_number, order.tracking_carrier);
+        const dienst = carrierName(order.tracking_carrier);
 
         const emailHtml = `
 <!DOCTYPE html>
@@ -95,8 +101,24 @@ export async function POST(req: Request) {
             <td style="color: #3e2723; padding: 4px 0; font-size: 14px;">Lieferadresse</td>
             <td style="color: #331f16; font-weight: bold; font-size: 14px; text-align: right;">${order.shipping_address.city}</td>
           </tr>` : ''}
+          ${order.tracking_number ? `
+          <tr>
+            <td style="color: #3e2723; padding: 4px 0; font-size: 14px;">Sendungsnummer${dienst ? ` (${dienst})` : ''}</td>
+            <td style="color: #331f16; font-weight: bold; font-size: 14px; text-align: right;">${order.tracking_number}</td>
+          </tr>` : ''}
         </table>
       </div>
+
+      ${trackingLink ? `
+      <div style="text-align: center; margin: 0 0 28px;">
+        <a href="${trackingLink}" target="_blank" rel="noopener noreferrer"
+           style="background: #b0813b; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 100px; font-weight: bold; font-size: 16px; display: inline-block;">
+          Sendung verfolgen 📦
+        </a>
+      </div>
+      <p style="color: #6b7280; font-size: 13px; line-height: 1.6; text-align: center; margin: -16px 0 28px;">
+        Es kann ein paar Stunden dauern, bis der Paketdienst die Sendung im System hat.
+      </p>` : ''}
 
       <p style="color: #3e2723; font-size: 15px; line-height: 1.6; margin: 0 0 32px;">
         <strong>Tipp fürs beste Erlebnis:</strong> Leg die Cookies kurz vor dem Essen für 1–2 Minuten bei 150°C in den Ofen – dann schmecken sie wieder wie frisch aus der Backstube! 🤤
