@@ -149,6 +149,39 @@ export async function POST(req: Request) {
 
             const orderData = { id: orderId };
 
+            // Rechnungsnummer nachtragen.
+            //
+            // Bestellnummer und Rechnungsnummer sind verschiedene Zähler – die
+            // Bestellnummer darf Lücken haben, die Rechnungsnummer nicht. Ohne
+            // diese Verbindung lässt sich zu einer Rechnungsnummer nicht mehr
+            // feststellen, welche Bestellung dazugehört.
+            //
+            // Stripe schreibt die Rechnung erst beim Bezahlen fest; erst dann
+            // hat sie eine Nummer. Ist sie hier noch nicht so weit, bleibt das
+            // Feld leer – das ist ärgerlich, aber kein Grund, die Bestellung
+            // scheitern zu lassen. Deshalb eigener try/catch.
+            if (session.invoice) {
+                try {
+                    const invoiceId = typeof session.invoice === 'string'
+                        ? session.invoice
+                        : session.invoice.id;
+                    const invoice = await stripe.invoices.retrieve(invoiceId);
+                    if (invoice.number || invoice.hosted_invoice_url) {
+                        await supabaseAdmin
+                            .from('orders')
+                            .update({
+                                invoice_reference: invoice.number ?? null,
+                                invoice_url: invoice.hosted_invoice_url ?? null,
+                            })
+                            .eq('id', orderId);
+                    } else {
+                        console.warn(`Rechnung ${invoiceId} hat noch keine Nummer – Bestellung ${orderId} bleibt ohne Verweis.`);
+                    }
+                } catch (invoiceError) {
+                    console.error('Rechnungsnummer konnte nicht nachgetragen werden:', invoiceError);
+                }
+            }
+
             const { data: orderRow } = await supabaseAdmin
                 .from('orders')
                 .select('order_number')

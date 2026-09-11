@@ -4,7 +4,7 @@ import { createBrowserClient } from "@supabase/ssr";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { useState } from "react";
-import { CheckCircle, Truck, Package, Clock, Phone, Copy, Check, AlertTriangle } from "lucide-react";
+import { CheckCircle, Truck, Package, Clock, Phone, Copy, Check, AlertTriangle, ExternalLink } from "lucide-react";
 import { addressLines, addressText, isDeliverable } from "@/lib/address";
 
 export default function ClientOrderTable({ initialOrders }: { initialOrders: any[] }) {
@@ -133,6 +133,27 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                             <td className="p-4 align-top">
                                 <span className="font-bold text-gray-900 block">#{order.order_number || order.id.substring(0, 8)}</span>
                                 <span className="text-xs text-gray-500">{totalItems} Artikel • {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount)}</span>
+                                {/* Rechnungsnummer: eigener Zähler, deshalb nie
+                                    gleich der Bestellnummer. Ohne sie lässt sich
+                                    eine Rückfrage zu „SHOP-0007" nicht zuordnen. */}
+                                {order.invoice_reference && (
+                                    <span className="text-xs text-gray-500 block mt-0.5">
+                                        Rechnung{' '}
+                                        {order.invoice_url ? (
+                                            <a
+                                                href={order.invoice_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="font-medium text-[var(--color-brand-primary)] hover:underline inline-flex items-center gap-1"
+                                            >
+                                                {order.invoice_reference}
+                                                <ExternalLink className="w-3 h-3" />
+                                            </a>
+                                        ) : (
+                                            <span className="font-medium text-gray-700">{order.invoice_reference}</span>
+                                        )}
+                                    </span>
+                                )}
                                 {/* Beim Packen muss sichtbar sein, was in den Karton kommt. */}
                                 {(order.order_items ?? []).map((item: any, i: number) => (
                                     <span key={i} className="block text-xs text-gray-600 mt-1">
@@ -155,7 +176,6 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                                 {order.source === 'phone' && (
                                     <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[11px] font-bold my-1">
                                         <Phone className="w-3 h-3" /> Telefon
-                                        {order.invoice_reference ? ` · ${order.invoice_reference}` : ''}
                                     </span>
                                 )}
                                 {order.customer_email
