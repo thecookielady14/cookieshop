@@ -38,3 +38,29 @@
     box-sizing: border-box;
   }
 }
+/*
+ * Rettungsnetz für die Einblend-Animation.
+ *
+ * AnimateIn liefert seinen Inhalt mit opacity 0 aus und blendet ihn per
+ * JavaScript ein. Ohne JavaScript bliebe davon nichts übrig – beim Shop wäre
+ * das das komplette Sortiment. Diese Regel greift genau dann.
+ */
+@media (scripting: none) {
+    [data-animate-in] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/*
+ * Wer im Betriebssystem weniger Bewegung eingestellt hat, bekommt den Inhalt
+ * sofort statt erst beim Hereinscrollen. Bewusst in CSS gelöst und nicht im
+ * Effect: dort hätte es eine zusätzliche Renderrunde ausgelöst.
+ */
+@media (prefers-reduced-motion: reduce) {
+    [data-animate-in] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}

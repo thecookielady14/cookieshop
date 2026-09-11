@@ -40,6 +40,10 @@ export default function AnimateIn({ children, className = '', delay = 0 }: Anima
   return (
     <div
       ref={ref}
+      /* Ohne JavaScript bliebe der Inhalt bei opacity 0 für immer unsichtbar –
+         beim Shop also das gesamte Sortiment. globals.css hebt das über
+         @media (scripting: none) an diesem Merkmal wieder auf. */
+      data-animate-in=""
       className={className}
       style={{
         opacity: visible ? 1 : 0,
