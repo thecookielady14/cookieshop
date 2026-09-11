@@ -253,7 +253,10 @@ export default function VarietyForm({ initial }: { initial: VarietyFormValues })
                             <div>
                                 <label htmlFor="order" className="block text-sm font-medium text-gray-700 mb-2">Reihenfolge</label>
                                 <input id="order" type="number" value={values.sort_order} onChange={(e) => set('sort_order', e.target.value)} className={INPUT} />
-                                <p className="text-xs text-gray-400 mt-2">Kleinere Zahl steht weiter vorn.</p>
+                                <p className="text-xs text-gray-400 mt-2">
+                                    Position im Konfigurator und in der Sortenliste auf der
+                                    Produktseite. Kleinere Zahl steht weiter vorn.
+                                </p>
                             </div>
                         </div>
                     </div>

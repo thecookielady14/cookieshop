@@ -355,6 +355,10 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                                 <label htmlFor="order" className="block text-sm font-medium text-gray-700 mb-2">Reihenfolge</label>
                                 <input id="order" type="number" value={values.sort_order}
                                     onChange={(e) => set('sort_order', e.target.value)} className={INPUT} />
+                                <p className="text-xs text-gray-400 mt-2">
+                                    Position auf der Linienseite und im Shop. Kleinere Zahl steht
+                                    weiter vorn, gleiche Zahl heißt: das Neueste zuerst.
+                                </p>
                             </div>
                         </div>
 

@@ -10,6 +10,9 @@ export default async function AdminProducts() {
     const { data: fetchedProducts } = await supabase
         .from('products')
         .select('*, product_lines(name), product_varieties(quantity, varieties(name))')
+        // Nach derselben Reihenfolge wie im Shop, damit die eingestellte Zahl
+        // sofort sichtbar wirkt. Gleiche Zahl: das Neueste zuerst.
+        .order('sort_order')
         .order('created_at', { ascending: false });
 
     // Use only the real backend data now
