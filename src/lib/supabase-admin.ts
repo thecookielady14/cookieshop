@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 /**
  * Supabase-Client mit Service-Role-Key.
  *
- * Umgeht RLS und darf deshalb ausschliesslich in Route Handlers und Server
+ * Umgeht RLS und darf deshalb ausschließlich in Route Handlers und Server
  * Components verwendet werden – NIEMALS in einer Client Component, sonst
  * landet der Schlüssel im Browser.
  *

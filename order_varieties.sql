@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS public.checkout_drafts (
 CREATE INDEX IF NOT EXISTS checkout_drafts_created_idx ON public.checkout_drafts (created_at);
 
 -- RLS an, aber absichtlich KEINE Policy: weder anonyme noch angemeldete Konten
--- dürfen hier lesen oder schreiben. Der Zugriff läuft ausschliesslich über den
+-- dürfen hier lesen oder schreiben. Der Zugriff läuft ausschließlich über den
 -- Service-Role-Key in /api/checkout und /api/webhook, der RLS umgeht. Mit einer
 -- offenen INSERT-Policy könnte sonst jeder Besucher die Tabelle vollschreiben.
 ALTER TABLE public.checkout_drafts ENABLE ROW LEVEL SECURITY;
@@ -125,5 +125,5 @@ END;
 $fn$;
 
 COMMENT ON TABLE public.order_item_varieties IS 'Welche Sorten stecken in einer Bestellposition. Grundlage der Backliste.';
-COMMENT ON TABLE public.checkout_drafts IS 'Serverseitig geprueftes Warenkorb-Abbild zu einer Stripe-Session. Umgeht das 500-Zeichen-Limit der Stripe-Metadata.';
+COMMENT ON TABLE public.checkout_drafts IS 'Serverseitig geprüftes Warenkorb-Abbild zu einer Stripe-Session. Umgeht das 500-Zeichen-Limit der Stripe-Metadata.';
 COMMENT ON FUNCTION public.record_order(JSONB) IS 'Schreibt Bestellkopf, Positionen und Sorten in einer Transaktion. NULL = Stripe-Session war bereits verarbeitet.';

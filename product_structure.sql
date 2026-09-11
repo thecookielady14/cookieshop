@@ -102,7 +102,7 @@ ALTER TABLE public.products ADD CONSTRAINT products_kind_check
 
 -- Stückzahl der Einheit. Nullable, weil eine Tüte auch nach Gewicht statt nach
 -- Stück verkauft werden kann. Beim Konfigurator ist sie dagegen zwingend –
--- ohne Zielzahl liesse sich "stell dir etwas zusammen" nicht prüfen.
+-- ohne Zielzahl ließe sich "stell dir etwas zusammen" nicht prüfen.
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS piece_count INTEGER;
 ALTER TABLE public.products DROP CONSTRAINT IF EXISTS products_piece_count_check;
 ALTER TABLE public.products ADD CONSTRAINT products_piece_count_check
@@ -183,14 +183,14 @@ BEGIN
   END IF;
 
   IF p.line_id IS NULL THEN
-    RAISE EXCEPTION 'products_lmiv_complete: Dem Produkt ist keine Linie zugeordnet.'
+    RAISE EXCEPTION 'products_lmiv_complete: Dem Artikel ist keine Linie zugeordnet.'
       USING ERRCODE = 'check_violation';
   END IF;
 
   -- Füllmenge: entweder Stückware (dann aus den Sorten gerechnet) oder eine
   -- deklarierte Nennfüllmenge. Eines von beidem muss vorhanden sein.
   IF p.piece_count IS NULL AND COALESCE(p.weight_grams, 0) <= 0 THEN
-    RAISE EXCEPTION 'products_lmiv_complete: Weder Stueckzahl noch Nettofuellmenge angegeben.'
+    RAISE EXCEPTION 'products_lmiv_complete: Weder Stückzahl noch Nettofüllmenge angegeben.'
       USING ERRCODE = 'check_violation';
   END IF;
 
@@ -201,12 +201,12 @@ BEGIN
      WHERE pv.product_id = p.id;
 
     IF v_count = 0 THEN
-      RAISE EXCEPTION 'products_lmiv_complete: Dem Produkt ist keine Sorte zugeordnet.'
+      RAISE EXCEPTION 'products_lmiv_complete: Dem Artikel ist keine Sorte zugeordnet.'
         USING ERRCODE = 'check_violation';
     END IF;
 
     IF p.piece_count IS NOT NULL AND v_sum <> p.piece_count THEN
-      RAISE EXCEPTION 'products_lmiv_complete: Die Sortenmengen ergeben % statt % Stueck.', v_sum, p.piece_count
+      RAISE EXCEPTION 'products_lmiv_complete: Die Sortenmengen ergeben % statt % Stück.', v_sum, p.piece_count
         USING ERRCODE = 'check_violation';
     END IF;
 
@@ -216,7 +216,7 @@ BEGIN
       JOIN public.varieties v ON v.id = pv.variety_id
      WHERE pv.product_id = p.id AND v.line_id <> p.line_id;
     IF v_broken IS NOT NULL THEN
-      RAISE EXCEPTION 'products_lmiv_complete: Diese Sorten gehoeren zu einer anderen Linie: %', v_broken
+      RAISE EXCEPTION 'products_lmiv_complete: Diese Sorten gehören zu einer anderen Linie: %', v_broken
         USING ERRCODE = 'check_violation';
     END IF;
 
@@ -227,7 +227,7 @@ BEGIN
       JOIN public.varieties v ON v.id = pv.variety_id
      WHERE pv.product_id = p.id AND v.is_available IS NOT TRUE;
     IF v_broken IS NOT NULL THEN
-      RAISE EXCEPTION 'products_lmiv_complete: Diese Sorten sind nicht freigegeben oder unvollstaendig gekennzeichnet: %', v_broken
+      RAISE EXCEPTION 'products_lmiv_complete: Diese Sorten sind nicht freigegeben oder unvollständig gekennzeichnet: %', v_broken
         USING ERRCODE = 'check_violation';
     END IF;
 
@@ -238,7 +238,7 @@ BEGIN
      WHERE v.line_id = p.line_id AND v.is_available IS TRUE;
 
     IF v_count = 0 THEN
-      RAISE EXCEPTION 'products_lmiv_complete: In dieser Linie ist keine Sorte freigegeben – der Karton waere leer.'
+      RAISE EXCEPTION 'products_lmiv_complete: In dieser Linie ist keine Sorte freigegeben – der Karton wäre leer.'
         USING ERRCODE = 'check_violation';
     END IF;
   END IF;
@@ -358,7 +358,7 @@ BEGIN
     WHERE id = v_id;
 
     IF NOT FOUND THEN
-      RAISE EXCEPTION 'Produkt % wurde nicht gefunden.', v_id;
+      RAISE EXCEPTION 'Der Verkaufsartikel % wurde nicht gefunden.', v_id;
     END IF;
   END IF;
 
@@ -417,7 +417,7 @@ VALUES
    10, true),
   ('athletic', 'Athletic Line',
    'Proteinkekse für nach dem Training',
-   'Mehr Eiweiss, derselbe Anspruch an Geschmack. Jede Sorte einzeln in ihrer eigenen Packung.',
+   'Mehr Eiweiß, derselbe Anspruch an Geschmack. Jede Sorte einzeln in ihrer eigenen Packung.',
    20, true),
   ('kids', 'Kids Line',
    'Ohne zugesetzten Zucker, klein und knusprig',
@@ -429,11 +429,11 @@ ON CONFLICT (slug) DO NOTHING;
 -- 9. Dokumentation an den Tabellen
 -- ---------------------------------------------------------------------------
 
-COMMENT ON TABLE  public.product_lines IS 'Produktlinien (Classic, Athletic, Kids, spaeter mehr). Ersetzt das fruehere Textfeld products.category. Rein darstellend – das Verhalten haengt an products.kind.';
+COMMENT ON TABLE  public.product_lines IS 'Produktlinien (Classic, Athletic, Kids, später mehr). Ersetzt das frühere Textfeld products.category. Rein darstellend – das Verhalten hängt an products.kind.';
 COMMENT ON TABLE  public.varieties IS 'Sorten mit Rezept und LMIV-Pflichtangaben. Eine Sorte wird nie direkt verkauft, sondern immer ueber ein Produkt.';
-COMMENT ON COLUMN public.varieties.piece_weight_grams IS 'Gewicht eines einzelnen Kekses. Grundlage fuer Nettofuellmenge und Grundpreis der Verkaufseinheit.';
+COMMENT ON COLUMN public.varieties.piece_weight_grams IS 'Gewicht eines einzelnen Kekses. Grundlage fuer Nettofüllmenge und Grundpreis der Verkaufseinheit.';
 COMMENT ON TABLE  public.product_varieties IS 'Feste Zusammenstellung: welche Sorte steckt wie oft in einem Produkt. Konfigurierbare Produkte haben hier keine Zeilen.';
-COMMENT ON COLUMN public.products.kind IS 'fixed = feste Zusammenstellung, configurable = Kundschaft waehlt die Sorten selbst.';
-COMMENT ON COLUMN public.products.piece_count IS 'Anzahl Kekse in der Verkaufseinheit. Beim Konfigurator die Zahl, die gewaehlt werden muss.';
-COMMENT ON COLUMN public.products.weight_grams IS 'Nur noch die deklarierte Nennfuellmenge fuer Ware nach Gewicht. Bei Stueckware wird die Fuellmenge aus den Sorten gerechnet.';
+COMMENT ON COLUMN public.products.kind IS 'fixed = feste Zusammenstellung, configurable = Kundschaft wählt die Sorten selbst.';
+COMMENT ON COLUMN public.products.piece_count IS 'Anzahl Kekse in der Verkaufseinheit. Beim Konfigurator die Zahl, die gewählt werden muss.';
+COMMENT ON COLUMN public.products.weight_grams IS 'Nur noch die deklarierte Nennfuellmenge fuer Ware nach Gewicht. Bei Stückware wird die Fuellmenge aus den Sorten gerechnet.';
 COMMENT ON FUNCTION public.admin_save_product(JSONB) IS 'Speichert Produkt und Zusammensetzung in einer Transaktion, damit die LMIV-Trigger korrekt greifen.';

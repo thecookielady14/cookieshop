@@ -8,8 +8,8 @@ const baseUrl = siteUrl;
  * Bei jedem Abruf frisch erzeugen.
  *
  * Sonst friert Next die Sitemap beim Bauen ein: ein neu angelegtes Produkt
- * oder eine umbenannte Linie taucht erst beim naechsten Deploy auf – und
- * geloeschte Eintraege bleiben stehen.
+ * oder eine umbenannte Linie taucht erst beim nächsten Deploy auf – und
+ * gelöschte Einträge bleiben stehen.
  */
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
 
     // Linien- und Produktseiten. Entwuerfe bleiben draussen - was nicht
-    // bestellbar ist, gehoert nicht in die Sitemap.
+    // bestellbar ist, gehört nicht in die Sitemap.
     let dynamicRoutes: MetadataRoute.Sitemap = [];
     try {
         const [{ data: lines }, { data: products }] = await Promise.all([

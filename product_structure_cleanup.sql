@@ -26,7 +26,7 @@ ALTER TABLE public.products DROP COLUMN IF EXISTS salt_g;
 -- ('classic'/'kids') ist durch product_lines ersetzt.
 ALTER TABLE public.products DROP COLUMN IF EXISTS category;
 
--- line_id ist ab jetzt Pflicht: ein Verkaufsartikel ohne Linie waere weder
+-- line_id ist ab jetzt Pflicht: ein Verkaufsartikel ohne Linie wäre weder
 -- im Shop auffindbar noch pruefbar.
 UPDATE public.products SET line_id = (SELECT id FROM public.product_lines ORDER BY sort_order LIMIT 1)
  WHERE line_id IS NULL;

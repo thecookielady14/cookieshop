@@ -264,7 +264,7 @@ export default function NewPhoneOrder() {
 
                                       {/* Beim Wunschkarton muss auch am Telefon feststehen,
                                           welche Sorten hineinkommen - sonst fehlt die
-                                          Bestellung spaeter auf der Backliste. */}
+                                          Bestellung später auf der Backliste. */}
                                       {qty > 0 && p.kind === 'configurable' && (
                                         <div className="mt-3 pt-3 border-t border-black/5">
                                           <p className={`text-xs font-bold mb-2 ${
