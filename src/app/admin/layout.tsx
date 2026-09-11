@@ -37,7 +37,11 @@ export default function AdminLayout({
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
             {/* Admin Sidebar */}
-            <aside className="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col md:fixed h-auto md:h-full z-10 pt-4 md:pt-8 pb-4 md:pb-6 relative md:static shrink-0">
+            {/* Die Leiste stand im Fluss UND der Inhalt hatte zusätzlich ml-64 –
+                der Abstand wurde doppelt gezählt, daher die breite weiße Fläche.
+                Außerdem widersprachen sich md:fixed und md:static. Jetzt: im
+                Fluss, aber klebend, damit sie beim Scrollen stehen bleibt. */}
+            <aside className="w-full md:w-64 shrink-0 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col relative md:sticky md:top-0 md:h-screen z-10 pt-4 md:pt-8 pb-4 md:pb-6">
                 {/* Branding & Logo */}
                 <div className="px-4 md:px-6 mb-4 md:mb-8 flex md:flex-col items-center md:items-center justify-start gap-4 md:gap-0">
                     <img
@@ -82,7 +86,7 @@ export default function AdminLayout({
             </aside>
 
             {/* Main Admin Content */}
-            <main className="flex-1 md:ml-64 p-4 md:p-8 max-w-full overflow-x-hidden">
+            <main className="flex-1 min-w-0 p-4 md:p-8">
                 {children}
             </main>
         </div>

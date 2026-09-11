@@ -40,7 +40,7 @@ export default async function AdminOrders() {
                 </Link>
             </div>
 
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-x-auto">
                 <ClientOrderTable initialOrders={orders || []} />
             </div>
         </div>
