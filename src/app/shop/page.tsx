@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import AnimateIn from "@/components/AnimateIn";
 import OrdersClosedBanner from "@/components/OrdersClosedBanner";
 import ProductCard from "@/components/ProductCard";
+import LineTileFallback from "@/components/LineTileFallback";
 import { getProductLines, getProducts } from "@/lib/catalog";
 
 export const metadata: Metadata = {
@@ -59,9 +60,7 @@ export default async function ShopOverview() {
                                                 sizes="(max-width: 768px) 100vw, 33vw"
                                             />
                                         ) : (
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <Cookie className="w-16 h-16 text-[var(--color-brand-primary)]/30" />
-                                            </div>
+                                            <LineTileFallback slug={line.slug} index={index} />
                                         )}
                                     </div>
                                     <div className="p-6">
