@@ -1,5 +1,6 @@
 import { contactEmail, siteUrl } from '@/lib/site';
 import { sendMail } from '@/lib/email';
+import { addressLines, type ShippingAddress } from '@/lib/address';
 
 /**
  * Meldung an die Betreiberin, dass eine Bestellung eingegangen ist.
@@ -31,7 +32,7 @@ export async function sendNewOrderNotification(options: {
     orderNumber: number | string | null;
     customerName: string | null;
     customerEmail: string | null;
-    shippingAddress: Record<string, unknown> | null;
+    shippingAddress: ShippingAddress | null;
     totalAmount: number;
     isPaid: boolean;
     items: NotificationItem[];
@@ -65,12 +66,11 @@ export async function sendNewOrderNotification(options: {
         })
         .join('');
 
-    const address = options.shippingAddress;
-    const addressHtml = address
-        ? [address.name, address.line1, address.line2, `${address.postal_code ?? ''} ${address.city ?? ''}`.trim()]
-              .filter((part) => part && String(part).trim())
-              .map((part) => escapeHtml(String(part)))
-              .join('<br>')
+    // Dieselbe Formatierung wie in der Adminliste – sonst steht in der Mail
+    // etwas anderes als auf dem Bildschirm.
+    const zeilen = addressLines(options.shippingAddress);
+    const addressHtml = zeilen.length > 0
+        ? zeilen.map((zeile) => escapeHtml(zeile)).join('<br>')
         : '<span style="color:#9ca3af;">keine Adresse übermittelt</span>';
 
     const paymentNote = options.isPaid

@@ -4,11 +4,26 @@ import { supabase } from "@/lib/supabase";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { useState } from "react";
-import { CheckCircle, Truck, Package, Clock, Phone } from "lucide-react";
+import { CheckCircle, Truck, Package, Clock, Phone, Copy, Check, AlertTriangle } from "lucide-react";
+import { addressLines, addressText, isDeliverable } from "@/lib/address";
 
 export default function ClientOrderTable({ initialOrders }: { initialOrders: any[] }) {
     const [orders, setOrders] = useState(initialOrders);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
+    /** Welche Adresse gerade kopiert wurde – nur für die kurze Rückmeldung. */
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    const handleCopyAddress = async (orderId: string, text: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedId(orderId);
+            setTimeout(() => setCopiedId((id) => (id === orderId ? null : id)), 2000);
+        } catch {
+            // Ohne Zwischenablage (altes Browserfenster, kein HTTPS) bleibt die
+            // Adresse trotzdem lesbar – sie steht ja vollständig daneben.
+            alert('Kopieren hat nicht geklappt. Die Adresse steht vollständig in der Spalte.');
+        }
+    };
 
     const handleStatusChange = async (orderId: string, newStatus: string) => {
         setUpdatingId(orderId);
@@ -78,6 +93,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                 <tr className="bg-gray-50 border-b border-gray-100">
                     <th className="p-4 font-semibold text-gray-500">Bestellung</th>
                     <th className="p-4 font-semibold text-gray-500">Kunde</th>
+                    <th className="p-4 font-semibold text-gray-500">Lieferadresse</th>
                     <th className="p-4 font-semibold text-gray-500">Datum</th>
                     <th className="p-4 font-semibold text-gray-500">Status</th>
                     <th className="p-4 font-semibold text-gray-500 text-right">Aktionen</th>
@@ -86,6 +102,8 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
             <tbody>
                 {orders.map((order: any) => {
                     const totalItems = order.order_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
+                    const zeilen = addressLines(order.shipping_address);
+                    const versandfertig = isDeliverable(order.shipping_address);
                     return (
                         <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                             <td className="p-4 align-top">
@@ -119,9 +137,35 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                                 {order.customer_email
                                     ? <span className="text-xs text-gray-500 block">{order.customer_email}</span>
                                     : <span className="text-xs text-gray-400 block italic">keine E-Mail hinterlegt</span>}
-                                {order.shipping_address && (
-                                    <span className="text-xs text-gray-500 block truncate max-w-[200px]" title={`${order.shipping_address.line1}, ${order.shipping_address.city}`}>
-                                        {order.shipping_address.name || order.customer_email || '—'} • {order.shipping_address.city}
+                            </td>
+                            {/* Eigene Spalte: beim Packen wird die vollständige
+                                Adresse gebraucht, nicht nur der Ort. */}
+                            <td className="p-4 align-top">
+                                {zeilen.length > 0 ? (
+                                    <div className="flex items-start gap-2">
+                                        <address className="not-italic text-sm text-gray-700 leading-snug">
+                                            {zeilen.map((zeile: string, i: number) => (
+                                                <span key={i} className="block">{zeile}</span>
+                                            ))}
+                                        </address>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCopyAddress(order.id, addressText(order.shipping_address))}
+                                            title="Adresse kopieren"
+                                            aria-label={`Lieferadresse der Bestellung ${order.order_number ?? ''} kopieren`}
+                                            className="p-1.5 rounded-lg border border-gray-200 text-gray-400 hover:text-gray-700 hover:bg-white transition-colors flex-shrink-0"
+                                        >
+                                            {copiedId === order.id
+                                                ? <Check className="w-4 h-4 text-green-600" />
+                                                : <Copy className="w-4 h-4" />}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <span className="text-xs text-gray-400 italic">keine Adresse hinterlegt</span>
+                                )}
+                                {zeilen.length > 0 && !versandfertig && (
+                                    <span className="mt-2 inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[11px] font-bold">
+                                        <AlertTriangle className="w-3 h-3" /> unvollständig
                                     </span>
                                 )}
                             </td>
