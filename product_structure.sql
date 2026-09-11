@@ -419,7 +419,7 @@ VALUES
    'Proteinkekse für nach dem Training',
    'Mehr Eiweiss, derselbe Anspruch an Geschmack. Jede Sorte einzeln in ihrer eigenen Packung.',
    20, true),
-  ('pure', 'Pure Line',
+  ('kids', 'Kids Line',
    'Ohne zugesetzten Zucker, klein und knusprig',
    'Kleine Kekse ohne zugesetzten Zucker – gedacht für Kinderhaende, gern genommen von Erwachsenen.',
    30, true)
@@ -429,7 +429,7 @@ ON CONFLICT (slug) DO NOTHING;
 -- 9. Dokumentation an den Tabellen
 -- ---------------------------------------------------------------------------
 
-COMMENT ON TABLE  public.product_lines IS 'Produktlinien (Classic, Athletic, Pure, spaeter mehr). Ersetzt das fruehere Textfeld products.category. Rein darstellend – das Verhalten haengt an products.kind.';
+COMMENT ON TABLE  public.product_lines IS 'Produktlinien (Classic, Athletic, Kids, spaeter mehr). Ersetzt das fruehere Textfeld products.category. Rein darstellend – das Verhalten haengt an products.kind.';
 COMMENT ON TABLE  public.varieties IS 'Sorten mit Rezept und LMIV-Pflichtangaben. Eine Sorte wird nie direkt verkauft, sondern immer ueber ein Produkt.';
 COMMENT ON COLUMN public.varieties.piece_weight_grams IS 'Gewicht eines einzelnen Kekses. Grundlage fuer Nettofuellmenge und Grundpreis der Verkaufseinheit.';
 COMMENT ON TABLE  public.product_varieties IS 'Feste Zusammenstellung: welche Sorte steckt wie oft in einem Produkt. Konfigurierbare Produkte haben hier keine Zeilen.';

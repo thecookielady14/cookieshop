@@ -4,6 +4,15 @@ import { supabase } from '@/lib/supabase';
 
 const baseUrl = siteUrl;
 
+/**
+ * Bei jedem Abruf frisch erzeugen.
+ *
+ * Sonst friert Next die Sitemap beim Bauen ein: ein neu angelegtes Produkt
+ * oder eine umbenannte Linie taucht erst beim naechsten Deploy auf – und
+ * geloeschte Eintraege bleiben stehen.
+ */
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const staticRoutes: MetadataRoute.Sitemap = [
         { url: `${baseUrl}/`, changeFrequency: 'weekly', priority: 1 },

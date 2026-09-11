@@ -9,7 +9,7 @@ import { getProductLines, getProducts } from "@/lib/catalog";
 
 export const metadata: Metadata = {
     title: "Shop – Handgemachte Kekse bestellen",
-    description: "Entdecke alle handgemachten Kekse von The Cookie Lady: Classic Line im Sechserkarton, Athletic Line mit Proteinkeksen und Pure Line ohne zugesetzten Zucker.",
+    description: "Entdecke alle handgemachten Kekse von The Cookie Lady: Classic Line im Sechserkarton, Athletic Line mit Proteinkeksen und Kids Line ohne zugesetzten Zucker.",
 };
 
 export const dynamic = 'force-dynamic';
