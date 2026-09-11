@@ -88,9 +88,23 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                     const totalItems = order.order_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
                     return (
                         <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                            <td className="p-4">
+                            <td className="p-4 align-top">
                                 <span className="font-bold text-gray-900 block">#{order.order_number || order.id.substring(0, 8)}</span>
                                 <span className="text-xs text-gray-500">{totalItems} Artikel • {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount)}</span>
+                                {/* Beim Packen muss sichtbar sein, was in den Karton kommt. */}
+                                {(order.order_items ?? []).map((item: any, i: number) => (
+                                    <span key={i} className="block text-xs text-gray-600 mt-1">
+                                        {item.quantity}× {item.products?.name ?? 'Artikel'}
+                                        {(item.order_item_varieties ?? []).length > 0 && (
+                                            <span className="text-gray-400">
+                                                {' – '}
+                                                {item.order_item_varieties
+                                                    .map((v: any) => `${v.quantity}× ${v.variety_name}`)
+                                                    .join(', ')}
+                                            </span>
+                                        )}
+                                    </span>
+                                ))}
                             </td>
                             <td className="p-4">
                                 <span className="font-medium text-gray-900 block">

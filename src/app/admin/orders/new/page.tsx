@@ -12,6 +12,15 @@ interface Product {
     id: string;
     name: string;
     price: number;
+    kind: 'fixed' | 'configurable';
+    piece_count: number | null;
+    line_id: string;
+}
+
+interface VarietyOption {
+    id: string;
+    name: string;
+    line_id: string;
 }
 
 export default function NewPhoneOrder() {
@@ -24,6 +33,9 @@ export default function NewPhoneOrder() {
     );
 
     const [products, setProducts] = useState<Product[]>([]);
+    const [varieties, setVarieties] = useState<VarietyOption[]>([]);
+    // Sortenauswahl je konfigurierbarem Produkt: { produktId: { sortenId: menge } }
+    const [selections, setSelections] = useState<Record<string, Record<string, number>>>({});
     const [settings, setSettings] = useState<ShopSettings>(DEFAULT_SHOP_SETTINGS);
     const [quantities, setQuantities] = useState<Record<string, number>>({});
 
@@ -45,11 +57,15 @@ export default function NewPhoneOrder() {
 
     useEffect(() => {
         const load = async () => {
-            const [{ data: prods }, { data: cfg }] = await Promise.all([
-                supabase.from('products').select('id, name, price').order('name'),
+            const [{ data: prods }, { data: cfg }, { data: vars }] = await Promise.all([
+                supabase.from('products').select('id, name, price, kind, piece_count, line_id')
+                    .eq('is_available', true).order('sort_order'),
                 supabase.from('shop_settings').select('*').eq('id', 1).maybeSingle(),
+                supabase.from('varieties').select('id, name, line_id')
+                    .eq('is_available', true).order('sort_order'),
             ]);
             setProducts(prods ?? []);
+            setVarieties(vars ?? []);
             if (cfg) {
                 setSettings({
                     shippingCost: Number(cfg.shipping_cost),
@@ -81,6 +97,19 @@ export default function NewPhoneOrder() {
         : calculateShipping(goodsTotal, settings);
     const totalAmount = goodsTotal + shippingCost;
 
+    const selectionSum = (productId: string) =>
+        Object.values(selections[productId] ?? {}).reduce((sum, n) => sum + n, 0);
+
+    const changeVariety = (productId: string, varietyId: string, delta: number) => {
+        setSelections((prev) => {
+            const forProduct = { ...(prev[productId] ?? {}) };
+            const next = Math.max(0, (forProduct[varietyId] ?? 0) + delta);
+            if (next === 0) delete forProduct[varietyId];
+            else forProduct[varietyId] = next;
+            return { ...prev, [productId]: forProduct };
+        });
+    };
+
     const changeQuantity = (id: string, delta: number) => {
         setQuantities((prev) => {
             const next = Math.max(0, (prev[id] ?? 0) + delta);
@@ -98,6 +127,13 @@ export default function NewPhoneOrder() {
         }
         if (!customerName.trim()) {
             setError('Bitte einen Namen eintragen.');
+            return;
+        }
+        const incomplete = selected.find(
+            (p) => p.kind === 'configurable' && selectionSum(p.id) !== (p.piece_count ?? 0)
+        );
+        if (incomplete) {
+            setError(`Bitte stelle „${incomplete.name}" mit genau ${incomplete.piece_count} Keksen zusammen.`);
             return;
         }
 
@@ -118,7 +154,13 @@ export default function NewPhoneOrder() {
                     Authorization: `Bearer ${session.access_token}`,
                 },
                 body: JSON.stringify({
-                    items: selected.map((p) => ({ id: p.id, quantity: quantities[p.id] })),
+                    items: selected.map((p) => ({
+                        id: p.id,
+                        quantity: quantities[p.id],
+                        varieties: Object.entries(selections[p.id] ?? {})
+                            .filter(([, qty]) => qty > 0)
+                            .map(([varietyId, qty]) => ({ varietyId, quantity: qty })),
+                    })),
                     customerName,
                     customerEmail,
                     invoiceReference,
@@ -187,11 +229,15 @@ export default function NewPhoneOrder() {
                             {products.map((p) => {
                                 const qty = quantities[p.id] ?? 0;
                                 return (
-                                    <div key={p.id} className={`flex items-center gap-4 p-3 rounded-2xl border ${qty > 0 ? 'border-[var(--color-brand-primary)]/30 bg-[var(--color-brand-secondary)]/40' : 'border-gray-100'}`}>
+                                    <div key={p.id} className={`p-3 rounded-2xl border ${qty > 0 ? 'border-[var(--color-brand-primary)]/30 bg-[var(--color-brand-secondary)]/40' : 'border-gray-100'}`}>
+                                      <div className="flex items-center gap-4">
                                         <div className="flex-1 min-w-0">
                                             <span className="font-medium text-gray-900 block truncate">{p.name}</span>
                                             <span className="text-sm text-gray-500">
                                                 {formatEuro(p.price)}
+                                                {p.kind === 'configurable' && p.piece_count
+                                                    ? ` · ${p.piece_count} Kekse zur Wahl`
+                                                    : ''}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -214,6 +260,42 @@ export default function NewPhoneOrder() {
                                                 <Plus className="w-4 h-4" />
                                             </button>
                                         </div>
+                                      </div>
+
+                                      {/* Beim Wunschkarton muss auch am Telefon feststehen,
+                                          welche Sorten hineinkommen - sonst fehlt die
+                                          Bestellung spaeter auf der Backliste. */}
+                                      {qty > 0 && p.kind === 'configurable' && (
+                                        <div className="mt-3 pt-3 border-t border-black/5">
+                                          <p className={`text-xs font-bold mb-2 ${
+                                              selectionSum(p.id) === (p.piece_count ?? 0) ? 'text-green-700' : 'text-amber-700'
+                                          }`}>
+                                            {selectionSum(p.id)} von {p.piece_count} Keksen gewählt
+                                          </p>
+                                          <div className="space-y-2">
+                                            {varieties.filter((v) => v.line_id === p.line_id).map((v) => {
+                                              const vq = selections[p.id]?.[v.id] ?? 0;
+                                              return (
+                                                <div key={v.id} className="flex items-center gap-3 text-sm">
+                                                  <span className="flex-1 min-w-0 truncate text-gray-700">{v.name}</span>
+                                                  <button type="button" onClick={() => changeVariety(p.id, v.id, -1)}
+                                                    disabled={vq === 0} aria-label={`${v.name} weniger`}
+                                                    className="p-1.5 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-30">
+                                                    <Minus className="w-3 h-3" />
+                                                  </button>
+                                                  <span className="w-6 text-center font-bold">{vq}</span>
+                                                  <button type="button" onClick={() => changeVariety(p.id, v.id, 1)}
+                                                    disabled={selectionSum(p.id) >= (p.piece_count ?? 0)}
+                                                    aria-label={`${v.name} mehr`}
+                                                    className="p-1.5 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-30">
+                                                    <Plus className="w-3 h-3" />
+                                                  </button>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                 );
                             })}

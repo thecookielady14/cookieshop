@@ -18,7 +18,9 @@ export default async function AdminOrders() {
         .select(`
             *,
             order_items (
-                quantity
+                quantity,
+                products ( name ),
+                order_item_varieties ( variety_name, quantity )
             )
         `)
         .order('created_at', { ascending: false });
