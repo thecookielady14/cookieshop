@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isAdminEmail } from '@/lib/admin-auth';
+import { sendMail } from '@/lib/email';
 
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,11 +51,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ sent: false, reason: 'Keine E-Mail-Adresse hinterlegt' });
         }
 
-        const resendApiKey = process.env.RESEND_API_KEY;
-        if (!resendApiKey) {
-            console.warn('RESEND_API_KEY nicht gesetzt – Email wird nicht versendet');
-            return NextResponse.json({ sent: false, reason: 'No RESEND_API_KEY' });
-        }
 
         const customerName = order.customer_name || order.customer_email;
         const orderNumber = order.order_number ? `#${order.order_number}` : `#${orderId.substring(0, 8)}`;
@@ -129,25 +125,15 @@ export async function POST(req: Request) {
 </body>
 </html>`;
 
-        // Send via Resend API (no SDK needed, plain fetch)
-        const emailResponse = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${resendApiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                from: 'The Cookie Lady <kontakt@thecookielady.de>',
-                to: [order.customer_email],
-                subject: `Deine Kekse sind unterwegs! 🚀 (${orderNumber})`,
-                html: emailHtml,
-            }),
+        const result = await sendMail({
+            to: order.customer_email,
+            subject: `Deine Kekse sind unterwegs! 🚀 (${orderNumber})`,
+            html: emailHtml,
         });
 
-        if (!emailResponse.ok) {
-            const errText = await emailResponse.text();
-            console.error('Resend error:', errText);
-            return new NextResponse('Email konnte nicht versendet werden', { status: 500 });
+        if (!result.sent) {
+            // Der Status ist schon gesetzt; nur die Mail ging nicht raus.
+            return NextResponse.json({ sent: false, reason: result.reason }, { status: 502 });
         }
 
         return NextResponse.json({ sent: true });

@@ -5,6 +5,8 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 import { formatEuro } from '@/lib/shop-settings';
 import { decodeItemsFromMetadata } from '@/lib/checkout-items';
 import { VAT_PERCENTAGE } from '@/lib/site';
+import { sendMail } from '@/lib/email';
+import { sendNewOrderNotification } from '@/lib/order-notification';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
     apiVersion: '2026-01-28.clover',
@@ -135,10 +137,40 @@ export async function POST(req: Request) {
             }
 
             const orderData = { id: orderId };
+
+            const { data: orderRow } = await supabaseAdmin
+                .from('orders')
+                .select('order_number')
+                .eq('id', orderId)
+                .maybeSingle();
+            const orderNumber = orderRow?.order_number ?? null;
+
+            // Meldung an die Betreiberin. Da auf Bestellung gebacken wird, ist
+            // das der eigentliche Auslöser für die Arbeit – ohne sie müsste
+            // regelmäßig im Adminbereich nachgeschaut werden.
+            // Ein Fehler hier darf die Bestellung nicht gefährden.
+            try {
+                await sendNewOrderNotification({
+                    orderNumber,
+                    customerName: session.customer_details?.name ?? null,
+                    customerEmail,
+                    shippingAddress: shippingAddress,
+                    totalAmount,
+                    isPaid,
+                    items: items.map((i) => ({
+                        name: i.name ?? 'Artikel',
+                        quantity: i.quantity,
+                        price: i.price,
+                        varieties: i.varieties ?? [],
+                    })),
+                });
+            } catch (notifyError) {
+                console.error('Meldung über neue Bestellung fehlgeschlagen:', notifyError);
+            }
             console.log(`Bestellung ${orderId} angelegt für ${customerEmail} (${isPaid ? 'bezahlt' : 'offen'})`);
 
             // Send order confirmation email if RESEND_API_KEY is configured
-            if (process.env.RESEND_API_KEY && items.length > 0 && customerEmail) {
+            if (items.length > 0 && customerEmail) {
                 try {
                     // Namen stehen im Entwurf; nur bei der Rückfallebene fehlen sie.
                     const missingNames = items.filter((i) => !i.name).map((i) => i.product_id);
@@ -231,18 +263,10 @@ export async function POST(req: Request) {
 </body>
 </html>`;
 
-                    await fetch('https://api.resend.com/emails', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            from: 'The Cookie Lady <kontakt@thecookielady.de>',
-                            to: [customerEmail],
-                            subject: `Deine Bestellung ist eingegangen! 🍪 (#${orderData.id.slice(0, 8).toUpperCase()})`,
-                            html: emailHtml,
-                        }),
+                    await sendMail({
+                        to: customerEmail,
+                        subject: `Deine Bestellung ist eingegangen! 🍪 (${orderNumber ? '#' + orderNumber : '#' + String(orderData.id).slice(0, 8).toUpperCase()})`,
+                        html: emailHtml,
                     });
 
                     console.log(`Order confirmation email sent to ${customerEmail}`);
