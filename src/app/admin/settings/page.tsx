@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Save, Truck, AlertTriangle, Check, Power } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
+import { assertWritten } from '@/lib/admin-write';
 import { DEFAULT_SHOP_SETTINGS, DEFAULT_ORDERS_CLOSED_MESSAGE, formatEuro } from '@/lib/shop-settings';
 
 export default function AdminSettings() {
@@ -100,7 +101,7 @@ export default function AdminSettings() {
 
         setSaving(true);
         try {
-            const { error: saveError } = await supabase
+            const { data: saved, error: saveError } = await supabase
                 .from('shop_settings')
                 .update({
                     shipping_cost: parsedCost,
@@ -111,9 +112,11 @@ export default function AdminSettings() {
                     orders_closed_message: closedMessage.trim() || null,
                     updated_at: new Date().toISOString(),
                 })
-                .eq('id', 1);
+                .eq('id', 1)
+                .select('id');
 
             if (saveError) throw saveError;
+            assertWritten(saved, 'Die Einstellungen');
 
             setSaved(true);
             setTimeout(() => setSaved(false), 3000);

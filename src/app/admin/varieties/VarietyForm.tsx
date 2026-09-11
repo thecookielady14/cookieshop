@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
+import { assertWritten } from '@/lib/admin-write';
 
 /**
  * Formular für eine Sorte – gemeinsam für Anlegen und Bearbeiten.
@@ -152,11 +153,12 @@ export default function VarietyForm({ initial }: { initial: VarietyFormValues })
                 salt_g: num(values.salt_g),
             };
 
-            const { error: saveError } = initial.id
-                ? await supabase.from('varieties').update(row).eq('id', initial.id)
-                : await supabase.from('varieties').insert([row]);
+            const { data: saved, error: saveError } = initial.id
+                ? await supabase.from('varieties').update(row).eq('id', initial.id).select('id')
+                : await supabase.from('varieties').insert([row]).select('id');
 
             if (saveError) throw saveError;
+            assertWritten(saved, 'Die Sorte');
 
             router.push('/admin/varieties');
             router.refresh();

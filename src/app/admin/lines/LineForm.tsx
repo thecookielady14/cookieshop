@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, AlertCircle, Link2 } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
+import { assertWritten } from '@/lib/admin-write';
 
 /**
  * Formular für eine Produktlinie – gemeinsam für Anlegen und Bearbeiten.
@@ -106,11 +107,12 @@ export default function LineForm({ initial }: { initial: LineFormValues }) {
                 updated_at: new Date().toISOString(),
             };
 
-            const { error: saveError } = initial.id
-                ? await supabase.from('product_lines').update(row).eq('id', initial.id)
-                : await supabase.from('product_lines').insert([row]);
+            const { data: saved, error: saveError } = initial.id
+                ? await supabase.from('product_lines').update(row).eq('id', initial.id).select('id')
+                : await supabase.from('product_lines').insert([row]).select('id');
 
             if (saveError) throw saveError;
+            assertWritten(saved, 'Die Linie');
 
             router.push('/admin/lines');
             router.refresh();

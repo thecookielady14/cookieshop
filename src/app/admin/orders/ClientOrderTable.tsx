@@ -1,6 +1,6 @@
 'use client';
 
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@supabase/ssr";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { useState } from "react";
@@ -8,6 +8,20 @@ import { CheckCircle, Truck, Package, Clock, Phone, Copy, Check, AlertTriangle }
 import { addressLines, addressText, isDeliverable } from "@/lib/address";
 
 export default function ClientOrderTable({ initialOrders }: { initialOrders: any[] }) {
+    /**
+     * Bewusst createBrowserClient aus @supabase/ssr, nicht der einfache Client.
+     * Die Anmeldeseite legt die Sitzung in Cookies ab; der einfache Client sucht
+     * sie im localStorage und findet dort nichts. Folge war: Änderungen liefen
+     * ohne Sitzung und damit an der RLS vorbei ins Leere – PostgREST antwortet
+     * darauf mit 200 und null Zeilen, also ohne Fehler. Der Status sah im
+     * Browser geändert aus und war es in der Datenbank nie.
+     */
+    const [supabase] = useState(() =>
+        createBrowserClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+    );
     const [orders, setOrders] = useState(initialOrders);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
     /** Welche Adresse gerade kopiert wurde – nur für die kurze Rückmeldung. */
@@ -28,12 +42,22 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
     const handleStatusChange = async (orderId: string, newStatus: string) => {
         setUpdatingId(orderId);
         try {
-            const { error } = await supabase
+            // .select() zurückfordern und prüfen, dass wirklich eine Zeile
+            // geändert wurde. Ohne das bleibt ein wirkungsloser Schreibversuch
+            // unbemerkt, und die Anzeige behauptet etwas Falsches.
+            const { data, error } = await supabase
                 .from('orders')
                 .update({ status: newStatus })
-                .eq('id', orderId);
+                .eq('id', orderId)
+                .select('id');
 
             if (error) throw error;
+            if (!data || data.length === 0) {
+                throw new Error(
+                    'Die Änderung wurde nicht gespeichert – vermutlich ist die Anmeldung abgelaufen. ' +
+                    'Bitte die Seite neu laden und erneut anmelden.'
+                );
+            }
 
             // Optimistically update local state
             setOrders(orders.map(order =>

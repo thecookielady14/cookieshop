@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Pencil, Trash2, AlertCircle } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
+import { assertWritten } from '@/lib/admin-write';
 
 interface VarietyRow {
     id: string;
@@ -42,11 +43,18 @@ export default function ClientVarietyTable({ initial }: { initial: VarietyRow[] 
         if (!confirm(`„${row.name}" wirklich löschen?`)) return;
 
         setBusyId(row.id);
-        const { error: deleteError } = await supabase.from('varieties').delete().eq('id', row.id);
+        const { data: deleted, error: deleteError } = await supabase
+            .from('varieties').delete().eq('id', row.id).select('id');
         setBusyId(null);
 
         if (deleteError) {
             setError('Löschen nicht möglich: ' + deleteError.message);
+            return;
+        }
+        try {
+            assertWritten(deleted, `Die Sorte „${row.name}"`);
+        } catch (e) {
+            setError(e instanceof Error ? e.message : String(e));
             return;
         }
         setRows((r) => r.filter((x) => x.id !== row.id));

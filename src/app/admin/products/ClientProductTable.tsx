@@ -1,12 +1,21 @@
 'use client';
 
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@supabase/ssr";
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function ClientProductTable({ initialProducts }: { initialProducts: any[] }) {
+    // Wie in der Bestellliste: die Anmeldung liegt in Cookies, nicht im
+    // localStorage. Mit dem einfachen Client lief das Löschen ohne Sitzung und
+    // scheiterte an der RLS – ohne Fehler, die Zeile verschwand nur scheinbar.
+    const [supabase] = useState(() =>
+        createBrowserClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+    );
     const [products, setProducts] = useState(initialProducts);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const router = useRouter();
@@ -17,12 +26,19 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
         setIsDeleting(id);
         
         try {
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('products')
                 .delete()
-                .eq('id', id);
+                .eq('id', id)
+                .select('id');
 
             if (error) throw error;
+            if (!data || data.length === 0) {
+                throw new Error(
+                    'Nichts gelöscht – vermutlich ist die Anmeldung abgelaufen. ' +
+                    'Bitte die Seite neu laden und erneut anmelden.'
+                );
+            }
 
             // Remove from local state to update UI instantly
             setProducts(products.filter(p => p.id !== id));
