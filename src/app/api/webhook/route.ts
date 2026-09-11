@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { formatEuro } from '@/lib/shop-settings';
 import { decodeItemsFromMetadata } from '@/lib/checkout-items';
 import { VAT_PERCENTAGE } from '@/lib/site';
@@ -53,79 +53,105 @@ export async function POST(req: Request) {
                 ?? null;
             const totalAmount = (session.amount_total || 0) / 100;
 
-            // 2. Positionen aus der Metadata lesen (kompaktes Format, siehe lib/checkout-items.ts)
-            const items = decodeItemsFromMetadata(session.metadata);
+            // 2. Positionen aus dem Checkout-Entwurf lesen. Dort steht auch,
+            //    welche Sorten in einem zusammengestellten Karton stecken – das
+            //    passt nicht in die Stripe-Metadata. Fehlt der Entwurf, greift
+            //    das kompakte Metadata-Format als Rückfallebene.
+            let items: { product_id: string; name?: string; quantity: number; price: number;
+                         varieties: { variety_id: string; name: string; quantity: number }[] }[] = [];
 
-            // 3. Insert the order into Supabase using the service role key (bypasses RLS)
-            const supabaseAdmin = createClient(
-                process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-                process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-            );
+            const draftId = session.metadata?.draft;
+            if (draftId) {
+                const { data: draft } = await supabaseAdmin
+                    .from('checkout_drafts')
+                    .select('payload')
+                    .eq('id', draftId)
+                    .maybeSingle();
 
-            // Idempotency: skip if this session was already processed
-            const { data: existing } = await supabaseAdmin
-                .from('orders')
-                .select('id')
-                .eq('stripe_session_id', session.id)
-                .maybeSingle();
-
-            if (existing) {
-                console.log(`Session ${session.id} already processed – skipping duplicate webhook.`);
-                return new NextResponse('Already processed', { status: 200 });
+                if (draft?.payload?.items) {
+                    items = draft.payload.items;
+                } else {
+                    console.warn(`Checkout-Entwurf ${draftId} nicht gefunden – nutze Metadata.`);
+                }
             }
 
-            const { data: orderData, error: orderError } = await supabaseAdmin
-                .from('orders')
-                .insert([{
+            if (items.length === 0) {
+                items = decodeItemsFromMetadata(session.metadata).map((i) => ({
+                    product_id: i.id,
+                    quantity: i.qty,
+                    price: i.price,
+                    varieties: [],
+                }));
+            }
+
+            // 3. Bestellkopf, Positionen und Sorten in EINER Transaktion.
+            //    Früher lief das als getrennte Schreibvorgänge: schlug der
+            //    zweite fehl, antwortete die Route mit 500, Stripe lieferte
+            //    erneut aus – und die Idempotenzprüfung fand die bereits
+            //    angelegte Bestellung und übersprang sie. Die Bestellung blieb
+            //    dauerhaft ohne Positionen.
+            const { data: orderId, error: orderError } = await supabaseAdmin.rpc('record_order', {
+                payload: {
                     customer_name: session.customer_details?.name || null,
                     customer_email: customerEmail,
                     stripe_session_id: session.id,
                     total_amount: totalAmount,
                     status: 'paid',
                     source: 'online',
-                    shipping_address: shippingAddress
-                }])
-                .select()
-                .single();
+                    shipping_address: shippingAddress,
+                    items: items.map((i) => ({
+                        product_id: i.product_id,
+                        quantity: i.quantity,
+                        price: i.price,
+                        varieties: i.varieties ?? [],
+                    })),
+                },
+            });
 
             if (orderError) throw orderError;
 
-            // 4. Insert the order items (price_at_time comes from validated server-side metadata)
-            if (items.length > 0 && orderData) {
-                const orderItemsToInsert = items.map((item) => ({
-                    order_id: orderData.id,
-                    product_id: item.id,
-                    quantity: item.qty,
-                    price_at_time: item.price  // set from validated DB price in checkout route
-                }));
-
-                const { error: itemsError } = await supabaseAdmin
-                    .from('order_items')
-                    .insert(orderItemsToInsert);
-
-                if (itemsError) throw itemsError;
+            // NULL heisst: diese Session wurde bereits verarbeitet.
+            if (!orderId) {
+                console.log(`Session ${session.id} war schon verarbeitet – doppelter Webhook.`);
+                return new NextResponse('Already processed', { status: 200 });
             }
 
-            console.log(`Order ${orderData.id} created successfully for ${customerEmail}`);
+            // Entwurf abhaken, damit das Aufräumen weiss, was erledigt ist.
+            if (draftId) {
+                await supabaseAdmin
+                    .from('checkout_drafts')
+                    .update({ consumed_at: new Date().toISOString() })
+                    .eq('id', draftId);
+            }
+
+            const orderData = { id: orderId };
+            console.log(`Bestellung ${orderId} angelegt für ${customerEmail}`);
 
             // Send order confirmation email if RESEND_API_KEY is configured
             if (process.env.RESEND_API_KEY && items.length > 0 && customerEmail) {
                 try {
-                    // Fetch product names for the email
-                    const productIds = items.map((i) => i.id);
-                    const { data: productRows } = await supabaseAdmin
-                        .from('products')
-                        .select('id, name')
-                        .in('id', productIds);
-
-                    const productMap = new Map((productRows || []).map((p: any) => [p.id, p.name]));
+                    // Namen stehen im Entwurf; nur bei der Rückfallebene fehlen sie.
+                    const missingNames = items.filter((i) => !i.name).map((i) => i.product_id);
+                    const productMap = new Map<string, string>();
+                    if (missingNames.length > 0) {
+                        const { data: productRows } = await supabaseAdmin
+                            .from('products')
+                            .select('id, name')
+                            .in('id', missingNames);
+                        for (const row of productRows ?? []) productMap.set(row.id, row.name);
+                    }
 
                     const itemsHtml = items.map((item) => {
-                        const name = productMap.get(item.id) || 'Unbekanntes Produkt';
+                        const name = item.name || productMap.get(item.product_id) || 'Unbekanntes Produkt';
+                        // Bei einem zusammengestellten Karton ist der Inhalt das
+                        // Wesentliche – ohne ihn weiss niemand, was bestellt wurde.
+                        const composition = (item.varieties ?? []).length > 1
+                            ? `<br><span style="font-size:12px;color:#9c7a4a;">${item.varieties.map((v) => `${v.quantity}× ${v.name}`).join(', ')}</span>`
+                            : '';
                         return `<tr>
-                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;">${name}</td>
-                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;text-align:center;">${item.qty}x</td>
-                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;text-align:right;">${item.price.toFixed(2).replace('.', ',')} €</td>
+                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;">${name}${composition}</td>
+                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;text-align:center;vertical-align:top;">${item.quantity}x</td>
+                            <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;text-align:right;vertical-align:top;">${item.price.toFixed(2).replace('.', ',')} €</td>
                         </tr>`;
                     }).join('');
 
