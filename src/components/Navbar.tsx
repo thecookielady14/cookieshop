@@ -23,18 +23,20 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="fixed top-0 w-full z-50 flex justify-between items-center p-6 lg:px-12 bg-[var(--color-brand-primary)] backdrop-blur-md">
+            <nav className="fixed top-0 w-full z-50 flex justify-between items-center px-4 py-3 sm:p-6 lg:px-12 bg-[var(--color-brand-primary)] backdrop-blur-md">
                 {/* Left Box */}
                 <div className="flex-1 flex justify-start items-center">
-                    <Link href="/" className="flex items-center gap-3 group">
+                    <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
                         <Image
                             src="/logo_transparent.png"
                             alt="The Cookie Lady Logo"
                             width={50}
                             height={50}
-                            className="rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform"
+                            className="w-10 h-10 sm:w-[50px] sm:h-[50px] rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform"
                         />
-                        <span className="font-serif font-black text-xl tracking-tight text-[var(--color-brand-accent)] group-hover:text-white transition-colors">
+                        {/* Ohne whitespace-nowrap brach der Name am Handy auf drei
+                            Zeilen um und machte den Kopf doppelt so hoch. */}
+                        <span className="font-serif font-black text-lg sm:text-xl tracking-tight whitespace-nowrap text-[var(--color-brand-accent)] group-hover:text-white transition-colors">
                             The Cookie Lady
                         </span>
                     </Link>

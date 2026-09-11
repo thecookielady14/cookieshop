@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Wheat, AlertTriangle, Lightbulb, BarChart3 } from "lucide-react";
+import { Wheat, AlertTriangle, Lightbulb, BarChart3, ChevronDown } from "lucide-react";
 import { highlightAllergens } from "@/lib/allergens";
 import type { Variety } from "@/lib/catalog";
 
@@ -40,7 +40,7 @@ export default function VarietyLabel({
     return (
         <details className="group border border-neutral-200 rounded-2xl overflow-hidden bg-white">
             <summary className="flex items-center justify-between gap-4 p-4 cursor-pointer list-none hover:bg-[var(--color-brand-secondary)]/40 transition-colors">
-                <span className="flex items-center gap-3 min-w-0">
+                <span className="flex items-center gap-3 min-w-0 flex-1">
                     <span className="relative flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-[var(--color-brand-secondary)]">
                         {variety.imageUrl ? (
                             <Image src={variety.imageUrl} alt={variety.name} fill className="object-cover" sizes="56px" />
@@ -63,8 +63,16 @@ export default function VarietyLabel({
                         )}
                     </span>
                 </span>
-                <span className="text-sm font-medium text-[var(--color-brand-primary)] whitespace-nowrap">
-                    Angaben <span className="group-open:hidden">einblenden</span><span className="hidden group-open:inline">ausblenden</span>
+                {/* Auf dem Handy nur der Pfeil: ausgeschrieben belegte dieser
+                    Hinweis 138 von 390 Pixeln und quetschte den Sortennamen auf
+                    zwei Buchstaben zusammen. Bei einem Lebensmittel ist aber
+                    genau die Sorte die Information, die lesbar bleiben muss. */}
+                <span className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-brand-primary)] whitespace-nowrap flex-shrink-0">
+                    <span className="hidden sm:inline">
+                        Angaben <span className="group-open:hidden">einblenden</span><span className="hidden group-open:inline">ausblenden</span>
+                    </span>
+                    <span className="sr-only sm:hidden">Angaben ein- oder ausblenden</span>
+                    <ChevronDown className="w-5 h-5 transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
                 </span>
             </summary>
 
