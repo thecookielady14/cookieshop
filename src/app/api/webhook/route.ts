@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import { formatEuro } from '@/lib/shop-settings';
 import { decodeItemsFromMetadata } from '@/lib/checkout-items';
-import { VAT_PERCENTAGE } from '@/lib/site';
+import { VAT_PERCENTAGE, contactEmail } from '@/lib/site';
 import { sendMail } from '@/lib/email';
 import { sendNewOrderNotification } from '@/lib/order-notification';
 
@@ -50,9 +50,20 @@ export async function POST(req: Request) {
                 console.warn(`Session ${session.id} kam ohne E-Mail-Adresse an.`);
             }
             // Stripe API >= 2025-03-31: shipping_details lives under collected_information
-            const shippingAddress = (session as any).collected_information?.shipping_details?.address
-                ?? (session as any).shipping_details?.address
+            const shippingDetails = (session as any).collected_information?.shipping_details
+                ?? (session as any).shipping_details
                 ?? null;
+            // Stripes Adressobjekt hat kein Namensfeld – der Empfängername steht
+            // daneben. Wird er nicht mit hineingeschrieben, geht bei einer
+            // Geschenksendung der eigentliche Empfänger verloren und das Paket
+            // trägt den Namen der Bestellerin. Die Form entspricht damit dem,
+            // was das Telefonformular speichert.
+            const shippingAddress = shippingDetails?.address
+                ? {
+                      ...shippingDetails.address,
+                      name: shippingDetails.name ?? session.customer_details?.name ?? null,
+                  }
+                : null;
             const totalAmount = (session.amount_total || 0) / 100;
 
             // 2. Positionen aus dem Checkout-Entwurf lesen. Dort steht auch,
@@ -279,6 +290,65 @@ export async function POST(req: Request) {
         } catch (error: any) {
             console.error('Error processing webhook:', error);
             return new NextResponse('Error saving order to database', { status: 500 });
+        }
+    }
+
+    // Nachzügler-Zahlungen.
+    //
+    // Bei Zahlungsarten wie Klarna gilt der Checkout als abgeschlossen, bevor
+    // das Geld sicher ist – die Bestellung entsteht dann als "pending". Das
+    // Ergebnis kommt erst später als eigenes Ereignis. Ohne diese Behandlung
+    // bliebe eine längst bezahlte Bestellung für immer auf "unbezahlt" stehen
+    // und würde nie gebacken; eine gescheiterte bliebe offen und würde
+    // vielleicht doch gebacken. Beides kostet echtes Geld.
+    if (
+        event.type === 'checkout.session.async_payment_succeeded' ||
+        event.type === 'checkout.session.async_payment_failed'
+    ) {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const bezahlt = event.type === 'checkout.session.async_payment_succeeded';
+
+        try {
+            // Nur den Status ändern, nichts neu anlegen: die Bestellung gibt es
+            // schon aus checkout.session.completed. Findet sich keine, ist das
+            // kein Fehler – dann kam das Ereignis zu einer Sitzung, die diese
+            // Website nicht erzeugt hat.
+            const { data, error } = await supabaseAdmin
+                .from('orders')
+                .update({ status: bezahlt ? 'paid' : 'cancelled' })
+                .eq('stripe_session_id', session.id)
+                .select('id, order_number, customer_email')
+                .maybeSingle();
+
+            if (error) throw error;
+            if (!data) {
+                console.warn(`Nachzügler-Zahlung ohne passende Bestellung: ${session.id}`);
+                return new NextResponse('No matching order', { status: 200 });
+            }
+
+            console.log(
+                `Bestellung ${data.order_number ?? data.id} nach Nachzügler-Zahlung auf ` +
+                `${bezahlt ? 'bezahlt' : 'storniert'} gesetzt.`
+            );
+
+            // Die Betreiberin muss das erfahren: bei Erfolg ist das der
+            // Startschuss zum Backen, bei Misserfolg die Warnung, es zu lassen.
+            await sendMail({
+                to: contactEmail,
+                subject: bezahlt
+                    ? `Zahlung eingegangen – Bestellung #${data.order_number ?? data.id}`
+                    : `Zahlung fehlgeschlagen – Bestellung #${data.order_number ?? data.id} storniert`,
+                html: bezahlt
+                    ? `<p>Die Zahlung zu Bestellung <strong>#${data.order_number ?? data.id}</strong> ist eingegangen. Die Bestellung steht jetzt auf „bezahlt“ und kann gebacken werden.</p>`
+                    : `<p>Die Zahlung zu Bestellung <strong>#${data.order_number ?? data.id}</strong> ist fehlgeschlagen. Die Bestellung wurde auf „storniert“ gesetzt – bitte nicht backen.</p>`,
+            }).catch((mailError) => {
+                // Der Statuswechsel ist das Wichtige und darf nicht an der Mail scheitern.
+                console.error('Meldung zur Nachzügler-Zahlung fehlgeschlagen:', mailError);
+            });
+        } catch (error: any) {
+            console.error('Fehler bei Nachzügler-Zahlung:', error);
+            // 500 lässt Stripe erneut zustellen – der Statuswechsel darf nicht verloren gehen.
+            return new NextResponse('Error updating order status', { status: 500 });
         }
     }
 
