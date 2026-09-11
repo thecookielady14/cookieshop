@@ -9,7 +9,7 @@ export default async function AdminProducts() {
     // Fetch products
     const { data: fetchedProducts } = await supabase
         .from('products')
-        .select('*')
+        .select('*, product_lines(name), product_varieties(quantity, varieties(name))')
         .order('created_at', { ascending: false });
 
     // Use only the real backend data now

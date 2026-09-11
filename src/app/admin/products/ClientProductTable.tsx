@@ -12,7 +12,7 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
     const router = useRouter();
 
     const handleDelete = async (id: string, name: string) => {
-        if (!confirm(`Möchtest du den Keks "${name}" wirklich löschen?`)) return;
+        if (!confirm(`„${name}" wirklich löschen? Wenn es dazu schon Bestellungen gibt, nimm es lieber über „Im Shop bestellbar" aus dem Verkauf – sonst verlieren die Bestellungen ihren Bezug.`)) return;
 
         setIsDeleting(id);
         
@@ -38,7 +38,7 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
     if (products.length === 0) {
         return (
             <div className="p-12 text-center text-gray-500">
-                Noch keine Kekse angelegt. Fang direkt an!
+                Noch keine Produkte angelegt. Lege zuerst Sorten an, dann die Kartons und Tüten darum herum.
             </div>
         );
     }
@@ -48,10 +48,10 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
             <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
                     <th className="p-4 font-semibold text-gray-500">Name</th>
-                    <th className="p-4 font-semibold text-gray-500">Kategorie</th>
+                    <th className="p-4 font-semibold text-gray-500">Linie</th>
                     <th className="p-4 font-semibold text-gray-500">Preis</th>
                     <th className="p-4 font-semibold text-gray-500">Status</th>
-                    <th className="p-4 font-semibold text-gray-500">Lager</th>
+                    <th className="p-4 font-semibold text-gray-500">Inhalt</th>
                     <th className="p-4 font-semibold text-gray-500 text-right">Aktionen</th>
                 </tr>
             </thead>
@@ -60,10 +60,8 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
                     <tr key={product.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                         <td className="p-4 font-medium text-gray-900">{product.name}</td>
                         <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                product.category === 'kids' ? 'bg-pink-100 text-pink-700' : 'bg-amber-100 text-amber-700'
-                            }`}>
-                                {product.category === 'kids' ? 'Kids' : 'Classic'}
+                            <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 whitespace-nowrap">
+                                {product.product_lines?.name ?? 'Ohne Linie'}
                             </span>
                         </td>
                         <td className="p-4 text-gray-600">{product.price.toFixed(2).replace('.', ',')} €</td>
@@ -73,7 +71,15 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
                                 {product.is_available ? 'Bestellbar' : 'Nicht bestellbar'}
                             </span>
                         </td>
-                        <td className="p-4 text-gray-600">{product.weight_grams}g</td>
+                        <td className="p-4 text-gray-600 text-sm">
+                            {product.kind === 'configurable'
+                                ? `${product.piece_count ?? '?'} Kekse zur Wahl`
+                                : (product.product_varieties ?? []).length === 0
+                                    ? <span className="text-amber-700">keine Sorten</span>
+                                    : (product.product_varieties ?? [])
+                                        .map((pv: any) => `${pv.quantity}× ${pv.varieties?.name ?? '?'}`)
+                                        .join(', ')}
+                        </td>
                         <td className="p-4 text-right">
                             <div className="flex justify-end gap-2">
                                 <Link 
