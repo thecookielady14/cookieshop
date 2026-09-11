@@ -1,6 +1,7 @@
 import { contactEmail, siteUrl } from '@/lib/site';
 import { sendMail } from '@/lib/email';
 import { addressLines, type ShippingAddress } from '@/lib/address';
+import { escapeHtml } from '@/lib/html';
 
 /**
  * Meldung an die Betreiberin, dass eine Bestellung eingegangen ist.
@@ -21,12 +22,6 @@ export interface NotificationItem {
 }
 
 const euro = (value: number) => `${value.toFixed(2).replace('.', ',')} €`;
-
-function escapeHtml(value: string): string {
-    return value
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
 
 export async function sendNewOrderNotification(options: {
     orderNumber: number | string | null;

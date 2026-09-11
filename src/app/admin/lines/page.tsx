@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Plus, Pencil, Cookie } from 'lucide-react';
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { plural } from '@/lib/plural';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,7 +80,7 @@ export default async function AdminLines() {
                                     </td>
                                     <td className="p-4 text-gray-600 text-sm whitespace-nowrap">/shop/{line.slug}</td>
                                     <td className="p-4 text-gray-600 text-sm whitespace-nowrap">
-                                        {(line.varieties ?? []).length} Sorten · {(line.products ?? []).length} Artikel
+                                        {plural((line.varieties ?? []).length, 'Sorte', 'Sorten')} · {(line.products ?? []).length} Artikel
                                     </td>
                                     <td className="p-4 text-gray-600">{line.sort_order}</td>
                                     <td className="p-4">

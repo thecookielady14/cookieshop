@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { plural } from '@/lib/plural';
 import { ArrowLeft, Building2, Package } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -161,7 +162,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                 )}
                                 {configurable && product.pieceCount && (
                                     <span className="text-sm font-bold text-[var(--color-brand-primary)] bg-[var(--color-brand-primary)]/10 px-3 py-1 rounded-md inline-block w-max mt-2">
-                                        {product.pieceCount} Kekse nach deiner Wahl
+                                        {plural(product.pieceCount ?? 0, 'Keks', 'Kekse')} nach deiner Wahl
                                     </span>
                                 )}
                             </div>

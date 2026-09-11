@@ -4,6 +4,7 @@ import { createBrowserClient } from "@supabase/ssr";
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { plural } from '@/lib/plural';
 import Link from "next/link";
 
 export default function ClientProductTable({ initialProducts }: { initialProducts: any[] }) {
@@ -89,7 +90,7 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
                         </td>
                         <td className="p-4 text-gray-600 text-sm">
                             {product.kind === 'configurable'
-                                ? `${product.piece_count ?? '?'} Kekse zur Wahl`
+                                ? (product.piece_count ? plural(product.piece_count, 'Keks', 'Kekse') + ' zur Wahl' : 'Kekse zur Wahl')
                                 : (product.product_varieties ?? []).length === 0
                                     ? <span className="text-amber-700">keine Sorten</span>
                                     : (product.product_varieties ?? [])

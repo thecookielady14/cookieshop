@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import { zaehltAlsUmsatz } from '@/lib/order-status';
 
 // Initialize Supabase client for Server Component
 const supabase = createClient(
@@ -14,7 +15,7 @@ export default async function AdminCustomers() {
     // Fetch all orders to derive customers
     const { data: fetchedOrders, error } = await supabase
         .from('orders')
-        .select('customer_name, customer_email, total_amount, created_at')
+        .select('customer_name, customer_email, total_amount, created_at, status')
         .order('created_at', { ascending: false });
 
     if (error) console.error("Error fetching orders for customers view:", error);
@@ -25,18 +26,24 @@ export default async function AdminCustomers() {
         fetchedOrders.forEach(order => {
             if (!order.customer_email) return; // Skip if no email
 
+            // Stornierte Bestellungen zählen weder als Umsatz noch als
+            // Bestellung: Es floss kein Geld, und gekauft hat die Kundschaft
+            // am Ende nichts. Vorher erhöhte ein Storno beides.
+            const storniert = order.status === 'cancelled';
+            const umsatz = zaehltAlsUmsatz(order.status) ? (order.total_amount || 0) : 0;
+
             if (!customerMap.has(order.customer_email)) {
                 customerMap.set(order.customer_email, {
                     name: order.customer_name || 'Unbekannt',
                     email: order.customer_email,
-                    orders_count: 1,
-                    total_spent: order.total_amount || 0,
+                    orders_count: storniert ? 0 : 1,
+                    total_spent: umsatz,
                     last_order: order.created_at
                 });
             } else {
                 const existing = customerMap.get(order.customer_email);
-                existing.orders_count += 1;
-                existing.total_spent += (order.total_amount || 0);
+                if (!storniert) existing.orders_count += 1;
+                existing.total_spent += umsatz;
                 // Since orders are sorted descending, the first one encountered is the latest
                 // We keep the first one's last_order date
             }

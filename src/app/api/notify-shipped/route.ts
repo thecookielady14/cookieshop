@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { isAdminEmail } from '@/lib/admin-auth';
 import { sendMail } from '@/lib/email';
 import { carrierName, trackingUrl } from '@/lib/tracking';
+import { addressLines } from '@/lib/address';
+import { escapeHtml } from '@/lib/html';
 
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -62,6 +64,12 @@ export async function POST(req: Request) {
         const trackingLink = trackingUrl(order.tracking_number, order.tracking_carrier);
         const dienst = carrierName(order.tracking_carrier);
 
+        // Die vollständige Anschrift, nicht nur der Ort: So kann die Kundschaft
+        // erkennen, ob das Paket wirklich zur richtigen Adresse geht – und bei
+        // einem Tippfehler noch rechtzeitig schreiben. Dieselbe Formatierung
+        // wie im Adminbereich, damit beide Seiten dasselbe sehen.
+        const adresszeilen = addressLines(order.shipping_address);
+
         const emailHtml = `
 <!DOCTYPE html>
 <html lang="de">
@@ -80,7 +88,7 @@ export async function POST(req: Request) {
       <h2 style="color: #331f16; font-size: 22px; margin: 0 0 16px;">Deine Kekse sind unterwegs! 🚀</h2>
       
       <p style="color: #3e2723; font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
-        Hallo ${customerName},<br><br>
+        Hallo ${escapeHtml(customerName)},<br><br>
         wir haben deine Bestellung <strong>${orderNumber}</strong> heute frisch verpackt und auf die Reise zu dir geschickt.
         Du solltest deine leckeren Cookies in <strong>2–4 Werktagen</strong> erhalten.
       </p>
@@ -96,15 +104,15 @@ export async function POST(req: Request) {
             <td style="color: #3e2723; padding: 4px 0; font-size: 14px;">Gesamtbetrag</td>
             <td style="color: #331f16; font-weight: bold; font-size: 14px; text-align: right;">${totalFormatted}</td>
           </tr>
-          ${order.shipping_address?.city ? `
+          ${adresszeilen.length > 0 ? `
           <tr>
-            <td style="color: #3e2723; padding: 4px 0; font-size: 14px;">Lieferadresse</td>
-            <td style="color: #331f16; font-weight: bold; font-size: 14px; text-align: right;">${order.shipping_address.city}</td>
+            <td style="color: #3e2723; padding: 4px 0; font-size: 14px; vertical-align: top;">Lieferadresse</td>
+            <td style="color: #331f16; font-weight: bold; font-size: 14px; text-align: right; line-height: 1.5;">${adresszeilen.map((z) => escapeHtml(z)).join('<br>')}</td>
           </tr>` : ''}
           ${order.tracking_number ? `
           <tr>
             <td style="color: #3e2723; padding: 4px 0; font-size: 14px;">Sendungsnummer${dienst ? ` (${dienst})` : ''}</td>
-            <td style="color: #331f16; font-weight: bold; font-size: 14px; text-align: right;">${order.tracking_number}</td>
+            <td style="color: #331f16; font-weight: bold; font-size: 14px; text-align: right;">${escapeHtml(order.tracking_number)}</td>
           </tr>` : ''}
         </table>
       </div>

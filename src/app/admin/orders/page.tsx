@@ -23,7 +23,12 @@ export default async function AdminOrders() {
                 order_item_varieties ( variety_name, quantity )
             )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        // Obergrenze, damit die Seite nicht irgendwann alles auf einmal lädt.
+        // Für den Alltag reicht das weit: gefiltert wird im Browser, und die
+        // Arbeitsliste "Zu erledigen" ist immer kurz. Wird sie einmal
+        // überschritten, gehört hier echtes Blättern hin.
+        .limit(500);
 
     if (error) console.error("Error fetching admin orders:", error);
 

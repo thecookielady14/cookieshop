@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
+import { statusInfo } from '@/lib/order-status';
 
 // Initialize Supabase client for Server Component
 const supabase = createClient(
@@ -50,11 +51,17 @@ export default async function AdminDashboard() {
             uniqueCustomers.add(order.customer_email);
         }
 
-        // Calculate Revenue and Orders for "Today"
+        // Umsatz und Bestellungen des heutigen Tages.
+        //
+        // Stornierte und noch unbezahlte Bestellungen gehören in keine
+        // Umsatzsumme – vorher wurden sie mitgezählt, sodass ein Storno den
+        // Tagesumsatz erhöhte. Bei den Bestellungen zählen Stornos ebenfalls
+        // nicht, weil sie keine Arbeit mehr auslösen.
         const orderDate = new Date(order.created_at);
         if (orderDate >= today) {
-            neueBestellungenHeute++;
-            umsatzHeute += order.total_amount;
+            const info = statusInfo(order.status);
+            if (order.status !== 'cancelled') neueBestellungenHeute++;
+            if (info.istEinnahme) umsatzHeute += order.total_amount;
         }
     });
 
@@ -183,20 +190,13 @@ export default async function AdminDashboard() {
                                             <div>
                                                 <h4 className="font-bold text-sm text-gray-900 line-clamp-1">{order.customer_name || 'Unbekannt'}</h4>
                                                 <p className="text-xs text-gray-500">
-                                                    {format(new Date(order.created_at), 'dd.MM., HH:mm', { locale: de })} • {totalItems} Kekse
+                                                    {format(new Date(order.created_at), 'dd.MM., HH:mm', { locale: de })} • {totalItems} Artikel
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <span className={`inline-block px-2 py-1 text-xs font-bold rounded-md mb-1 ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                    order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                                                        order.status === 'shipped' ? 'bg-purple-100 text-purple-800' :
-                                                            'bg-green-100 text-green-800'
-                                                }`}>
-                                                {order.status === 'pending' ? 'Unbezahlt' :
-                                                    order.status === 'processing' ? 'In Bearbeitung' :
-                                                        order.status === 'shipped' ? 'Versendet' :
-                                                            order.status === 'delivered' ? 'Zugestellt' : order.status}
+                                            <span className={`inline-block px-2 py-1 text-xs font-bold rounded-md mb-1 ${statusInfo(order.status).farbe}`}>
+                                                {statusInfo(order.status).label}
                                             </span>
                                             <p className="font-bold text-sm text-gray-900">
                                                 {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount)}

@@ -3,11 +3,12 @@
 import { createBrowserClient } from "@supabase/ssr";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { useState } from "react";
-import { CheckCircle, Truck, Package, Clock, Phone, Copy, Check, AlertTriangle, ExternalLink } from "lucide-react";
+import { useMemo, useState } from "react";
+import { CheckCircle, Truck, Package, Clock, Phone, Copy, Check, AlertTriangle, ExternalLink, Search, XCircle } from "lucide-react";
 import { addressLines, addressText, isDeliverable } from "@/lib/address";
 import { CARRIERS, trackingUrl } from "@/lib/tracking";
 import { assertWritten } from "@/lib/admin-write";
+import { statusInfo } from "@/lib/order-status";
 
 export default function ClientOrderTable({ initialOrders }: { initialOrders: any[] }) {
     /**
@@ -29,6 +30,51 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
     /** Welche Adresse gerade kopiert wurde – nur für die kurze Rückmeldung. */
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [savingTrackingId, setSavingTrackingId] = useState<string | null>(null);
+
+    /**
+     * Die Liste ist eine Arbeitsliste, kein Archiv. Standardmäßig steht darauf,
+     * was noch zu tun ist – bezahlt, aber noch nicht verschickt. Versendetes
+     * verschwindet aus der Sicht, nicht aus der Datenbank: ein Klick auf den
+     * passenden Reiter holt es zurück. Ein getrenntes Archiv wären zwei Orte
+     * zum Suchen statt einem.
+     */
+    const [ansicht, setAnsicht] = useState<'offen' | 'shipped' | 'cancelled' | 'alle'>('offen');
+    const [suche, setSuche] = useState('');
+
+    const OFFENE_STATUS = ['paid', 'processing', 'pending'];
+
+    const zaehler = useMemo(() => ({
+        offen: orders.filter((o: any) => OFFENE_STATUS.includes(o.status)).length,
+        shipped: orders.filter((o: any) => o.status === 'shipped' || o.status === 'delivered').length,
+        cancelled: orders.filter((o: any) => o.status === 'cancelled').length,
+        alle: orders.length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [orders]);
+
+    const sichtbareOrders = useMemo(() => {
+        const begriff = suche.trim().toLowerCase();
+
+        return orders.filter((o: any) => {
+            const passtZurAnsicht =
+                ansicht === 'alle' ? true
+                : ansicht === 'offen' ? OFFENE_STATUS.includes(o.status)
+                : ansicht === 'shipped' ? (o.status === 'shipped' || o.status === 'delivered')
+                : o.status === 'cancelled';
+            if (!passtZurAnsicht) return false;
+            if (!begriff) return true;
+
+            // Danach wird tatsächlich gesucht, wenn jemand anruft: Name,
+            // E-Mail, Bestellnummer, Rechnungsnummer, Sendungsnummer, Ort.
+            const heuhaufen = [
+                o.order_number, o.customer_name, o.customer_email,
+                o.invoice_reference, o.tracking_number,
+                o.shipping_address?.city, o.shipping_address?.line1,
+            ].filter(Boolean).join(' ').toLowerCase();
+
+            return heuhaufen.includes(begriff);
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [orders, ansicht, suche]);
 
     const handleCopyAddress = async (orderId: string, text: string) => {
         try {
@@ -119,15 +165,20 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
         }
     };
 
+    /** Symbol je Status; Text und Farbe kommen aus @/lib/order-status. */
+    const STATUS_SYMBOL: Record<string, React.ComponentType<{ className?: string }>> = {
+        pending: Clock, paid: Package, processing: Package,
+        shipped: Truck, delivered: CheckCircle, cancelled: XCircle,
+    };
+
     const getStatusBadge = (status: string) => {
-        switch (status) {
-            case 'paid':
-            case 'processing': return <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 w-max"><Package className="w-3 h-3"/> In Bearbeitung</span>;
-            case 'shipped': return <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 w-max"><Truck className="w-3 h-3"/> Versendet</span>;
-            case 'delivered': return <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 w-max"><CheckCircle className="w-3 h-3"/> Zugestellt</span>;
-            case 'pending': return <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 w-max"><Clock className="w-3 h-3"/> Unbezahlt</span>;
-            default: return <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">{status}</span>;
-        }
+        const info = statusInfo(status);
+        const Symbol = STATUS_SYMBOL[status];
+        return (
+            <span className={`${info.farbe} px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 w-max`}>
+                {Symbol && <Symbol className="w-3 h-3" />} {info.label}
+            </span>
+        );
     }
 
     if (orders.length === 0) {
@@ -138,7 +189,58 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
         );
     }
 
+    const reiter: { id: typeof ansicht; name: string; anzahl: number }[] = [
+        { id: 'offen', name: 'Zu erledigen', anzahl: zaehler.offen },
+        { id: 'shipped', name: 'Versendet', anzahl: zaehler.shipped },
+        { id: 'cancelled', name: 'Storniert', anzahl: zaehler.cancelled },
+        { id: 'alle', name: 'Alle', anzahl: zaehler.alle },
+    ];
+
     return (
+        <>
+            <div className="flex flex-col md:flex-row md:items-center gap-3 p-4 border-b border-gray-100">
+                <div className="flex gap-1 flex-wrap">
+                    {reiter.map((r) => (
+                        <button
+                            key={r.id}
+                            type="button"
+                            onClick={() => setAnsicht(r.id)}
+                            aria-pressed={ansicht === r.id}
+                            className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                                ansicht === r.id
+                                    ? 'bg-[var(--color-brand-primary)] text-white'
+                                    : 'text-gray-600 hover:bg-gray-100'
+                            }`}
+                        >
+                            {r.name}
+                            <span className={`ml-1.5 text-xs ${ansicht === r.id ? 'text-white/70' : 'text-gray-400'}`}>
+                                {r.anzahl}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+                <div className="relative md:ml-auto md:w-72">
+                    <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                        type="search"
+                        value={suche}
+                        onChange={(e) => setSuche(e.target.value)}
+                        placeholder="Name, E-Mail, Nummer …"
+                        aria-label="Bestellungen durchsuchen"
+                        className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-xl outline-none focus:border-[var(--color-brand-primary)]"
+                    />
+                </div>
+            </div>
+
+            {sichtbareOrders.length === 0 ? (
+                <div className="p-12 text-center text-gray-500">
+                    {suche.trim()
+                        ? `Nichts gefunden zu „${suche.trim()}".`
+                        : ansicht === 'offen'
+                            ? 'Nichts zu tun – alle Bestellungen sind raus. 🎉'
+                            : 'Keine Bestellungen in dieser Ansicht.'}
+                </div>
+            ) : (
         <table className="w-full text-left border-collapse">
             <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
@@ -151,7 +253,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                 </tr>
             </thead>
             <tbody>
-                {orders.map((order: any) => {
+                {sichtbareOrders.map((order: any) => {
                     const totalItems = order.order_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
                     const zeilen = addressLines(order.shipping_address);
                     const versandfertig = isDeliverable(order.shipping_address);
@@ -314,5 +416,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                 })}
             </tbody>
         </table>
+            )}
+        </>
     );
 }
