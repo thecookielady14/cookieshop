@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { Phone } from "lucide-react";
-import ClientOrderTable from "./ClientOrderTable";
+import ClientOrderTable, { type Traceability } from "./ClientOrderTable";
 
 // Initialize Supabase client for Server Component
 const supabase = createClient(
@@ -20,7 +20,7 @@ export default async function AdminOrders() {
             order_items (
                 quantity,
                 products ( name ),
-                order_item_varieties ( variety_name, quantity )
+                order_item_varieties ( id, variety_id, variety_name, quantity )
             )
         `)
         .order('created_at', { ascending: false })
@@ -31,6 +31,8 @@ export default async function AdminOrders() {
         .limit(500);
 
     if (error) console.error("Error fetching admin orders:", error);
+
+    const traceability = await loadTraceability(orders ?? []);
 
     return (
         <div>
@@ -46,8 +48,48 @@ export default async function AdminOrders() {
             </div>
 
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-x-auto">
-                <ClientOrderTable initialOrders={orders || []} />
+                <ClientOrderTable initialOrders={orders || []} traceability={traceability} />
             </div>
         </div>
     );
+}
+
+/**
+ * Backchargen fürs Packen: offene Chargen zur Auswahl und die bereits
+ * zugeordneten je Sorte einer Bestellposition.
+ *
+ * Bewusst getrennt von der Bestellabfrage: solange rueckverfolgung.sql nicht
+ * ausgeführt ist, fehlen die Tabellen. Eingebettet würde dann die ganze
+ * Bestellliste nicht laden – so fällt nur die Chargenspalte weg (null).
+ */
+async function loadTraceability(orders: any[]): Promise<Traceability | null> {
+    const { data: openBatches, error } = await supabase
+        .from('bake_batches')
+        .select('id, code, variety_id, variety_name')
+        .eq('is_closed', false)
+        .order('batch_number', { ascending: false });
+    if (error) return null;
+
+    const oivIds: string[] = orders.flatMap((o) =>
+        (o.order_items ?? []).flatMap((i: any) => (i.order_item_varieties ?? []).map((v: any) => v.id))
+    );
+
+    // In Häppchen, weil die IDs in der URL landen und PostgREST ohnehin nur
+    // 1000 Zeilen je Abfrage liefert.
+    const assigned: Traceability['assigned'] = {};
+    for (let i = 0; i < oivIds.length; i += 150) {
+        const { data, error: e } = await supabase
+            .from('order_item_variety_batches')
+            .select('order_item_variety_id, batch_id, bake_batches(code)')
+            .in('order_item_variety_id', oivIds.slice(i, i + 150));
+        if (e) return null;
+        for (const row of (data ?? []) as any[]) {
+            (assigned[row.order_item_variety_id] ??= []).push({
+                batch_id: row.batch_id,
+                code: row.bake_batches?.code ?? '?',
+            });
+        }
+    }
+
+    return { openBatches: openBatches ?? [], assigned };
 }

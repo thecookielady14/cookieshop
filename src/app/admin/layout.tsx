@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Layers, Package, Cookie, ShoppingCart, ChefHat, Users, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Layers, Package, Cookie, ShoppingCart, ChefHat, Wheat, Tag, Route, Users, Settings, LogOut } from "lucide-react";
 import { createBrowserClient } from '@supabase/ssr';
 
 export default function AdminLayout({
@@ -30,6 +30,9 @@ export default function AdminLayout({
         { name: 'Verkaufsartikel', href: '/admin/products', icon: Package },
         { name: 'Bestellungen', href: '/admin/orders', icon: ShoppingCart },
         { name: 'Backliste', href: '/admin/backliste', icon: ChefHat },
+        { name: 'Zutaten', href: '/admin/zutaten', icon: Wheat },
+        { name: 'Backchargen', href: '/admin/backchargen', icon: Tag },
+        { name: 'Rückverfolgung', href: '/admin/rueckverfolgung', icon: Route },
         { name: 'Kunden', href: '/admin/customers', icon: Users },
         { name: 'Einstellungen', href: '/admin/settings', icon: Settings },
     ];

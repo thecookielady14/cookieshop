@@ -9,8 +9,16 @@ import { addressLines, addressText, isDeliverable } from "@/lib/address";
 import { CARRIERS, trackingUrl } from "@/lib/tracking";
 import { assertWritten } from "@/lib/admin-write";
 import { statusInfo } from "@/lib/order-status";
+import BatchAssign, { type AssignedBatch, type OpenBatch } from "./BatchAssign";
 
-export default function ClientOrderTable({ initialOrders }: { initialOrders: any[] }) {
+/** null, solange rueckverfolgung.sql nicht ausgeführt ist – dann ohne Chargen. */
+export interface Traceability {
+    openBatches: OpenBatch[];
+    /** Zugeordnete Backchargen je order_item_varieties.id */
+    assigned: Record<string, AssignedBatch[]>;
+}
+
+export default function ClientOrderTable({ initialOrders, traceability }: { initialOrders: any[]; traceability: Traceability | null }) {
     /**
      * Bewusst createBrowserClient aus @supabase/ssr, nicht der einfache Client.
      * Die Anmeldeseite legt die Sitzung in Cookies ab; der einfache Client sucht
@@ -30,6 +38,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
     /** Welche Adresse gerade kopiert wurde – nur für die kurze Rückmeldung. */
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [savingTrackingId, setSavingTrackingId] = useState<string | null>(null);
+    const [assignedBatches, setAssignedBatches] = useState(traceability?.assigned ?? {});
 
     /**
      * Die Liste ist eine Arbeitsliste, kein Archiv. Standardmäßig steht darauf,
@@ -287,7 +296,7 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                                 {(order.order_items ?? []).map((item: any, i: number) => (
                                     <span key={i} className="block text-xs text-gray-600 mt-1">
                                         {item.quantity}× {item.products?.name ?? 'Artikel'}
-                                        {(item.order_item_varieties ?? []).length > 0 && (
+                                        {!traceability && (item.order_item_varieties ?? []).length > 0 && (
                                             <span className="text-gray-400">
                                                 {' – '}
                                                 {item.order_item_varieties
@@ -295,6 +304,20 @@ export default function ClientOrderTable({ initialOrders }: { initialOrders: any
                                                     .join(', ')}
                                             </span>
                                         )}
+                                        {/* Rückverfolgung: je Sorte die Backcharge(n), aus denen gepackt wurde. */}
+                                        {traceability && (item.order_item_varieties ?? []).map((v: any) => (
+                                            <BatchAssign
+                                                key={v.id}
+                                                supabase={supabase}
+                                                oivId={v.id}
+                                                varietyId={v.variety_id}
+                                                varietyName={v.variety_name}
+                                                quantity={v.quantity * item.quantity}
+                                                assigned={assignedBatches[v.id] ?? []}
+                                                openBatches={traceability.openBatches}
+                                                onChange={(next) => setAssignedBatches((prev) => ({ ...prev, [v.id]: next }))}
+                                            />
+                                        ))}
                                     </span>
                                 ))}
                             </td>
