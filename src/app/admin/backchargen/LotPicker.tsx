@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { ScanBarcode, X, AlertTriangle } from 'lucide-react';
 import BarcodeScanner from '@/components/BarcodeScanner';
+import { mhdStatus } from '@/lib/mhd';
 
 export interface OpenLot {
     id: string;
@@ -114,9 +115,13 @@ export default function LotPicker({
                                 <label key={l.id} className="flex items-center gap-2 py-1 text-sm cursor-pointer">
                                     <input type="checkbox" checked={selected.includes(l.id)} onChange={() => toggle(l.id)} />
                                     <span className="font-mono">{l.lot_number}</span>
-                                    {l.best_before && (
+                                    {l.best_before && (mhdStatus(l.best_before, null) === 'abgelaufen' ? (
+                                        <span className="text-xs font-bold text-red-700 bg-red-100 px-1.5 py-0.5 rounded">
+                                            MHD {format(parseISO(l.best_before), 'dd.MM.yy')} abgelaufen
+                                        </span>
+                                    ) : (
                                         <span className="text-xs text-gray-400">MHD {format(parseISO(l.best_before), 'dd.MM.yy')}</span>
-                                    )}
+                                    ))}
                                 </label>
                             ))}
                         </fieldset>

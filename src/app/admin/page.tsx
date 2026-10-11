@@ -1,9 +1,10 @@
-import { Package, ShoppingCart, TrendingUp, Users, Cookie, ArrowRight } from "lucide-react";
+import { Package, ShoppingCart, TrendingUp, Users, Cookie, ArrowRight, BellRing } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { statusInfo } from '@/lib/order-status';
+import { mhdText, type MhdWarning } from '@/lib/mhd';
 
 // Initialize Supabase client for Server Component
 const supabase = createClient(
@@ -15,7 +16,7 @@ export const revalidate = 0; // Disable caching for the admin dashboard
 
 export default async function AdminDashboard() {
     // Fetch Orders and Products in parallel for faster loading
-    const [ordersResult, productsResult] = await Promise.all([
+    const [ordersResult, productsResult, mhdResult] = await Promise.all([
         supabase
             .from('orders')
             .select(`
@@ -29,7 +30,14 @@ export default async function AdminDashboard() {
         supabase
             .from('products')
             .select('id, is_available'),
+        // Fehlt die Sicht noch (mhd_warnung.sql nicht ausgeführt), bleibt der
+        // Hinweis einfach weg – die Übersicht lädt trotzdem.
+        supabase
+            .from('mhd_warnings')
+            .select('lot_id, lot_number, days_left, ingredient_name')
+            .order('days_left'),
     ]);
+    const mhdWarnings = (mhdResult.data ?? []) as Pick<MhdWarning, 'lot_id' | 'lot_number' | 'days_left' | 'ingredient_name'>[];
 
     const { data: orders, error: ordersError } = ordersResult;
     const { data: products, error: productsError } = productsResult;
@@ -71,6 +79,22 @@ export default async function AdminDashboard() {
     return (
         <div>
             <h1 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900">Hallo, Cookie Lady! 👋</h1>
+
+            {mhdWarnings.length > 0 && (
+                <Link href="/admin/zutaten" className="block bg-red-50 border border-red-200 text-red-900 rounded-2xl p-5 mb-4 hover:bg-red-100 transition-colors">
+                    <span className="flex items-center gap-2 font-bold mb-1">
+                        <BellRing className="w-5 h-5 flex-shrink-0" /> MHD prüfen
+                    </span>
+                    <ul className="text-sm space-y-0.5">
+                        {mhdWarnings.slice(0, 5).map((w) => (
+                            <li key={w.lot_id}>
+                                <strong>{w.ingredient_name}</strong> (Los {w.lot_number}) – {mhdText(w)}
+                            </li>
+                        ))}
+                        {mhdWarnings.length > 5 && <li>… und {mhdWarnings.length - 5} weitere</li>}
+                    </ul>
+                </Link>
+            )}
 
             {/* Der Unterschied zwischen Sorte und Verkaufsartikel ist der haeufigste
                 Stolperstein - deshalb steht er hier, nicht in einer Anleitung. */}

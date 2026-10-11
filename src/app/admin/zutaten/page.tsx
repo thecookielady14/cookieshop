@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { de } from 'date-fns/locale';
-import { ScanBarcode, Plus, AlertTriangle, Check, Trash2, Search } from 'lucide-react';
+import { ScanBarcode, Plus, AlertTriangle, Check, Trash2, Search, BellRing } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
 import { assertWritten } from '@/lib/admin-write';
 import BarcodeScanner from '@/components/BarcodeScanner';
+import { MHD_WARN_OPTIONS, mhdStatus, mhdText } from '@/lib/mhd';
 
 interface Lot {
     id: string;
@@ -22,11 +23,18 @@ interface Ingredient {
     name: string;
     supplier: string | null;
     ean: string | null;
+    /** null = keine MHD-Warnung für diese Zutat */
+    mhd_warn_days: number | null;
     ingredient_lots: Lot[];
 }
 
 const today = () => format(new Date(), 'yyyy-MM-dd');
 const datum = (d: string | null) => (d ? format(parseISO(d), 'dd.MM.yyyy', { locale: de }) : '—');
+const tageBis = (d: string) => Math.round((parseISO(d).getTime() - parseISO(today()).getTime()) / 86_400_000);
+
+/** <select> kennt nur Text: '' steht für „keine Warnung". */
+const warnValue = (v: number | null) => (v === null ? '' : String(v));
+const parseWarn = (v: string) => (v === '' ? null : parseInt(v, 10));
 
 /**
  * Zutaten und Wareneingang auf einer Seite: wer eine neue Packung Mehl
@@ -61,15 +69,16 @@ export default function AdminZutaten() {
     const [newName, setNewName] = useState('');
     const [newSupplier, setNewSupplier] = useState('');
     const [newEan, setNewEan] = useState('');
+    const [newWarnDays, setNewWarnDays] = useState<number | null>(null);
 
     const load = useCallback(async () => {
         const { data, error: loadError } = await supabase
             .from('ingredients')
-            .select('id, name, supplier, ean, ingredient_lots(id, lot_number, best_before, received_on, is_used_up, bake_batch_lots(batch_id))')
+            .select('id, name, supplier, ean, mhd_warn_days, ingredient_lots(id, lot_number, best_before, received_on, is_used_up, bake_batch_lots(batch_id))')
             .order('name');
         if (loadError) {
             setError(
-                'Die Tabellen für die Rückverfolgung fehlen noch. Führe die Datei rueckverfolgung.sql im Supabase SQL Editor aus. (' +
+                'Die Datenbank ist noch nicht auf dem aktuellen Stand. Führe rueckverfolgung.sql und mhd_warnung.sql im Supabase SQL Editor aus. (' +
                 loadError.message + ')'
             );
         } else {
@@ -122,6 +131,7 @@ export default function AdminZutaten() {
                         name: newName.trim(),
                         supplier: newSupplier.trim() || null,
                         ean: newEan.trim() || null,
+                        mhd_warn_days: newWarnDays,
                     })
                     .select('id');
                 if (insertError) throw insertError;
@@ -154,6 +164,7 @@ export default function AdminZutaten() {
             setNewName('');
             setNewSupplier('');
             setNewEan('');
+            setNewWarnDays(null);
             setIngredientId(id);
             await load();
         } catch (err) {
@@ -177,6 +188,19 @@ export default function AdminZutaten() {
                 ...i,
                 ingredient_lots: i.ingredient_lots.map((l) => (l.id === lot.id ? { ...l, is_used_up: !l.is_used_up } : l)),
             })));
+        } catch (err) {
+            setError(err instanceof Error ? err.message : String(err));
+        }
+    };
+
+    const changeWarnDays = async (ing: Ingredient, value: number | null) => {
+        setError(null);
+        const { data, error: updateError } = await supabase
+            .from('ingredients').update({ mhd_warn_days: value }).eq('id', ing.id).select('id');
+        try {
+            if (updateError) throw updateError;
+            assertWritten(data, 'Die MHD-Warnung');
+            setIngredients((prev) => prev.map((i) => (i.id === ing.id ? { ...i, mhd_warn_days: value } : i)));
         } catch (err) {
             setError(err instanceof Error ? err.message : String(err));
         }
@@ -233,6 +257,13 @@ export default function AdminZutaten() {
                 .filter(Boolean).join(' ').toLowerCase().includes(begriff));
     }, [ingredients, showUsedUp, suche]);
 
+    // Gleiche Regel wie die Sicht mhd_warnings: offene Chargen, Warnung an der Zutat eingeschaltet.
+    const faellig = ingredients.flatMap((i) => i.ingredient_lots
+        .filter((l) => !l.is_used_up && l.best_before && i.mhd_warn_days !== null
+            && mhdStatus(l.best_before, i.mhd_warn_days) !== 'ok')
+        .map((l) => ({ ing: i, lot: l, days_left: tageBis(l.best_before!) })))
+        .sort((a, b) => a.days_left - b.days_left);
+
     const inputClass =
         'w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)] outline-none transition-all bg-white';
 
@@ -257,6 +288,24 @@ export default function AdminZutaten() {
                 <div className="flex gap-3 bg-green-50 border border-green-200 text-green-900 p-4 rounded-2xl mb-6 text-sm">
                     <Check className="w-5 h-5 flex-shrink-0 mt-0.5" />
                     <p>{notice}</p>
+                </div>
+            )}
+
+            {faellig.length > 0 && (
+                <div className="bg-red-50 border border-red-200 text-red-900 rounded-3xl p-5 mb-6">
+                    <p className="flex items-center gap-2 font-bold mb-2">
+                        <BellRing className="w-5 h-5 flex-shrink-0" /> MHD prüfen
+                    </p>
+                    <ul className="space-y-1 text-sm">
+                        {faellig.map(({ ing, lot, days_left }) => (
+                            <li key={lot.id}>
+                                <strong>{ing.name}</strong>, Los <span className="font-mono">{lot.lot_number}</span> – {mhdText({ days_left })}
+                            </li>
+                        ))}
+                    </ul>
+                    <p className="text-xs text-red-800/80 mt-3">
+                        Packung leer? Dann unten auf „Aufgebraucht“ tippen – damit verschwindet der Hinweis.
+                    </p>
                 </div>
             )}
 
@@ -285,6 +334,13 @@ export default function AdminZutaten() {
                             <span className="text-gray-600">Barcode (EAN)</span>
                             <input className={inputClass} value={newEan} onChange={(e) => setNewEan(e.target.value)}
                                 inputMode="numeric" placeholder="optional" />
+                        </label>
+                        <label className="block text-sm md:col-span-3">
+                            <span className="text-gray-600">MHD-Warnung</span>
+                            <select className={inputClass} value={warnValue(newWarnDays)}
+                                onChange={(e) => setNewWarnDays(parseWarn(e.target.value))}>
+                                {MHD_WARN_OPTIONS.map((o) => <option key={warnValue(o.value)} value={warnValue(o.value)}>{o.label}</option>)}
+                            </select>
                         </label>
                         <button type="button" onClick={() => setNewMode(false)}
                             className="text-sm text-gray-500 hover:underline text-left md:col-span-3">
@@ -356,11 +412,22 @@ export default function AdminZutaten() {
                     {sichtbar.map((ing) => (
                         <div key={ing.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-5">
                             <div className="flex items-start justify-between gap-3 mb-3">
-                                <div>
+                                <div className="min-w-0">
                                     <span className="font-bold text-gray-900">{ing.name}</span>
                                     <span className="block text-xs text-gray-500">
                                         {[ing.supplier, ing.ean && `EAN ${ing.ean}`].filter(Boolean).join(' · ') || 'kein Lieferant hinterlegt'}
                                     </span>
+                                    <label className="inline-flex items-center gap-1.5 mt-2 text-xs text-gray-600">
+                                        <BellRing className={`w-3.5 h-3.5 flex-shrink-0 ${ing.mhd_warn_days === null ? 'text-gray-300' : 'text-[var(--color-brand-accent)]'}`} />
+                                        <span className="sr-only">MHD-Warnung für {ing.name}</span>
+                                        <select
+                                            value={warnValue(ing.mhd_warn_days)}
+                                            onChange={(e) => changeWarnDays(ing, parseWarn(e.target.value))}
+                                            className="bg-transparent border border-gray-200 rounded-lg px-2 py-1 outline-none focus:border-[var(--color-brand-primary)] cursor-pointer"
+                                        >
+                                            {MHD_WARN_OPTIONS.map((o) => <option key={warnValue(o.value)} value={warnValue(o.value)}>{o.label}</option>)}
+                                        </select>
+                                    </label>
                                 </div>
                                 {ing.lotCount === 0 && (
                                     <button type="button" onClick={() => deleteIngredient(ing)} aria-label={`${ing.name} löschen`}
@@ -378,7 +445,7 @@ export default function AdminZutaten() {
                                             <span className={`font-mono font-bold ${lot.is_used_up ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
                                                 {lot.lot_number}
                                             </span>
-                                            <span className="text-gray-500">MHD {datum(lot.best_before)}</span>
+                                            <MhdBadge bestBefore={lot.best_before} warnDays={ing.mhd_warn_days} usedUp={lot.is_used_up} />
                                             <span className="text-gray-400">Eingang {datum(lot.received_on)}</span>
                                             {lot.bake_batch_lots.length > 0 && (
                                                 <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">
@@ -408,5 +475,17 @@ export default function AdminZutaten() {
 
             {scanning && <BarcodeScanner onDetected={handleScan} onClose={() => setScanning(false)} />}
         </div>
+    );
+}
+
+/** MHD einer Charge, rot wenn abgelaufen, gelb im Warnzeitraum. */
+function MhdBadge({ bestBefore, warnDays, usedUp }: { bestBefore: string | null; warnDays: number | null; usedUp: boolean }) {
+    const status = usedUp ? 'ok' : mhdStatus(bestBefore, warnDays);
+    if (status === 'ok') return <span className="text-gray-500">MHD {datum(bestBefore)}</span>;
+    const days_left = tageBis(bestBefore!);
+    return (
+        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${status === 'abgelaufen' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-900'}`}>
+            MHD {datum(bestBefore)} · {mhdText({ days_left })}
+        </span>
     );
 }
