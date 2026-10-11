@@ -12,12 +12,7 @@ ALTER TABLE public.ingredients
   ADD COLUMN IF NOT EXISTS mhd_warn_days INTEGER
   CHECK (mhd_warn_days IS NULL OR mhd_warn_days BETWEEN 0 AND 365);
 
--- Wann die E-Mail rausging. Zwei Stufen, jeweils genau einmal:
--- „läuft bald ab" und „ist abgelaufen".
-ALTER TABLE public.ingredient_lots ADD COLUMN IF NOT EXISTS mhd_warned_at  TIMESTAMPTZ;
-ALTER TABLE public.ingredient_lots ADD COLUMN IF NOT EXISTS mhd_expired_at TIMESTAMPTZ;
-
--- Die Regel steht genau einmal hier; Adminbereich und E-Mail lesen beide
+-- Die Regel steht genau einmal hier; die Übersicht im Adminbereich liest
 -- diese Sicht. security_invoker: es gelten die RLS-Regeln des Aufrufers,
 -- die Sicht öffnet also nichts, was die Tabellen nicht ohnehin erlauben.
 CREATE OR REPLACE VIEW public.mhd_warnings
@@ -27,8 +22,6 @@ SELECT
   l.lot_number,
   l.best_before,
   l.best_before - CURRENT_DATE AS days_left,
-  l.mhd_warned_at,
-  l.mhd_expired_at,
   i.id              AS ingredient_id,
   i.name            AS ingredient_name,
   i.supplier,
@@ -41,4 +34,4 @@ WHERE l.is_used_up = false
   AND l.best_before - CURRENT_DATE <= i.mhd_warn_days;
 
 COMMENT ON COLUMN public.ingredients.mhd_warn_days IS 'NULL = keine MHD-Warnung. Sonst: so viele Tage vor dem MHD warnen.';
-COMMENT ON VIEW public.mhd_warnings IS 'Offene Zutatenchargen, deren MHD im Warnzeitraum liegt oder überschritten ist. Grundlage für Adminhinweis und E-Mail.';
+COMMENT ON VIEW public.mhd_warnings IS 'Offene Zutatenchargen, deren MHD im Warnzeitraum liegt oder überschritten ist. Grundlage für den Hinweis im Adminbereich.';

@@ -3,9 +3,9 @@ import { differenceInCalendarDays, parseISO } from 'date-fns';
 /**
  * MHD-Warnung für Zutaten.
  *
- * Ob gewarnt wird, entscheidet die Sicht public.mhd_warnings (E-Mail und
- * Übersicht). Die Funktionen hier rechnen dieselbe Regel im Browser nach,
- * damit die Zutatenliste ihre Farben ohne zusätzliche Abfrage bekommt.
+ * Ob gewarnt wird, entscheidet die Sicht public.mhd_warnings (Übersicht).
+ * Die Funktionen hier rechnen dieselbe Regel im Browser nach, damit die
+ * Zutatenliste ihre Farben ohne zusätzliche Abfrage bekommt.
  */
 
 export interface MhdWarning {
@@ -13,8 +13,6 @@ export interface MhdWarning {
     lot_number: string;
     best_before: string;
     days_left: number;
-    mhd_warned_at: string | null;
-    mhd_expired_at: string | null;
     ingredient_id: string;
     ingredient_name: string;
     supplier: string | null;
