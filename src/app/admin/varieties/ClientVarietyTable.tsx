@@ -83,7 +83,7 @@ export default function ClientVarietyTable({ initial }: { initial: VarietyRow[] 
                     <span>{error}</span>
                 </div>
             )}
-            <table className="w-full text-left">
+            <table className="admin-table w-full text-left">
                 <thead className="bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
                     <tr>
                         <th className="p-4 font-semibold">Sorte</th>
@@ -97,7 +97,7 @@ export default function ClientVarietyTable({ initial }: { initial: VarietyRow[] 
                 <tbody>
                     {rows.map((row) => (
                         <tr key={row.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                            <td className="p-4">
+                            <td className="p-4" data-full>
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden relative flex-shrink-0">
                                         {row.image_url
@@ -112,24 +112,24 @@ export default function ClientVarietyTable({ initial }: { initial: VarietyRow[] 
                                     </div>
                                 </div>
                             </td>
-                            <td className="p-4 text-gray-600">{row.line_name}</td>
-                            <td className="p-4 text-gray-600 whitespace-nowrap">
+                            <td className="p-4 text-gray-600" data-label="Linie">{row.line_name}</td>
+                            <td className="p-4 text-gray-600 whitespace-nowrap" data-label="Gewicht">
                                 {row.piece_weight_grams !== null ? `${row.piece_weight_grams} g` : '—'}
                             </td>
-                            <td className="p-4">
+                            <td className="p-4" data-label="Status">
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
                                     row.is_available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                                 }`}>
                                     {row.is_available ? 'Freigegeben' : 'Entwurf'}
                                 </span>
                             </td>
-                            <td className="p-4 text-sm text-gray-600">
+                            <td className="p-4 text-sm text-gray-600" data-label="Verwendet in" data-full>
                                 {row.used_by.length === 0
                                     ? <span className="text-gray-400">—</span>
                                     : row.used_by.map((p) => p.name).join(', ')}
                             </td>
-                            <td className="p-4 text-right">
-                                <div className="flex justify-end gap-2">
+                            <td className="p-4 text-right" data-full>
+                                <div className="flex xl:justify-end gap-2">
                                     <Link href={`/admin/varieties/${row.id}/edit`}
                                         aria-label={`${row.name} bearbeiten`}
                                         className="p-2 border border-gray-200 rounded-lg hover:bg-white transition-colors">

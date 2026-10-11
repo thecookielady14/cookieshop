@@ -70,7 +70,7 @@ export default async function AdminDashboard() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-2 text-gray-900">Hallo, Cookie Lady! 👋</h1>
+            <h1 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900">Hallo, Cookie Lady! 👋</h1>
 
             {/* Der Unterschied zwischen Sorte und Verkaufsartikel ist der haeufigste
                 Stolperstein - deshalb steht er hier, nicht in einer Anleitung. */}
@@ -135,7 +135,7 @@ export default async function AdminDashboard() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Quick Actions */}
-                <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 h-fit">
+                <div className="bg-white p-5 md:p-8 rounded-3xl shadow-sm border border-gray-100 h-fit">
                     <h2 className="text-xl font-bold mb-6">Schnellzugriff</h2>
                     <div className="space-y-4">
                         <Link href="/admin/varieties/new" className="block p-4 rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all flex justify-between items-center group">
@@ -163,8 +163,8 @@ export default async function AdminDashboard() {
                 </div>
 
                 {/* Recent Orders Overview */}
-                <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-bold mb-6 flex justify-between items-end">
+                <div className="bg-white p-5 md:p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <h2 className="text-xl font-bold mb-6 flex justify-between items-end gap-3">
                         Letzte Bestellungen
                         <Link href="/admin/orders" className="text-sm font-medium text-[var(--color-brand-primary)] hover:underline">Alle ansehen</Link>
                     </h2>
@@ -182,20 +182,20 @@ export default async function AdminDashboard() {
                                 const totalItems = order.order_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
 
                                 return (
-                                    <div key={order.id} className="flex items-center justify-between p-4 rounded-xl bg-gray-50">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-orange-200 flex items-center justify-center font-bold text-orange-700">
+                                    <div key={order.id} className="flex items-center justify-between gap-3 p-4 rounded-xl bg-gray-50">
+                                        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                                            <div className="w-10 h-10 flex-shrink-0 rounded-full bg-orange-200 flex items-center justify-center font-bold text-orange-700">
                                                 {initials}
                                             </div>
-                                            <div>
+                                            <div className="min-w-0">
                                                 <h4 className="font-bold text-sm text-gray-900 line-clamp-1">{order.customer_name || 'Unbekannt'}</h4>
                                                 <p className="text-xs text-gray-500">
                                                     {format(new Date(order.created_at), 'dd.MM., HH:mm', { locale: de })} • {totalItems} Artikel
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <span className={`inline-block px-2 py-1 text-xs font-bold rounded-md mb-1 ${statusInfo(order.status).farbe}`}>
+                                        <div className="text-right flex-shrink-0">
+                                            <span className={`inline-block px-2 py-1 text-xs font-bold rounded-md mb-1 whitespace-nowrap ${statusInfo(order.status).farbe}`}>
                                                 {statusInfo(order.status).label}
                                             </span>
                                             <p className="font-bold text-sm text-gray-900">

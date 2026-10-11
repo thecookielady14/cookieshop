@@ -137,7 +137,7 @@ export default function AdminSettings() {
     return (
         <div className="max-w-3xl">
             <div className="flex items-center gap-4 mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">Einstellungen</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Einstellungen</h1>
             </div>
             <p className="text-gray-500 mb-8">
                 Diese Werte gelten sofort im Warenkorb, beim Bezahlen und in den E-Mails – ein neuer Deploy ist nicht nötig.

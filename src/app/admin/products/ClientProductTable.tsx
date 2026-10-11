@@ -61,7 +61,7 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
     }
 
     return (
-        <table className="w-full text-left border-collapse">
+        <table className="admin-table w-full text-left border-collapse">
             <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
                     <th className="p-4 font-semibold text-gray-500">Name</th>
@@ -75,20 +75,20 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
             <tbody>
                 {products.map((product: any) => (
                     <tr key={product.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                        <td className="p-4 font-medium text-gray-900">{product.name}</td>
-                        <td className="p-4">
+                        <td className="p-4 font-medium text-gray-900" data-full>{product.name}</td>
+                        <td className="p-4" data-label="Linie">
                             <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 whitespace-nowrap">
                                 {product.product_lines?.name ?? 'Ohne Linie'}
                             </span>
                         </td>
-                        <td className="p-4 text-gray-600">{product.price.toFixed(2).replace('.', ',')} €</td>
-                        <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${product.is_available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+                        <td className="p-4 text-gray-600 whitespace-nowrap" data-label="Preis">{product.price.toFixed(2).replace('.', ',')} €</td>
+                        <td className="p-4" data-label="Status">
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${product.is_available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                                 }`}>
                                 {product.is_available ? 'Bestellbar' : 'Nicht bestellbar'}
                             </span>
                         </td>
-                        <td className="p-4 text-gray-600 text-sm">
+                        <td className="p-4 text-gray-600 text-sm" data-label="Inhalt" data-full>
                             {product.kind === 'configurable'
                                 ? (product.piece_count ? plural(product.piece_count, 'Keks', 'Kekse') + ' zur Wahl' : 'Kekse zur Wahl')
                                 : (product.product_varieties ?? []).length === 0
@@ -97,8 +97,8 @@ export default function ClientProductTable({ initialProducts }: { initialProduct
                                         .map((pv: any) => `${pv.quantity}× ${pv.varieties?.name ?? '?'}`)
                                         .join(', ')}
                         </td>
-                        <td className="p-4 text-right">
-                            <div className="flex justify-end gap-2">
+                        <td className="p-4 text-right" data-full>
+                            <div className="flex xl:justify-end gap-2">
                                 <Link 
                                     href={`/admin/products/${product.id}/edit`}
                                     title="Bearbeiten" 

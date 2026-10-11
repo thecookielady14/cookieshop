@@ -250,14 +250,12 @@ export default function ClientOrderTable({ initialOrders, traceability }: { init
                             : 'Keine Bestellungen in dieser Ansicht.'}
                 </div>
             ) : (
-        <table className="w-full text-left border-collapse">
+        <table className="admin-table w-full text-left border-collapse">
             <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
                     <th className="p-4 font-semibold text-gray-500">Bestellung</th>
                     <th className="p-4 font-semibold text-gray-500">Kunde</th>
                     <th className="p-4 font-semibold text-gray-500">Lieferadresse</th>
-                    <th className="p-4 font-semibold text-gray-500">Datum</th>
-                    <th className="p-4 font-semibold text-gray-500">Status</th>
                     <th className="p-4 font-semibold text-gray-500 text-right">Aktionen</th>
                 </tr>
             </thead>
@@ -268,9 +266,17 @@ export default function ClientOrderTable({ initialOrders, traceability }: { init
                     const versandfertig = isDeliverable(order.shipping_address);
                     return (
                         <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                            <td className="p-4 align-top">
-                                <span className="font-bold text-gray-900 block">#{order.order_number || order.id.substring(0, 8)}</span>
-                                <span className="text-xs text-gray-500">{totalItems} Artikel • {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount)}</span>
+                            <td className="p-4 align-top min-w-[13rem]" data-full>
+                                {/* Datum und Status stehen hier statt in eigenen Spalten:
+                                    sechs Spalten passten selbst auf einem Laptop nicht,
+                                    die Adresse wurde zu „Must-erfra-u" zerdrückt. */}
+                                <span className="flex flex-wrap items-center gap-2">
+                                    <span className="font-bold text-gray-900">#{order.order_number || order.id.substring(0, 8)}</span>
+                                    {getStatusBadge(order.status)}
+                                </span>
+                                <span className="text-xs text-gray-500 block mt-1">
+                                    {format(new Date(order.created_at), 'dd.MM., HH:mm', { locale: de })} • {totalItems} Artikel • {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(order.total_amount)}
+                                </span>
                                 {/* Rechnungsnummer: eigener Zähler, deshalb nie
                                     gleich der Bestellnummer. Ohne sie lässt sich
                                     eine Rückfrage zu „SHOP-0007" nicht zuordnen. */}
@@ -321,7 +327,7 @@ export default function ClientOrderTable({ initialOrders, traceability }: { init
                                     </span>
                                 ))}
                             </td>
-                            <td className="p-4">
+                            <td className="p-4 align-top min-w-[11rem]" data-label="Kunde">
                                 <span className="font-medium text-gray-900 block">
                                     {order.customer_name || order.customer_email || 'Ohne Namen'}
                                 </span>
@@ -336,7 +342,7 @@ export default function ClientOrderTable({ initialOrders, traceability }: { init
                             </td>
                             {/* Eigene Spalte: beim Packen wird die vollständige
                                 Adresse gebraucht, nicht nur der Ort. */}
-                            <td className="p-4 align-top">
+                            <td className="p-4 align-top min-w-[11rem]" data-label="Lieferadresse">
                                 {zeilen.length > 0 ? (
                                     <div className="flex items-start gap-2">
                                         <address className="not-italic text-sm text-gray-700 leading-snug">
@@ -365,14 +371,8 @@ export default function ClientOrderTable({ initialOrders, traceability }: { init
                                     </span>
                                 )}
                             </td>
-                            <td className="p-4 text-gray-600">
-                                {format(new Date(order.created_at), 'dd.MM., HH:mm', { locale: de })}
-                            </td>
-                            <td className="p-4">
-                                {getStatusBadge(order.status)}
-                            </td>
-                            <td className="p-4 text-right">
-                                <div className="flex justify-end gap-2">
+                            <td className="p-4 align-top text-right" data-full>
+                                <div className="flex xl:justify-end gap-2">
                                     <select 
                                         value={order.status}
                                         disabled={updatingId === order.id}
@@ -392,7 +392,7 @@ export default function ClientOrderTable({ initialOrders, traceability }: { init
                                 </div>
                                 {/* Sendungsnummer: beim Packen eintragen, dann steht
                                     sie als Link in der Versandmail. */}
-                                <div className="flex items-center justify-end gap-2 mt-2">
+                                <div className="flex flex-wrap items-center xl:justify-end gap-2 mt-2">
                                     <select
                                         value={order.tracking_carrier ?? 'dhl'}
                                         onChange={(e) => handleTrackingSave(order.id, order.tracking_number ?? '', e.target.value)}
@@ -419,7 +419,7 @@ export default function ClientOrderTable({ initialOrders, traceability }: { init
                                     />
                                 </div>
                                 {order.tracking_number && (
-                                    <div className="text-right mt-1">
+                                    <div className="xl:text-right mt-1">
                                         {trackingUrl(order.tracking_number, order.tracking_carrier) ? (
                                             <a
                                                 href={trackingUrl(order.tracking_number, order.tracking_carrier)!}

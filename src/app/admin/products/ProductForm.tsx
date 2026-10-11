@@ -188,7 +188,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                 <Link href="/admin/products" className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
                     <ArrowLeft className="w-5 h-5 text-gray-500" />
                 </Link>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                     {isEdit ? 'Verkaufsartikel bearbeiten' : 'Neuen Verkaufsartikel anlegen'}
                 </h1>
             </div>
@@ -228,7 +228,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div>
                             <label htmlFor="line" className="block text-sm font-medium text-gray-700 mb-2">
                                 Produktlinie <span className="text-red-500">*</span>
@@ -335,7 +335,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                             <textarea id="desc" rows={2} value={values.description} onChange={(e) => set('description', e.target.value)} className={INPUT} />
                         </div>
 
-                        <div className="grid grid-cols-3 gap-6">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                             <div>
                                 <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
                                     Preis (€) <span className="text-red-500">*</span>

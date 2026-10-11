@@ -20,11 +20,11 @@ export default async function AdminProducts() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">Verkaufsartikel</h1>
+            <div className="flex flex-wrap gap-3 justify-between items-center mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Verkaufsartikel</h1>
                 <Link
                     href="/admin/products/new"
-                    className="bg-[var(--color-brand-text)] text-white px-6 py-3 rounded-xl font-bold hover:bg-neutral-800 transition-colors flex items-center gap-2"
+                    className="bg-[var(--color-brand-text)] text-white px-5 py-3 rounded-xl font-bold hover:bg-neutral-800 transition-colors flex items-center gap-2 whitespace-nowrap"
                 >
                     <CopyPlus className="w-5 h-5" />
                     Neuer Verkaufsartikel

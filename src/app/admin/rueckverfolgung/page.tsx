@@ -167,7 +167,7 @@ export default function Rueckverfolgung() {
 
     return (
         <div className="max-w-4xl">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Rückverfolgung</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Rückverfolgung</h1>
             <p className="text-gray-500 mb-8 max-w-2xl">
                 Für den Ernstfall: Gib eine <strong className="text-gray-700">Los-Nummer einer Zutat</strong> (Rückruf beim
                 Lieferanten), eine <strong className="text-gray-700">Losnummer wie L042</strong> (vom Keks-Etikett) oder
@@ -210,7 +210,7 @@ export default function Rueckverfolgung() {
                     <section key={b.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
                         <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">Backcharge</p>
                         <div className="flex items-center gap-3 mb-3">
-                            <span className="font-mono font-black text-3xl">{b.code}</span>
+                            <span className="font-mono font-black text-3xl whitespace-nowrap">{b.code}</span>
                             <span className="text-gray-700">{b.variety_name}, gebacken am {datum(b.baked_on)}</span>
                         </div>
                         <OrderList orders={b.orders} />

@@ -36,10 +36,10 @@ export default async function AdminVarieties() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">Sorten</h1>
+            <div className="flex flex-wrap gap-3 justify-between items-center mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Sorten</h1>
                 <Link href="/admin/varieties/new"
-                    className="flex items-center gap-2 bg-[var(--color-brand-primary)] text-white px-5 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity">
+                    className="flex items-center gap-2 whitespace-nowrap bg-[var(--color-brand-primary)] text-white px-5 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity">
                     <Plus className="w-4 h-4" />
                     Neue Sorte
                 </Link>

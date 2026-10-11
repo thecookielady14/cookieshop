@@ -199,7 +199,7 @@ export default function NewPhoneOrder() {
                 <Link href="/admin/orders" className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
                     <ArrowLeft className="w-5 h-5 text-gray-500" />
                 </Link>
-                <h1 className="text-3xl font-bold text-gray-900">Telefonbestellung erfassen</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Telefonbestellung erfassen</h1>
             </div>
             <p className="text-gray-500 mb-8 ml-14">
                 Die Rechnung schreibst du wie gewohnt in Lexware. Hier landet die Bestellung

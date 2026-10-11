@@ -60,7 +60,7 @@ export default async function Backliste() {
 
     return (
         <div className="max-w-3xl">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Backliste</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Backliste</h1>
             <p className="text-gray-500 mb-8 max-w-2xl">
                 Alle offenen und bezahlten Bestellungen zusammengezählt – so oft brauchst du jede
                 Sorte. Versendete und stornierte Bestellungen sind nicht dabei.

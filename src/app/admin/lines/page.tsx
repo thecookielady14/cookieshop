@@ -24,10 +24,10 @@ export default async function AdminLines() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">Produktlinien</h1>
+            <div className="flex flex-wrap gap-3 justify-between items-center mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Produktlinien</h1>
                 <Link href="/admin/lines/new"
-                    className="flex items-center gap-2 bg-[var(--color-brand-primary)] text-white px-5 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity">
+                    className="flex items-center gap-2 whitespace-nowrap bg-[var(--color-brand-primary)] text-white px-5 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity">
                     <Plus className="w-4 h-4" />
                     Neue Linie
                 </Link>
@@ -42,7 +42,7 @@ export default async function AdminLines() {
                 {lines.length === 0 ? (
                     <div className="p-12 text-center text-gray-500">Noch keine Linien angelegt.</div>
                 ) : (
-                    <table className="w-full text-left">
+                    <table className="admin-table w-full text-left">
                         <thead className="bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
                             <tr>
                                 <th className="p-4 font-semibold">Linie</th>
@@ -56,7 +56,7 @@ export default async function AdminLines() {
                         <tbody>
                             {lines.map((line) => (
                                 <tr key={line.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                                    <td className="p-4">
+                                    <td className="p-4" data-full>
                                         <div className="flex items-center gap-3">
                                             <div className="w-16 aspect-[4/3] rounded-lg bg-gray-100 overflow-hidden relative flex-shrink-0">
                                                 {line.image_url ? (
@@ -78,19 +78,19 @@ export default async function AdminLines() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-gray-600 text-sm whitespace-nowrap">/shop/{line.slug}</td>
-                                    <td className="p-4 text-gray-600 text-sm whitespace-nowrap">
+                                    <td className="p-4 text-gray-600 text-sm whitespace-nowrap" data-label="Adresse">/shop/{line.slug}</td>
+                                    <td className="p-4 text-gray-600 text-sm whitespace-nowrap" data-label="Inhalt">
                                         {plural((line.varieties ?? []).length, 'Sorte', 'Sorten')} · {(line.products ?? []).length} Artikel
                                     </td>
-                                    <td className="p-4 text-gray-600">{line.sort_order}</td>
-                                    <td className="p-4">
+                                    <td className="p-4 text-gray-600" data-label="Reihenfolge">{line.sort_order}</td>
+                                    <td className="p-4" data-label="Status">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
                                             line.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                                         }`}>
                                             {line.is_active ? 'Sichtbar' : 'Ausgeblendet'}
                                         </span>
                                     </td>
-                                    <td className="p-4 text-right">
+                                    <td className="p-4 text-right" data-full>
                                         <Link href={`/admin/lines/${line.id}/edit`}
                                             aria-label={`${line.name} bearbeiten`}
                                             className="inline-block p-2 border border-gray-200 rounded-lg hover:bg-white transition-colors">

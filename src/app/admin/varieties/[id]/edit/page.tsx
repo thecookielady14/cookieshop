@@ -19,7 +19,7 @@ export default async function EditVariety({ params }: { params: Promise<{ id: st
     if (!data) {
         return (
             <div className="max-w-3xl">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">Sorte nicht gefunden</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Sorte nicht gefunden</h1>
                 <p className="text-gray-500 mb-8">
                     Diese Sorte gibt es nicht mehr – vielleicht wurde sie gelöscht.
                 </p>

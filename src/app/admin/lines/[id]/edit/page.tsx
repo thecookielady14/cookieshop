@@ -13,7 +13,7 @@ export default async function EditLine({ params }: { params: Promise<{ id: strin
     if (!data) {
         return (
             <div className="max-w-3xl">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">Linie nicht gefunden</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Linie nicht gefunden</h1>
                 <p className="text-gray-500 mb-8">Diese Linie gibt es nicht mehr.</p>
                 <Link href="/admin/lines" className="text-[var(--color-brand-primary)] underline">
                     Zurück zur Übersicht

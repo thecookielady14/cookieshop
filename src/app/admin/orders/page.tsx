@@ -36,11 +36,11 @@ export default async function AdminOrders() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Bestellungen</h1>
+            <div className="flex flex-wrap gap-3 justify-between items-center mb-8">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Bestellungen</h1>
                 <Link
                     href="/admin/orders/new"
-                    className="flex items-center gap-2 bg-[var(--color-brand-primary)] text-white px-5 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity"
+                    className="flex items-center gap-2 whitespace-nowrap bg-[var(--color-brand-primary)] text-white px-5 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity"
                 >
                     <Phone className="w-4 h-4" />
                     Telefonbestellung

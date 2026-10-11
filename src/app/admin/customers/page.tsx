@@ -54,12 +54,12 @@ export default async function AdminCustomers() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Kunden</h1>
+            <div className="flex flex-wrap gap-3 justify-between items-center mb-8">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Kunden</h1>
             </div>
 
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <table className="w-full text-left border-collapse">
+                <table className="admin-table w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-gray-50 border-b border-gray-100">
                             <th className="p-4 font-semibold text-gray-500">Name</th>
@@ -77,24 +77,24 @@ export default async function AdminCustomers() {
 
                             return (
                                 <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                                    <td className="p-4">
+                                    <td className="p-4" data-full>
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-[var(--color-brand-secondary)] text-[var(--color-brand-text)] flex items-center justify-center font-bold text-sm">
+                                            <div className="w-8 h-8 flex-shrink-0 rounded-full bg-[var(--color-brand-secondary)] text-[var(--color-brand-text)] flex items-center justify-center font-bold text-sm">
                                                 {initials}
                                             </div>
                                             <span className="font-medium text-gray-900">{customer.name}</span>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-gray-600">{customer.email}</td>
-                                    <td className="p-4 text-center">
+                                    <td className="p-4 text-gray-600 break-all" data-label="E-Mail" data-full>{customer.email}</td>
+                                    <td className="p-4 text-center" data-label="Bestellungen">
                                         <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">
                                             {customer.orders_count}
                                         </span>
                                     </td>
-                                    <td className="p-4 text-gray-900 font-bold">
+                                    <td className="p-4 text-gray-900 font-bold whitespace-nowrap" data-label="Umsatz">
                                         {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(customer.total_spent)}
                                     </td>
-                                    <td className="p-4 text-gray-600">
+                                    <td className="p-4 text-gray-600 whitespace-nowrap" data-label="Letzte Bestellung">
                                         {format(new Date(customer.last_order), 'dd.MM.yyyy', { locale: de })}
                                     </td>
                                 </tr>

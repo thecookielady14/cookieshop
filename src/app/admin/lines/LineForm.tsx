@@ -135,7 +135,7 @@ export default function LineForm({ initial }: { initial: LineFormValues }) {
                 <Link href="/admin/lines" className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
                     <ArrowLeft className="w-5 h-5 text-gray-500" />
                 </Link>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                     {isEdit ? 'Linie bearbeiten' : 'Neue Linie anlegen'}
                 </h1>
             </div>

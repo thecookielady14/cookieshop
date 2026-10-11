@@ -240,7 +240,7 @@ export default function AdminZutaten() {
 
     return (
         <div className="max-w-4xl">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Zutaten &amp; Wareneingang</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Zutaten &amp; Wareneingang</h1>
             <p className="text-gray-500 mb-8 max-w-2xl">
                 Jede neue Packung bekommt hier ihre <strong className="text-gray-700">Los-Nummer und ihr MHD</strong>.
                 Beim Backen wählst du dann aus, welche Packungen du benutzt hast – so lässt sich jeder Keks
@@ -264,8 +264,8 @@ export default function AdminZutaten() {
                 <div className="flex items-center justify-between gap-4">
                     <h2 className="text-lg font-bold text-gray-900">Neue Packung erfassen</h2>
                     <button type="button" onClick={() => { setNotice(null); setScanning(true); }}
-                        className="flex items-center gap-2 bg-[var(--color-brand-primary)] text-white px-4 py-3 rounded-xl font-bold hover:opacity-90">
-                        <ScanBarcode className="w-5 h-5" /> Scannen
+                        className="flex items-center gap-2 whitespace-nowrap bg-[var(--color-brand-primary)] text-white px-4 py-3 rounded-xl font-bold hover:opacity-90">
+                        <ScanBarcode className="w-5 h-5 flex-shrink-0" /> Scannen
                     </button>
                 </div>
 

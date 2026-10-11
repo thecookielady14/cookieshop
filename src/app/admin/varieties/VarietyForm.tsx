@@ -183,7 +183,7 @@ export default function VarietyForm({ initial }: { initial: VarietyFormValues })
                 <Link href="/admin/varieties" className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
                     <ArrowLeft className="w-5 h-5 text-gray-500" />
                 </Link>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                     {isEdit ? 'Sorte bearbeiten' : 'Neue Sorte anlegen'}
                 </h1>
             </div>
@@ -241,7 +241,7 @@ export default function VarietyForm({ initial }: { initial: VarietyFormValues })
                                 placeholder="Ein Satz für den Konfigurator." className={INPUT} />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">
                                     Gewicht je Keks (g) <span className="text-red-500">*</span>

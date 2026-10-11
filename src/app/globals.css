@@ -64,3 +64,65 @@
         transition: none !important;
     }
 }
+
+/*
+ * Admin-Tabellen auf dem Handy: jede Zeile wird zur Karte.
+ *
+ * Sechs Spalten passen nicht auf 375 px – vorher wurden sie auf
+ * Buchstabenbreite zusammengedrückt („B-e-s-t-e-l-l-u-n-g"). Statt jede
+ * Tabelle doppelt (Tabelle + Kartenliste) zu pflegen, ändert diese Regel nur
+ * die Darstellung: Spaltenköpfe verschwinden, jede Zelle trägt ihre
+ * Beschriftung aus data-label selbst. data-full = Zelle über die volle Breite.
+ *
+ * Grenze 1280 px statt 768 px: neben der Seitenleiste bleiben auf Tablet und
+ * kleinem Laptop nur 500–700 px, auch dort wurden die Spalten zerdrückt.
+ *
+ * Absichtlich außerhalb von @layer: ungeschichtetes CSS gewinnt gegen die
+ * Tailwind-Utilities (p-4, text-right) an den Zellen, ohne !important.
+ */
+@media (max-width: 1279.98px) {
+    .admin-table,
+    .admin-table tbody {
+        display: block;
+        width: 100%;
+    }
+    .admin-table thead {
+        display: none;
+    }
+    .admin-table tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 0.75rem 1.25rem;
+        padding: 1rem;
+    }
+    .admin-table td {
+        display: block;
+        padding: 0;
+        text-align: left;
+        min-width: 0;
+    }
+    .admin-table td[data-full] {
+        flex-basis: 100%;
+    }
+    .admin-table td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 0.125rem;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #9ca3af;
+    }
+}
+
+/* iOS Safari zoomt beim Antippen in jedes Feld unter 16 px hinein und bleibt
+   dann vergrößert stehen – beim Packen (Sendungsnummer, Charge) jedes Mal. */
+@media (max-width: 767.98px) {
+    .admin-root input,
+    .admin-root select,
+    .admin-root textarea {
+        font-size: max(16px, 1em);
+    }
+}
