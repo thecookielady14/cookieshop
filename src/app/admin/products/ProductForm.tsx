@@ -222,7 +222,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                                         : 'border-gray-200 hover:border-gray-300'
                                 }`}>
                                 <Icon className={`w-6 h-6 mb-2 ${values.kind === key ? 'text-[var(--color-brand-primary)]' : 'text-gray-400'}`} />
-                                <span className="font-bold text-gray-900 block">{title}</span>
+                                <span className="font-bold text-gray-900 block hyphens-auto break-words">{title}</span>
                                 <span className="text-xs text-gray-500 block mt-1">{text}</span>
                             </button>
                         ))}
@@ -344,7 +344,7 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                                     onChange={(e) => set('price', e.target.value)} placeholder="12.90" className={INPUT} required />
                             </div>
                             <div>
-                                <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">Nennfüllmenge (g)</label>
+                                <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2 hyphens-auto break-words">Nennfüllmenge (g)</label>
                                 <input id="weight" type="number" min="0" value={values.weight_grams}
                                     onChange={(e) => set('weight_grams', e.target.value)} className={INPUT} />
                                 <p className="text-xs text-gray-400 mt-2">
@@ -412,12 +412,12 @@ export default function ProductForm({ initial }: { initial: ProductFormValues })
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-4">
-                    <Link href="/admin/products" className="px-6 py-3 rounded-xl font-bold bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
+                <div className="flex justify-end gap-3 sm:gap-4">
+                    <Link href="/admin/products" className="flex-1 sm:flex-none text-center whitespace-nowrap px-4 sm:px-6 py-3 rounded-xl font-bold bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
                         Abbrechen
                     </Link>
                     <button type="submit" disabled={saving}
-                        className="px-8 py-3 rounded-xl font-bold bg-[var(--color-brand-text)] text-white hover:bg-neutral-800 transition-colors shadow-md flex items-center gap-2 disabled:opacity-70">
+                        className="flex-1 sm:flex-none justify-center whitespace-nowrap px-4 sm:px-8 py-3 rounded-xl font-bold bg-[var(--color-brand-text)] text-white hover:bg-neutral-800 transition-colors shadow-md flex items-center gap-2 disabled:opacity-70">
                         {saving ? 'Speichere …' : <><Save className="w-5 h-5" /> Speichern</>}
                     </button>
                 </div>

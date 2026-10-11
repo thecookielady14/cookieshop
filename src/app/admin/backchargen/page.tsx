@@ -223,8 +223,8 @@ export default function AdminBackchargen() {
                 </button>
             </form>
 
-            <div className="flex items-center gap-4 mb-4">
-                <h2 className="text-lg font-bold text-gray-900">Bisherige Chargen</h2>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-4">
+                <h2 className="text-lg font-bold text-gray-900 whitespace-nowrap">Bisherige Chargen</h2>
                 <label className="flex items-center gap-2 text-sm text-gray-600">
                     <input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />
                     Abgeschlossene zeigen

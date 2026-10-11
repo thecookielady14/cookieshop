@@ -63,13 +63,13 @@ export default function AdminLayout({
                 Kopfzeile mit aufklappbarem Menü. */}
             <aside className="w-full md:w-64 shrink-0 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col sticky top-0 md:h-screen z-30 md:pt-8 md:pb-6">
                 {/* Branding & Logo */}
-                <div className="px-4 md:px-6 py-3 md:py-0 md:mb-8 flex md:flex-col items-center gap-3 md:gap-0">
+                <div className="px-4 md:px-6 py-3 md:py-0 md:mb-8 flex md:flex-col items-center gap-2 min-[360px]:gap-3 md:gap-0">
                     <img
                         src="/logo.jpeg"
                         alt="The Cookie Lady"
                         className="w-10 h-10 md:w-24 md:h-24 rounded-full object-cover shadow-sm md:mb-4 border-2 border-gray-50 flex-shrink-0"
                     />
-                    <span className="font-serif font-black text-lg md:text-xl text-left md:text-center leading-tight text-gray-900 whitespace-nowrap md:whitespace-normal">
+                    <span className="font-serif font-black text-base min-[360px]:text-lg md:text-xl text-left md:text-center leading-tight text-gray-900 whitespace-nowrap md:whitespace-normal">
                         The Cookie<br className="hidden md:block" /> Lady
                     </span>
                     <button
@@ -80,8 +80,10 @@ export default function AdminLayout({
                         aria-label={menuOpen ? 'Menü schließen' : 'Menü öffnen'}
                         className="md:hidden ml-auto flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 text-gray-700 whitespace-nowrap"
                     >
-                        {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                        <span className="text-sm font-medium">{menuOpen ? 'Schließen' : 'Menü'}</span>
+                        {menuOpen ? <X className="w-5 h-5 flex-shrink-0" /> : <Menu className="w-5 h-5 flex-shrink-0" />}
+                        {/* Immer „Menü": „Schließen" war breiter und schob den Knopf auf
+                            schmalen iPhones (320 px) über den Rand. Das ✕ zeigt den Zustand. */}
+                        <span className="text-sm font-medium">Menü</span>
                     </button>
                 </div>
 

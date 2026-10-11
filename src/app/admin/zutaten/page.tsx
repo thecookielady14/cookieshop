@@ -310,10 +310,10 @@ export default function AdminZutaten() {
             )}
 
             <form onSubmit={handleSave} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-8 space-y-4">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                     <h2 className="text-lg font-bold text-gray-900">Neue Packung erfassen</h2>
                     <button type="button" onClick={() => { setNotice(null); setScanning(true); }}
-                        className="flex items-center gap-2 whitespace-nowrap bg-[var(--color-brand-primary)] text-white px-4 py-3 rounded-xl font-bold hover:opacity-90">
+                        className="flex items-center justify-center gap-2 whitespace-nowrap w-full sm:w-auto bg-[var(--color-brand-primary)] text-white px-4 py-3 rounded-xl font-bold hover:opacity-90">
                         <ScanBarcode className="w-5 h-5 flex-shrink-0" /> Scannen
                     </button>
                 </div>
@@ -348,8 +348,8 @@ export default function AdminZutaten() {
                         </button>
                     </div>
                 ) : (
-                    <div className="flex gap-2 items-end">
-                        <label className="block text-sm flex-1">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:items-end">
+                        <label className="block text-sm flex-1 min-w-0">
                             <span className="text-gray-600">Zutat *</span>
                             <select className={inputClass} value={ingredientId} onChange={(e) => setIngredientId(e.target.value)}>
                                 <option value="">– bitte wählen –</option>
@@ -361,7 +361,7 @@ export default function AdminZutaten() {
                             </select>
                         </label>
                         <button type="button" onClick={() => { setNewMode(true); setIngredientId(''); }}
-                            className="flex items-center gap-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 whitespace-nowrap">
+                            className="flex items-center justify-center gap-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 whitespace-nowrap">
                             <Plus className="w-4 h-4" /> Neue Zutat
                         </button>
                     </div>

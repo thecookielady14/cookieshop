@@ -72,10 +72,11 @@ export default function LotPicker({
 
     return (
         <div className="space-y-3">
-            <div className="flex items-center justify-between gap-3">
+            {/* Auf dem Handy untereinander: nebeneinander wurde „Packung scannen" abgeschnitten. */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
                 <span className="text-sm text-gray-600">Verwendete Zutatenchargen</span>
                 <button type="button" onClick={() => { setHinweis(null); setScanning(true); }}
-                    className="flex items-center gap-2 whitespace-nowrap bg-[var(--color-brand-primary)] text-white px-4 py-2.5 rounded-xl font-bold hover:opacity-90">
+                    className="flex items-center justify-center gap-2 whitespace-nowrap w-full sm:w-auto bg-[var(--color-brand-primary)] text-white px-4 py-3 sm:py-2.5 rounded-xl font-bold hover:opacity-90">
                     <ScanBarcode className="w-5 h-5 flex-shrink-0" /> Packung scannen
                 </button>
             </div>

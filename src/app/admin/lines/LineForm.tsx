@@ -260,12 +260,12 @@ export default function LineForm({ initial }: { initial: LineFormValues }) {
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-4">
-                    <Link href="/admin/lines" className="px-6 py-3 rounded-xl font-bold bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
+                <div className="flex justify-end gap-3 sm:gap-4">
+                    <Link href="/admin/lines" className="flex-1 sm:flex-none text-center whitespace-nowrap px-4 sm:px-6 py-3 rounded-xl font-bold bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">
                         Abbrechen
                     </Link>
                     <button type="submit" disabled={saving}
-                        className="px-8 py-3 rounded-xl font-bold bg-[var(--color-brand-text)] text-white hover:bg-neutral-800 transition-colors shadow-md flex items-center gap-2 disabled:opacity-70">
+                        className="flex-1 sm:flex-none justify-center whitespace-nowrap px-4 sm:px-8 py-3 rounded-xl font-bold bg-[var(--color-brand-text)] text-white hover:bg-neutral-800 transition-colors shadow-md flex items-center gap-2 disabled:opacity-70">
                         {saving ? 'Speichere …' : <><Save className="w-5 h-5" /> Speichern</>}
                     </button>
                 </div>

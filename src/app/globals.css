@@ -126,3 +126,21 @@
         font-size: max(16px, 1em);
     }
 }
+
+/* iOS Safari gibt Datumsfeldern eine eigene Mindestbreite und zentriert das
+   Datum – auf schmalen iPhones ragte „Gebacken am" deshalb rechts aus der
+   Karte. Nur für iOS (-webkit-touch-callout gibt es nur dort), damit am PC
+   der Kalenderknopf erhalten bleibt. */
+@supports (-webkit-touch-callout: none) {
+    .admin-root input[type="date"] {
+        -webkit-appearance: none;
+        appearance: none;
+        display: block;
+        min-width: 0;
+        max-width: 100%;
+        min-height: 3rem;
+    }
+    .admin-root input[type="date"]::-webkit-date-and-time-value {
+        text-align: left;
+    }
+}
