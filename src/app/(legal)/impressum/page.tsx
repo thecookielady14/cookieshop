@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Impressum",
-    description: "Impressum und Anbieterkennzeichnung gemäß § 5 TMG für The Cookie Lady.",
+    description: "Impressum und Anbieterkennzeichnung gemäß § 5 DDG für The Cookie Lady.",
 };
 
 export default function Impressum() {
@@ -13,7 +13,7 @@ export default function Impressum() {
 
                 <div className="space-y-6 text-neutral-700">
                     <section>
-                        <h2 className="font-bold text-xl mb-2">Angaben gemäß § 5 TMG</h2>
+                        <h2 className="font-bold text-xl mb-2">Angaben gemäß § 5 DDG</h2>
                         <p>
                             Tanja Lux - The Cookie Lady<br />
                             Kissinger Straße 17<br />

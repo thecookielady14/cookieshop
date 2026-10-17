@@ -7,6 +7,8 @@ import { decodeItemsFromMetadata } from '@/lib/checkout-items';
 import { VAT_PERCENTAGE, contactEmail } from '@/lib/site';
 import { sendMail } from '@/lib/email';
 import { sendNewOrderNotification } from '@/lib/order-notification';
+import { escapeHtml } from '@/lib/html';
+import { legalTextsEmailHtml } from '@/lib/legal-texts';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
     apiVersion: '2026-01-28.clover',
@@ -228,11 +230,11 @@ export async function POST(req: Request) {
                     }
 
                     const itemsHtml = items.map((item) => {
-                        const name = item.name || productMap.get(item.product_id) || 'Unbekanntes Produkt';
+                        const name = escapeHtml(item.name || productMap.get(item.product_id) || 'Unbekanntes Produkt');
                         // Bei einem zusammengestellten Karton ist der Inhalt das
                         // Wesentliche – ohne ihn weiss niemand, was bestellt wurde.
                         const composition = (item.varieties ?? []).length > 1
-                            ? `<br><span style="font-size:12px;color:#9c7a4a;">${item.varieties.map((v) => `${v.quantity}× ${v.name}`).join(', ')}</span>`
+                            ? `<br><span style="font-size:12px;color:#9c7a4a;">${item.varieties.map((v) => `${v.quantity}× ${escapeHtml(v.name)}`).join(', ')}</span>`
                             : '';
                         return `<tr>
                             <td style="padding:8px 0;border-bottom:1px solid #f0e8d8;">${name}${composition}</td>
@@ -241,7 +243,8 @@ export async function POST(req: Request) {
                         </tr>`;
                     }).join('');
 
-                    const customerName = session.customer_details?.name || 'liebe Kundin / lieber Kunde';
+                    // Kommt aus dem Checkout, also von außen – vor der Ausgabe entschärfen.
+                    const customerName = escapeHtml(session.customer_details?.name || 'liebe Kundin / lieber Kunde');
                     // Tatsächlich berechneter Versand – nicht schätzen: totalAmount
                     // enthält den Versand bereits und taugt nicht als Vergleichswert.
                     // Der Versand läuft als besteuerte Position (siehe lib/stripe-tax.ts),
@@ -299,6 +302,8 @@ export async function POST(req: Request) {
           Weitere Kekse entdecken
         </a>
       </div>
+
+      ${legalTextsEmailHtml()}
     </div>
     <div style="background:#fef5e7;padding:20px;text-align:center;">
       <p style="color:#9c7a4a;font-size:12px;margin:0;">The Cookie Lady · Handgemachte Kekse mit Liebe</p>

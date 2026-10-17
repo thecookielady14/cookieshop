@@ -120,6 +120,49 @@ export default function Datenschutz() {
                             Weitere Informationen entnehmen Sie der Datenschutzerklärung von Stripe unter: <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://stripe.com/de/privacy</a>.
                         </p>
                     </section>
+
+                    <section>
+                        <h3 className="font-bold text-lg mb-2">PayPal</h3>
+                        <p className="mb-4">
+                            Wenn Sie mit PayPal bezahlen, werden Sie zu PayPal weitergeleitet. Anbieter ist die PayPal (Europe) S.à r.l. et Cie, S.C.A., 22-24 Boulevard Royal, L-2449 Luxemburg. PayPal erhält dabei die für die Zahlung nötigen Daten (z. B. Name, Rechnungsbetrag, Bestellbezug) und verarbeitet sie in eigener Verantwortung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
+                        </p>
+                        <p>
+                            Weitere Informationen entnehmen Sie der Datenschutzerklärung von PayPal unter: <a href="https://www.paypal.com/de/legalhub/privacy-full" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://www.paypal.com/de/legalhub/privacy-full</a>.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3 className="font-bold text-lg mb-2">Klarna</h3>
+                        <p className="mb-4">
+                            Wenn Sie mit Klarna bezahlen, werden Sie zu Klarna weitergeleitet. Anbieter ist die Klarna Bank AB (publ), Sveavägen 46, 111 34 Stockholm, Schweden. Klarna erhält Ihre Kontakt- und Bestelldaten und verarbeitet sie in eigener Verantwortung. Bei Zahlungsarten wie dem Kauf auf Rechnung kann Klarna Ihre Identität und Bonität prüfen und dafür Auskunfteien einbeziehen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
+                        </p>
+                        <p>
+                            Weitere Informationen entnehmen Sie der Datenschutzerklärung von Klarna unter: <a href="https://www.klarna.com/de/datenschutz/" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://www.klarna.com/de/datenschutz/</a>.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3 className="font-bold text-lg mb-2">Versand mit DHL</h3>
+                        <p>
+                            Für die Zustellung geben wir Ihren Namen und Ihre Lieferadresse an die DHL Paket GmbH, Sträßchensweg 10, 53113 Bonn, weiter. Ohne diese Angaben kann Ihr Paket nicht zugestellt werden; Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2 className="font-bold text-xl mb-3">7. Ihre Rechte</h2>
+                        <p className="mb-4">
+                            Sie haben jederzeit das Recht, Auskunft über Ihre bei uns gespeicherten personenbezogenen Daten zu erhalten (Art. 15 DSGVO) und deren Berichtigung (Art. 16 DSGVO), Löschung (Art. 17 DSGVO) oder die Einschränkung ihrer Verarbeitung (Art. 18 DSGVO) zu verlangen. Sie haben außerdem das Recht, Ihre Daten in einem gängigen, maschinenlesbaren Format zu erhalten (Art. 20 DSGVO).
+                        </p>
+                        <p className="mb-4">
+                            <strong>Widerspruchsrecht:</strong> Soweit wir Daten auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO verarbeiten, können Sie dieser Verarbeitung aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit widersprechen (Art. 21 DSGVO).
+                        </p>
+                        <p className="mb-4">
+                            Für all das genügt eine formlose Nachricht an kontakt@thecookielady.de.
+                        </p>
+                        <p>
+                            <strong>Beschwerderecht:</strong> Sie können sich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO). Für uns zuständig ist das Bayerische Landesamt für Datenschutzaufsicht, Promenade 18, 91522 Ansbach, <a href="https://www.lda.bayern.de" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">www.lda.bayern.de</a>.
+                        </p>
+                    </section>
                 </div>
             </div>
         </div>
