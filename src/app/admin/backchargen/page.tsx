@@ -49,6 +49,7 @@ export default function AdminBackchargen() {
     const [created, setCreated] = useState<{ id: string; code: string; variety: string } | null>(null);
     const [prefillHinweis, setPrefillHinweis] = useState<string | null>(null);
     const [showClosed, setShowClosed] = useState(false);
+    const [hygieneHeute, setHygieneHeute] = useState(true);
 
     const [varietyId, setVarietyId] = useState('');
     const [bakedOn, setBakedOn] = useState(today);
@@ -57,7 +58,7 @@ export default function AdminBackchargen() {
     const [selectedLots, setSelectedLots] = useState<string[]>([]);
 
     const load = useCallback(async () => {
-        const [v, l, b] = await Promise.all([
+        const [v, l, b, h] = await Promise.all([
             supabase.from('varieties').select('id, name').order('sort_order'),
             supabase.from('ingredient_lots')
                 .select('id, lot_number, best_before, ingredients(id, name, ean)')
@@ -67,7 +68,10 @@ export default function AdminBackchargen() {
                 .select('id, code, variety_id, variety_name, baked_on, piece_count, is_closed, bake_batch_lots(lot_id), order_item_variety_batches(order_item_variety_id)')
                 .order('batch_number', { ascending: false })
                 .limit(300),
+            // Fehlt die Tabelle noch, bleibt der Hinweis einfach aus
+            supabase.from('hygiene_checks').select('id').eq('kind', 'backtag').eq('check_date', today()).limit(1),
         ]);
+        setHygieneHeute(!!h.error || (h.data ?? []).length > 0);
         const loadError = v.error ?? l.error ?? b.error;
         if (loadError) {
             setError(
@@ -173,6 +177,14 @@ export default function AdminBackchargen() {
                         Charge öffnen
                     </Link>
                 </div>
+            )}
+
+            {!hygieneHeute && (
+                <p className="text-sm bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-2xl mb-6">
+                    Für heute fehlt noch die{' '}
+                    <Link href="/admin/hygiene" className="font-medium underline">Backtag-Checkliste</Link>{' '}
+                    (Kühlschrank, Reinigung, Etikettenkontrolle).
+                </p>
             )}
 
             {error && (

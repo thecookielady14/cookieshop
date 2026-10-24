@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Menu, X, Layers, Package, Cookie, ShoppingCart, ChefHat, Wheat, Tag, Route, Users, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Menu, X, Layers, Package, Cookie, ShoppingCart, ChefHat, Wheat, Tag, Route, ClipboardCheck, Users, Settings, LogOut } from "lucide-react";
 import { createBrowserClient } from '@supabase/ssr';
 
 export default function AdminLayout({
@@ -42,6 +42,7 @@ export default function AdminLayout({
         { name: 'Zutaten', href: '/admin/zutaten', icon: Wheat },
         { name: 'Backchargen', href: '/admin/backchargen', icon: Tag },
         { name: 'Rückverfolgung', href: '/admin/rueckverfolgung', icon: Route },
+        { name: 'Hygiene', href: '/admin/hygiene', icon: ClipboardCheck },
         { name: 'Kunden', href: '/admin/customers', icon: Users },
         { name: 'Einstellungen', href: '/admin/settings', icon: Settings },
     ];
@@ -61,7 +62,7 @@ export default function AdminLayout({
                 seitlich wischbare Leiste, in der nur drei von elf Punkten zu
                 sehen waren und „Abmelden" ganz fehlte – deshalb dort eine
                 Kopfzeile mit aufklappbarem Menü. */}
-            <aside className="w-full md:w-64 shrink-0 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col sticky top-0 md:h-screen z-30 md:pt-8 md:pb-6">
+            <aside className="print:hidden w-full md:w-64 shrink-0 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col sticky top-0 md:h-screen z-30 md:pt-8 md:pb-6">
                 {/* Branding & Logo */}
                 <div className="px-4 md:px-6 py-3 md:py-0 md:mb-8 flex md:flex-col items-center gap-2 min-[360px]:gap-3 md:gap-0">
                     <img
@@ -130,7 +131,7 @@ export default function AdminLayout({
             </aside>
 
             {/* Main Admin Content */}
-            <main className="flex-1 min-w-0 p-4 md:p-8">
+            <main className="flex-1 min-w-0 p-4 md:p-8 print:p-0">
                 {children}
             </main>
         </div>
