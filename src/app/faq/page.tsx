@@ -45,8 +45,8 @@ const faqItems: FaqItem[] = [
                     sie mit <strong>Fruchtpulver und echten Früchten</strong>, sodass der Geschmack natürlich und fruchtig ist.
                 </p>
                 <p>
-                    Wie bei allen meinen Keksen verwende ich regionale Zutaten, von denen viele aus
-                    <strong> biologischer Landwirtschaft</strong> stammen. So können die Kleinen bedenkenlos
+                    Wie bei allen meinen Keksen achte ich auf gute Zutaten, wo möglich
+                    <strong> aus der Region</strong>. So können die Kleinen bedenkenlos
                     zugreifen – und die Großen natürlich auch!
                 </p>
             </div>
