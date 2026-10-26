@@ -46,8 +46,8 @@ const faqItems: FaqItem[] = [
                 </p>
                 <p>
                     Wie bei allen meinen Keksen achte ich auf gute Zutaten, wo möglich
-                    <strong> aus der Region</strong>. So können die Kleinen bedenkenlos
-                    zugreifen – und die Großen natürlich auch!
+                    <strong> aus der Region</strong>. Die Kekse sind klein und soft – genau richtig für
+                    kleine Hände.
                 </p>
             </div>
         ),
