@@ -50,7 +50,7 @@ export default async function Home() {
             </h1>
             <p className="text-xl lg:text-2xl max-w-xl mb-12 text-white/90">
               Entdecke handgemachte Kekse aus regionalen Zutaten und echtem Dinkelmehl.
-              Knusprig, ehrlich und mit Liebe gebacken – direkt zu dir nach Hause.
+              Außen knusprig, innen zart – ehrlich und mit Liebe gebacken, direkt zu dir nach Hause.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 mt-4">

@@ -40,7 +40,7 @@ export default function About() {
                         </p>
                         <p>
                             Nach unzähligen Versuchen und vielen verbrannten Blechen habe ich meinen
-                            eigenen Stil gefunden: Kekse, die durch und durch knusprig sind, intensiv im Geschmack
+                            eigenen Stil gefunden: Kekse, die außen knusprig und innen zart sind, intensiv im Geschmack
                             und bei denen man sofort merkt, dass da jemand mit Leidenschaft am Werk war.
                         </p>
                         <p>
