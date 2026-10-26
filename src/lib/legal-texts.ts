@@ -79,10 +79,11 @@ export const agb: LegalText = {
                 { p: ['Die Zahlung wird über unseren Zahlungsdienstleister Stripe abgewickelt. Welche Zahlungsarten Ihnen zur Verfügung stehen, sehen Sie im Bestellprozess. Dazu gehören:'] },
                 {
                     list: [
-                        [{ strong: 'Kreditkarte:' }, ' Mit Abgabe der Bestellung übermitteln Sie Ihre Kreditkartendaten. Nach Ihrer Legitimation als rechtmäßiger Karteninhaber fordert Stripe unmittelbar nach der Bestellung Ihr Kreditkartenunternehmen zur Einleitung der Zahlungstransaktion auf.'],
+                        [{ strong: 'Kredit- oder Debitkarte:' }, ' Mit Abgabe der Bestellung übermitteln Sie Ihre Kartendaten. Nach Ihrer Legitimation als rechtmäßiger Karteninhaber fordert Stripe unmittelbar nach der Bestellung Ihr Kartenunternehmen zur Einleitung der Zahlungstransaktion auf.'],
                         [{ strong: 'Apple Pay / Google Pay:' }, ' Um den Rechnungsbetrag über Apple Pay oder Google Pay bezahlen zu können, müssen Sie bei dem jeweiligen Dienstanbieter registriert sein und die Zahlungsanweisung bestätigen.'],
+                        [{ strong: 'Amazon Pay:' }, ' Im Bestellprozess melden Sie sich mit Ihrem Amazon-Konto an und bestätigen die Zahlung mit einer dort hinterlegten Zahlungsart.'],
                         [{ strong: 'PayPal:' }, ' Im Bestellprozess werden Sie auf die Webseite des Online-Anbieters PayPal weitergeleitet. Dort können Sie Ihre Zahlungsdaten angeben und die Zahlungsanweisung an PayPal bestätigen.'],
-                        [{ strong: 'Klarna:' }, ' Im Bestellprozess werden Sie zu Klarna weitergeleitet und wählen dort eine der angebotenen Klarna-Zahlungsarten, etwa sofortige Zahlung oder Zahlung später. Es gelten ergänzend die Bedingungen von Klarna. Klarna kann eine Bonitätsprüfung durchführen. Wir backen Ihre Bestellung, sobald Klarna die Zahlung bestätigt hat.'],
+                        [{ strong: 'Banküberweisung:' }, ' Nach Abschluss der Bestellung erhalten Sie eine Bankverbindung (IBAN) und einen Verwendungszweck. Bitte überweisen Sie den Rechnungsbetrag innerhalb von 7 Tagen. Wir backen Ihre Bestellung, sobald die Zahlung bei uns eingegangen ist.'],
                     ],
                 },
             ],

@@ -132,12 +132,19 @@ export default function Datenschutz() {
                     </section>
 
                     <section>
-                        <h3 className="font-bold text-lg mb-2">Klarna</h3>
+                        <h3 className="font-bold text-lg mb-2">Amazon Pay</h3>
                         <p className="mb-4">
-                            Wenn Sie mit Klarna bezahlen, werden Sie zu Klarna weitergeleitet. Anbieter ist die Klarna Bank AB (publ), Sveavägen 46, 111 34 Stockholm, Schweden. Klarna erhält Ihre Kontakt- und Bestelldaten und verarbeitet sie in eigener Verantwortung. Bei Zahlungsarten wie dem Kauf auf Rechnung kann Klarna Ihre Identität und Bonität prüfen und dafür Auskunfteien einbeziehen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
+                            Wenn Sie mit Amazon Pay bezahlen, melden Sie sich mit Ihrem Amazon-Konto an. Anbieter ist die Amazon Payments Europe S.C.A., 38 avenue J.F. Kennedy, L-1855 Luxemburg. Amazon Pay erhält dabei die für die Zahlung nötigen Daten (z. B. Name, Rechnungsbetrag, Bestellbezug) und verarbeitet sie in eigener Verantwortung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
                         </p>
                         <p>
-                            Weitere Informationen entnehmen Sie der Datenschutzerklärung von Klarna unter: <a href="https://www.klarna.com/de/datenschutz/" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://www.klarna.com/de/datenschutz/</a>.
+                            Weitere Informationen finden Sie in den Datenschutzhinweisen von Amazon Pay unter: <a href="https://pay.amazon.de" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-primary)] hover:underline">https://pay.amazon.de</a>.
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3 className="font-bold text-lg mb-2">Banküberweisung</h3>
+                        <p>
+                            Wenn Sie per Banküberweisung bezahlen, stellt Ihnen Stripe eine Bankverbindung für Ihre Bestellung bereit und ordnet Ihre Überweisung der Bestellung zu. Stripe erhält dafür Ihren Namen, den Rechnungsbetrag und die Angaben Ihrer Überweisung. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
                         </p>
                     </section>
 

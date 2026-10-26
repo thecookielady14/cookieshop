@@ -35,10 +35,10 @@ function SuccessContent() {
 
                 <div className="bg-[var(--color-brand-bg)] p-6 rounded-2xl mb-10 inline-block w-full max-w-sm">
                     <p className="text-sm text-[var(--color-brand-dark)] text-center">
-                        Deine Cookies werden jetzt mit viel Liebe gebacken und frisch für dich verpackt. 🍪
+                        Sobald deine Zahlung da ist, werden deine Cookies mit viel Liebe gebacken und frisch für dich verpackt. 🍪
                     </p>
                     <p className="text-xs text-neutral-400 text-center mt-2">
-                        Du erhältst in Kürze eine Bestätigungsemail mit deiner Rechnung von Stripe.
+                        Du erhältst in Kürze eine Bestätigungsemail. Zahlst du per Überweisung, stehen die Überweisungsdaten darin.
                     </p>
                 </div>
 

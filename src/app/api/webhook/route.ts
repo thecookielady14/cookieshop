@@ -255,6 +255,26 @@ export async function POST(req: Request) {
                         : (session.shipping_cost?.amount_total ?? 0) / 100;
                     const shippingCost = shippingAmount === 0 ? 'Kostenlos' : formatEuro(shippingAmount);
 
+                    // Bei Banküberweisung ist noch nichts bezahlt: dann nicht
+                    // "ich backe jetzt" versprechen, sondern auf die Überweisung
+                    // hinweisen – mit Stripes Seite, auf der IBAN und
+                    // Verwendungszweck stehen.
+                    let instructionsUrl: string | null = null;
+                    if (!isPaid && typeof session.payment_intent === 'string') {
+                        try {
+                            const intent = await stripe.paymentIntents.retrieve(session.payment_intent);
+                            instructionsUrl = intent.next_action?.display_bank_transfer_instructions?.hosted_instructions_url ?? null;
+                        } catch (intentError) {
+                            console.error('Überweisungsdaten konnten nicht geladen werden:', intentError);
+                        }
+                    }
+                    const introText = isPaid
+                        ? 'vielen Dank für deine Bestellung! Ich werde deine Kekse jetzt mit viel Liebe backen und frisch für dich verpacken.'
+                        : 'vielen Dank für deine Bestellung! Sobald deine Zahlung bei mir eingegangen ist, backe ich deine Kekse mit viel Liebe und verpacke sie frisch für dich.';
+                    const paymentHint = instructionsUrl
+                        ? `<p style="color:#5a4a3a;font-size:15px;line-height:1.6;"><strong>Bitte überweise den Gesamtbetrag innerhalb von 7 Tagen.</strong> Bankverbindung und Verwendungszweck findest du hier: <a href="${escapeHtml(instructionsUrl)}" style="color:#b0813b;">Überweisungsdaten anzeigen</a></p>`
+                        : '';
+
                     const emailHtml = `
 <!DOCTYPE html>
 <html lang="de">
@@ -267,7 +287,8 @@ export async function POST(req: Request) {
     </div>
     <div style="padding:32px;">
       <p style="color:#331f16;font-size:16px;">Hallo ${customerName},</p>
-      <p style="color:#5a4a3a;font-size:15px;line-height:1.6;">vielen Dank für deine Bestellung! Ich werde deine Kekse jetzt mit viel Liebe backen und frisch für dich verpacken.</p>
+      <p style="color:#5a4a3a;font-size:15px;line-height:1.6;">${introText}</p>
+      ${paymentHint}
 
       <div style="background:#fef5e7;border-radius:16px;padding:20px;margin:24px 0;">
         <h2 style="color:#331f16;font-size:16px;margin:0 0 16px;font-weight:bold;">Deine Bestellung</h2>
