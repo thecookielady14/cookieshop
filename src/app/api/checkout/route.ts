@@ -247,7 +247,17 @@ export async function POST(req: Request) {
             draftId = draft.id;
         }
 
+        // Banküberweisung bietet Stripe im Checkout nur an, wenn die Session
+        // einen bestehenden Kunden mitbringt. E-Mail und Adresse trägt der
+        // Kunde danach wie gewohnt im Checkout ein.
+        const customer = await stripe.customers.create({
+            preferred_locales: ['de'],
+            metadata: draftId ? { draft: draftId } : {},
+        });
+
         const session = await stripe.checkout.sessions.create({
+            customer: customer.id,
+            customer_update: { name: 'auto', address: 'auto', shipping: 'auto' },
             // Zahlungsarten bewusst NICHT festgelegt: Stripe nimmt, was im
             // Dashboard freigeschaltet ist. Eine feste Liste scheitert, sobald
             // eine davon im Konto nicht aktiv ist – dann koennte niemand
