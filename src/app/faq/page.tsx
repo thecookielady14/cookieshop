@@ -41,8 +41,8 @@ const faqItems: FaqItem[] = [
             <div className="space-y-3">
                 <p>
                     Als Mama ist es mir besonders wichtig, dass Kinder bewusst naschen können – ohne schlechtes Gewissen.
-                    Meine <strong>Kinder-Kekse kommen komplett ohne zugesetzten Zucker</strong> aus. Stattdessen süße ich
-                    sie mit <strong>Fruchtpulver und echten Früchten</strong>, sodass der Geschmack natürlich und fruchtig ist.
+                    Meine <strong>Kinder-Kekse bekommen ihre natürliche Süße aus Früchten</strong> – aus Apfeldicksaft,
+                    <strong>Fruchtpulver und echten Früchten</strong>, sodass der Geschmack natürlich und fruchtig ist.
                 </p>
                 <p>
                     Wie bei allen meinen Keksen achte ich auf gute Zutaten, wo möglich
